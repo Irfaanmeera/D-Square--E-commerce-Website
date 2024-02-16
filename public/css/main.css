@@ -1736,11 +1736,13 @@ top: -1px;
   line-height: 40px;
   display: inline-block;
   border-radius: 50%;
-  border: 1px solid #eee;
+  border: transparent;
   color: #555;
-  font-size: 18px;
+  font-size: 24px;
   text-align: center;
   position: relative;
+  
+
 }
 
 .header .navbar-cart .wishlist a:hover {
@@ -1756,7 +1758,7 @@ top: -1px;
   height: 19px;
   width: 19px;
   line-height: 19px;
-  background-color: #081828;
+  background-color: #2679cc;
   color: #fff;
   font-size: 12px;
   font-weight: 500;
@@ -1769,8 +1771,8 @@ top: -1px;
 }
 
 .header .navbar-cart .cart-items:hover .main-btn {
-  color: #fff;
-  background-color: #0167F3;
+ 
+  background-color: #2679cc;
   border-color: transparent;
 }
 
@@ -1780,9 +1782,9 @@ top: -1px;
   line-height: 40px;
   display: inline-block;
   border-radius: 50%;
-  border: 1px solid #eee;
+  border:transparent;
   color: #555;
-  font-size: 18px;
+  font-size: 24px;
   text-align: center;
   position: relative;
 }
@@ -1794,7 +1796,7 @@ top: -1px;
   height: 19px;
   width: 19px;
   line-height: 19px;
-  background-color: #081828;
+  background-color: #2679cc;
   color: #fff;
   font-size: 12px;
   font-weight: 500;
@@ -2181,7 +2183,7 @@ top: -1px;
     -webkit-box-pack: justify;
     -ms-flex-pack: justify;
     justify-content: space-between;
-    padding: 10px 0;
+    /* padding: 10px 0; */
   }
 
   .header .navbar-nav .nav-item a::after {

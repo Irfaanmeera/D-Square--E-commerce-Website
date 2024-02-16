@@ -1,0 +1,163 @@
+const userCollection = require("../models/userModel");
+const transporter = require('../services/sendOtp')
+const nodemailer = require('nodemailer')
+const bcrypt = require("bcrypt");
+const saltRound = 10;
+
+
+//homepage
+const userHomeController = async(req,res)=>{
+  let user = req.session.user;
+  
+if(req.session.user){
+        res.render('user/homepageUser',{user});
+    }else{
+        res.redirect('/login')
+    }
+}
+
+//logincontroller
+const loginControler = async (req, res) => {
+  if (req.session.user) {
+    res.redirect("/");
+  } else {
+    res.render("user/login");
+  }
+};
+
+//lgoinpost conrtoler
+const loginPostControler = async (req, res) => {
+
+  const userFind = await userCollection.findOne({ email: req.body.email });
+  if (userFind) {
+    const password = await bcrypt.compare(req.body.password, userFind.password);
+
+    if (password) {
+      req.session.user = req.body;
+
+    console.log(req.session.user);
+    res.redirect('/');
+    } else {
+      res.render("user/login", { message: "Invalid Password" });
+    }
+  } else {
+    res.render("user/login", { message: "Invalid Email" });
+  }
+};
+
+
+//signup
+const signupControler = async (req, res) => {
+  if (req.session.user) {
+    res.redirect("/");
+  } else {
+    res.render("user/signup");
+  }
+};
+
+
+//signup post controller
+
+const signupPostControler = async (req, res) => {
+  // Validate input data
+  const { name, email, mobile } = req.body;
+
+  if (!name || name.trim() === "" || name.length < 0 || !email || !mobile) {
+      return res.render('user/signup',{message:"Name, email, and mobile are required"});
+  }
+
+  // Additional validation for email format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+      return res.render('user/signup',{message:"Invalid email id"});
+  }
+
+  //validation for mobile number
+  const mobileRegex = /^\d{10}$/;
+  if (!mobileRegex.test(mobile)) {
+      return res.render('user/signup',{message:"Invalid mobile number"});
+  }
+
+  const existingUser = await userCollection.findOne({ email, isBlocked:false});
+
+  if (existingUser) {
+      return res.render("user/signup", { message: "User Name already exists" });
+  }
+
+  const password = await bcrypt.hash(req.body.password, saltRound);
+  req.body.password = password;
+
+  const newUser = await userCollection.create(req.body);
+  req.session.user = req.body;
+  req.session.loggedIn = true;
+
+
+  //noedmailer email verification
+  const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      requireTLS: true,
+      auth: {
+          user: 'irfaanmeera@gmail.com',
+          pass: 'tayk wqro aapk jryl'
+      }
+  });
+
+  const otp = Math.floor(1000 + Math.random() * 9000);
+  req.session.otp = otp;
+  req.session.email = email;
+
+  const mailOptions = {
+      from: 'irfaanmeera@gmail.com',
+      to: email,
+      subject: 'Registration OTP for D Square',
+      html: `Your OTP is ${otp}`
+  };
+
+  transporter.sendMail(mailOptions, function(error, info) {
+      if (error) {
+          console.log(error);
+          return res.status(500).send("Error sending OTP");
+      } else {
+          console.log('Email has been sent:', info.response);
+          return res.render("user/otpPage");
+      }
+  });
+};
+
+//otp post controller
+const verifyOtp = async(req,res)=>{
+  const otp = req.body.otp.join('');
+  const email = req.session.email;
+  const sessionOTP = req.session.otp;
+
+  console.log(sessionOTP);
+  console.log(otp)
+
+  if (sessionOTP == otp) {
+      return res.render('user/otpSuccess');
+  } else {
+      return res.render('user/otpPage',{message:'Invalid otp'});
+  }
+};
+
+
+//logout
+
+const logoutControler = async (req, res) => {
+  req.session.destroy();
+  res.redirect("/login");
+};
+
+
+module.exports = {
+  userHomeController,
+  loginControler,
+  signupControler,
+  signupPostControler,
+  loginPostControler,
+  logoutControler,
+  verifyOtp,
+
+};
