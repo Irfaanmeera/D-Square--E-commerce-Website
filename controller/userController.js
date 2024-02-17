@@ -90,56 +90,117 @@ const signupPostControler = async (req, res) => {
   const newUser = await userCollection.create(req.body);
   req.session.user = req.body;
   req.session.loggedIn = true;
+  
+//noedmailer email verification
 
-
-  //noedmailer email verification
   const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 587,
-      secure: false,
-      requireTLS: true,
-      auth: {
-          user: 'irfaanmeera@gmail.com',
-          pass: 'tayk wqro aapk jryl'
-      }
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    requireTLS: true,
+    auth: {
+        user: 'irfaanmeera@gmail.com',
+        pass: 'tayk wqro aapk jryl'
+    }
   });
-
+  
   const otp = Math.floor(1000 + Math.random() * 9000);
+  
+  req.session.otp = otp;
+  req.session.email = email;
+  
+  const expirationTime = new Date();
+  expirationTime.setMinutes(expirationTime.getMinutes() + 5);
+  
+  req.session.otpExpiration = expirationTime;
+  console.log(req.session.otpExpiration)
+  
+  const mailOptions = {
+    from: 'irfaanmeera@gmail.com',
+    to: email,
+    subject: 'Registration OTP for D Square',
+    html: `Your OTP is ${otp}`
+  };
+  
+  transporter.sendMail(mailOptions, function(error, info) {
+    if (error) {
+        console.log(error);
+        return res.status(500).send("Error sending OTP");
+    } else {
+        console.log('Email has been sent:', info.response);
+         res.render("user/otpPage",{ expirationTime: expirationTime.toISOString() });
+    }
+  })
+  };
+
+//resend otp
+
+
+//signup post controller
+
+const resendOtp = async (req, res) => {
+
+  const email = req.session.email || req.body.email;
+
+//noedmailer email verification
+
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    requireTLS: true,
+    auth: {
+        user: 'irfaanmeera@gmail.com',
+        pass: 'tayk wqro aapk jryl'
+    }
+  });
+  
+  const otp = Math.floor(1000 + Math.random() * 9000);
+  
   req.session.otp = otp;
   req.session.email = email;
 
+  
+  const expirationTime = new Date();
+  expirationTime.setMinutes(expirationTime.getMinutes() + 5);
+  
+  req.session.otpExpiration = expirationTime;
+  console.log(req.session.otpExpiration)
+  
   const mailOptions = {
-      from: 'irfaanmeera@gmail.com',
-      to: email,
-      subject: 'Registration OTP for D Square',
-      html: `Your OTP is ${otp}`
+    from: 'irfaanmeera@gmail.com',
+    to: email,
+    subject: 'Registration OTP for D Square',
+    html: `Your OTP is ${otp}`
   };
-
+  
   transporter.sendMail(mailOptions, function(error, info) {
-      if (error) {
-          console.log(error);
-          return res.status(500).send("Error sending OTP");
-      } else {
-          console.log('Email has been sent:', info.response);
-          return res.render("user/otpPage");
-      }
-  });
-};
+    if (error) {
+        console.log(error);
+        return res.status(500).send("Error sending OTP");
+    } else {
+        console.log('Email has been sent:', info.response);
+         res.render("user/otpPage",{ expirationTime: expirationTime.toISOString(),message:'OTP Resent'});
+    }
+  })
+  };
 
 //otp post controller
 const verifyOtp = async(req,res)=>{
   const otp = req.body.otp.join('');
   const email = req.session.email;
   const sessionOTP = req.session.otp;
+  const expirationTime = req.session.otpExpirationTime;
 
   console.log(sessionOTP);
   console.log(otp)
-
+  
   if (sessionOTP == otp) {
       return res.render('user/otpSuccess');
   } else {
       return res.render('user/otpPage',{message:'Invalid otp'});
   }
+
 };
 
 
@@ -159,5 +220,7 @@ module.exports = {
   loginPostControler,
   logoutControler,
   verifyOtp,
+  resendOtp,
+
 
 };

@@ -34,9 +34,9 @@
         width: 350px;
         padding: 10px;
         border-radius: 20px;
-        background: #fff;
+        background: #2c2c2c;
         border: none;
-        height: 350px;
+        height: 450px;
         position: relative;
     }
 
@@ -49,7 +49,7 @@
     }
 
     .mobile-text {
-        color: #989696b8;
+        color: #ffffffb8;
         font-size: 15px;
     }
 
@@ -58,11 +58,11 @@
     }
 
     .form-control:focus {
-        color: #495057;
+        color: #f9f9f9;
         background-color: #fff;
-        border-color: #ff8880;
+        border-color: #0a0a0a;
         outline: 0;
-        box-shadow: none;
+        box-shadow:#262525;
     }
 
     .cursor {
@@ -72,9 +72,9 @@
 <div class="d-flex justify-content-center align-items-center container">
     <div class="card py-5 px-3">
         <form action="/verify" method="post">
-        <h3 class="text-center text-danger mb-3 mx-1 mx-md-4 mt-3">{{message}}</h3>
-            <h5 class="m-0">OTP Email verification</h5>
-            <span class="mobile-text">Please Enter the one time password to verify your account
+        <h5 class="text-center text-danger mb-2 mx-1 mx-md-4 mt-3">{{message}}</h5>
+            <h6 class="m-0 text-center text-white">OTP Email verification</h6>
+            <span class="mobile-text mt-2">Please Enter the one time password to verify your account
               
                 <b class="text-danger">{{user.email}}</b></span>
                
@@ -84,11 +84,13 @@
                 <input type="number" maxlength="1" oninput="index" class="form-control a" name="otp" required />
                 <input type="number" maxlength="1" oninput="index" class="form-control a" name="otp" required />
             </div>
-            <div class="text-center mt-5"><span class="d-block mobile-text">Don't
-                    receive the code?</span><a href="/signup" class="font-weight-bold text-danger cursor">Resend</a>
+            <div class="text-danger text-center mt-3"><p id="timer"></p></div>
+            
+            <div class="text-center mt-3"><span class="d-block mobile-text">Didn't
+                    receive the code?</span><a href="/resendOtp" class="font-weight-bold text-danger cursor">Resend</a>
             </div>
-            <div class="text-center mt-5">
-                <span><input type="submit" value="submit" class="btn btn-primary" /></span>
+            <div class="text-center mt-3">
+                <span><input type="submit" value="Verify OTP" class="btn btn-primary" /></span>
             </div>
         </form>
     </div>
@@ -107,6 +109,46 @@
 
 </script>
 
+  <script>
+        // Wait for the DOM to fully load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Function to update the timer
+            function updateTimer(expirationTime) {
+                // Get the current time
+                const now = new Date().getTime();
+
+                // Calculate the remaining time
+                const remainingTime = expirationTime - now;
+
+                // If remaining time is negative, set it to 0
+                const seconds = Math.max(Math.ceil(remainingTime / 1000), 0);
+
+                // Convert remaining time to minutes and seconds
+                const minutes = Math.floor(seconds / 60);
+                const remainingSeconds = seconds % 60;
+
+                // Update the UI with the remaining time
+                document.getElementById('timer').innerText = `Remaining time: ${minutes} : ${remainingSeconds} `;
+
+                // If the timer has expired, display a message
+                if (seconds <= 0) {
+                    document.getElementById('timer').innerText = 'OTP has expired';
+                    clearInterval(timerInterval); // Stop the timer interval
+                }
+            }
+
+            // Get the expiration time from the server-side code
+            const expirationTime = new Date('{{ expirationTime }}');
+
+            // Update the timer immediately
+            updateTimer(expirationTime);
+
+            // Update the timer every second
+            const timerInterval = setInterval(() => {
+                updateTimer(expirationTime);
+            }, 1000);
+        });
+    </script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
 integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
 crossorigin="anonymous"></script>
