@@ -902,7 +902,7 @@ ol {
 /* Bread Crumbs */
 .breadcrumbs {
   position: relative;
-  padding: 30px 0;
+  padding: 15px 0;
   z-index: 2;
   text-align: left;
   background-color: #fff;
@@ -912,13 +912,13 @@ ol {
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
   .breadcrumbs {
-    padding: 30px;
+    padding: 20px;
   }
 }
 
 @media (max-width: 767px) {
   .breadcrumbs {
-    padding: 30px;
+    padding: 20px;
   }
 }
 
@@ -966,7 +966,7 @@ ol {
 @media (max-width: 767px) {
   .breadcrumbs .breadcrumb-nav {
     text-align: center;
-    margin-top: 15px;
+    margin-top: 10px;
   }
 }
 
@@ -1021,7 +1021,7 @@ top: -1px;
 }
 
 .section {
-  padding-top: 90px;
+  padding-top: 40px;
   padding-bottom: 90px;
   position: relative;
 }
@@ -3293,6 +3293,8 @@ top: 2px;
 }
 
 .single-product .product-image {
+  
+  padding: 15px;
   overflow: hidden;
   position: relative;
 }
@@ -3606,18 +3608,21 @@ top: 2px;
 
 .item-details .top-area {
   background-color: #fff;
-  padding: 30px;
+  padding: 10px;
   border: 1px solid #eee;
   border-radius: 4px;
+
 }
 
 .item-details .product-images img {
-  width: 100%;
-  cursor: pointer;
+  width: 80%;
+  cursor:pointer;
   border: 1px solid #eee;
   border-radius: 4px;
   overflow: hidden;
-  padding: 5px;
+  padding: 15px;
+ 
+  
 }
 
 .item-details .product-images .images {
@@ -3625,7 +3630,6 @@ top: 2px;
   display: grid;
   Grid-template-columns: repeat(5, 1fr);
   Grid-gap: 1em 1em;
-  Margin-top: 1em;
 }
 
 /* @media (max-width: 767px) {
@@ -4922,3 +4926,7 @@ top: 2px;
     display: none;
   }
 }
+
+
+
+

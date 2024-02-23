@@ -10,6 +10,7 @@ const path = require('path');
 const connection = require("./config/dbConnect");
 connection();
 const session = require("express-session");
+const flash = require('express-flash')
 
 const PORT = 3000;
 
@@ -22,6 +23,7 @@ app.use(
   })
 );
 app.use(bodyparser.urlencoded({ extended: true }));
+app.use(bodyparser.json());
 
 app.set("view engine", "hbs");
 app.set('views', path.join(__dirname, 'views'));
@@ -31,7 +33,9 @@ hbs.registerPartials(path.join(__dirname, 'views', 'partials'));
 
 
 app.use(express.static(__dirname + '/public'));
+// app.use(express.static('public'));
 app.use(nocache());
+app.use(flash());
 
 
 
@@ -39,6 +43,7 @@ app.use(nocache());
 app.use('/api/user',authRouter);
 app.use("/", userRouter);
 app.use("/admin", adminRouter);
+
 
 
 app.listen(PORT,()=>{

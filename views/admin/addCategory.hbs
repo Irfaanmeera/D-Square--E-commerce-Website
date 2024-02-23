@@ -1,0 +1,179 @@
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Boxicons -->
+	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+	<!-- My CSS -->
+	
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/adminPanel.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+
+	<title>D SQUARE</title>
+</head>
+<body>
+
+
+	<!-- SIDEBAR -->
+	<section id="sidebar">
+		<a href="#" class="brand">
+			<i class='bx bxs-cart'></i>
+			<span class="text">D SQUARE</span>
+		</a>
+		<ul class="side-menu top ">
+			<li >
+				<a href="#">
+					<i class='bx bxs-dashboard' ></i>
+					<span class="text">Dashboard</span>
+				</a>
+			</li>
+			<li class="active">
+				<a href="/admin/category">
+					<i class='bx bxs-package'></i>
+					<span class="text">Categories</span>
+				</a>
+			</li>
+			<li >
+				<a href="/admin/product">
+					<i class='bx bxs-shopping-bags'></i>
+					<span class="text">Products</span>
+				</a>
+			</li>
+			<li>
+				<a href="#">
+					<i class='bx bxs-purchase-tag-alt'></i>
+					<span class="text">Orders</span>
+				</a>
+			</li>
+			<li>
+				<a href="#">
+					<i class='bx bxs-group' ></i>
+					<span class="text">Users</span>
+				</a>
+			</li>
+            <li>
+				<a href="#">
+					<i class='bx bxs-coupon'></i>
+					<span class="text">Coupons</span>
+				</a>
+			</li>
+            <li>
+				<a href="#">
+					<i class='bx bxs-receipt'></i>
+					<span class="text">Invoice</span>
+				</a>
+			</li>
+		</ul>
+		<ul class="side-menu">
+			<li>
+				<a href="#">
+					<i class='bx bxs-cog' ></i>
+					<span class="text">Settings</span>
+				</a>
+			</li>
+			<li>
+				<a href="#" class="logout">
+					<i class='bx bxs-log-out-circle' ></i>
+					<span class="text">Logout</span>
+				</a>
+			</li>
+		</ul>
+	</section>
+	<!-- SIDEBAR -->
+
+
+
+	<!-- CONTENT -->
+	<section id="content">
+		<!-- NAVBAR -->
+		<nav>
+			<i class='bx bx-menu' ></i>
+			<a href="#" class="nav-link">Admin Panel</a>
+		
+			
+			<a href="#" class="profile">
+				<img src="https://media.licdn.com/dms/image/C5603AQFSg4R-IWdHpg/profile-displayphoto-shrink_200_200/0/1652343116317?e=1714003200&v=beta&t=pmFIU8GF6HCKqo4Wt4oyk5Ws-GDJy-mHECO-4ejmtdE">
+			</a>
+		    <a href="/admin/login" class="btn text-white px-4" id="logoutbtn">Logout</a>	
+
+
+		</nav>
+		<!-- NAVBAR -->
+
+
+		<!-- MAIN -->
+		<main>
+			<div class="head-title">
+				<div class="left">
+					<h1>Add Category</h1>
+					<ul class="breadcrumb">
+						<li>
+							<a href="#">Home</a>
+						</li>
+						<li><i class='bx bx-chevron-right' ></i></li>
+                        <li>
+							<a href="/admin/product">Category</a>
+						</li>
+                        <li><i class='bx bx-chevron-right' ></i></li>
+						<li>
+							<a class="active" href="#">Add Category</a>
+						</li>
+					</ul>
+				</div>
+			
+			</div>
+           <div class="container">
+           <div class="row">
+             <div class="col-md-8 mx-auto p-5">
+   
+          <form id="addProductForm" action="" method="POST" role="form">
+          <div class="mb-3" style="width=400px;" >
+            
+            <input name="categoryName" id="productName" type="text" class="form-control" placeholder="Category Name">
+        </div>
+        <div class="mb-3">
+          
+            <input name="categoryDescription" type="text" class="form-control" min="100" placeholder="Category Description">
+        </div>
+
+       
+        <button type="submit" onclick="addCategory()" class="btn ms-auto" id="submitbtn" >Save Category</button>
+    </form>
+</div>
+</div>
+</div>
+
+
+        
+			
+		</main>
+		<!-- MAIN -->
+	</section>
+	<!-- CONTENT -->
+
+    
+</script>
+
+
+            <script>
+
+
+        // Sweet Alert Function
+        function addCategory() {
+          
+            Swal.fire({
+                icon: 'success',
+                title: 'Your Category Added Successfully!',
+                showConfirmButton: false,
+                timer: 1500
+            })
+        }
+    </script>
+	
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>	
+</body>
+</html>

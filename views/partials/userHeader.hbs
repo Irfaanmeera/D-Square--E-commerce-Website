@@ -9,7 +9,7 @@
     <link
       rel="shortcut icon"
       type="image/x-icon"
-      href="/public/images/favicon.svg"
+      href="/images/favicon.svg"
     />
 
     <!-- ========================= CSS here ========================= -->
@@ -19,6 +19,13 @@
     <link rel="stylesheet" href="/css/glightbox.min.css" />
     <link rel="stylesheet" href="/css/main.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/zoom.js/1.7.15/zoom.css">
+  <style>
+        /* Additional CSS styles for the zoomed image */
+        .zoomImg {
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+    </style>
   </head>
 
   <body>
@@ -60,9 +67,9 @@
               <div class="main-menu-search">
                 <!-- navbar search start -->
                 <div class="navbar-search">
-                  <div class="search-select">
+                  {{!-- <div class="search-select"> --}}
                      
-                    <div class="select-position">
+                    {{!-- <div class="select-position">
         
                       <select id="select1">
                         <option selected>All</option>
@@ -72,11 +79,13 @@
                         <option value="4">option 04</option>
                         <option value="5">option 05</option>
                       </select>
-                    </div>
-                  </div>
+                    </div> --}}
+                  {{!-- </div> --}}
                   <div class="search-input">
                     <input type="text" placeholder="Search" />
                   </div>
+
+
                   <div class="search-btn">
                     <button><i class="lni lni-search-alt"></i></button>
                   </div>
@@ -88,7 +97,7 @@
 
 
             <!--navbar right-->
-
+{{#if user}}
             <div class="col-lg-3 col-md-4 col-12">
               <div class="top-end">
                 <div class="user">
@@ -112,12 +121,13 @@
                       class="collapse navbar-collapse sub-menu-bar"
                       id="navbarSupportedContent"
                     >
+                 
                       <ul id="nav" class="navbar-nav ms-auto">
                         
                         <li class="nav-item">
                           <i class="lni lni-user"></i>
 
-                    
+                     
 
                           <a
                             class="dd-menu collapsed"
@@ -148,6 +158,7 @@
                               <button class="btn btn-primary" > <a href="/logout" style="color: #ffffff;" >Log Out</a></button>
                             </li>
                           </ul>
+                          
                         </li>
                         
                           </ul>
@@ -164,6 +175,7 @@
                  </div>
                 </div>
               </div>
+           
 
               <div class="col-lg-2 col-md-4 col-12">
                 <div class="navbar-cart">
@@ -255,9 +267,29 @@
                   </div>
                   <!--/ End Shopping Item -->
                 </div>
-              </div>
+               </div>
             </div>
 
+            {{else}}
+
+                <div class="col-lg-3 col-md-4 col-12">
+              <div class="top-end">
+                <div class="user">
+                  <i class="lni lni-user"></i>
+                  Hello, User
+                </div>
+                
+                <ul class="user-login">
+                  <li>
+                    <a href="/login">Sign In</a>
+                  </li>
+                  <li>
+                    <a href="/signup">Register</a>
+                  </li>
+                </ul>
+               </div>
+              </div>
+              {{/if}}
           
              <!--/ navbar right ends -->        
 
@@ -277,36 +309,9 @@
                   ><i class="lni lni-menu"></i>All Categories</span
                 >
                 <ul class="sub-category">
-                  <li>
-                    <a href="product-grids.html"
+                  <li><a href="product-grids.html"
                       >Electronics <i class="lni lni-chevron-right"></i
-                    ></a>
-                    <ul class="inner-sub-category">
-                      <li><a href="product-grids.html">Digital Cameras</a></li>
-                      <li><a href="product-grids.html">Camcorders</a></li>
-                      <li><a href="product-grids.html">Camera Drones</a></li>
-                      <li><a href="product-grids.html">Smart Watches</a></li>
-                      <li><a href="product-grids.html">Headphones</a></li>
-                      <li><a href="product-grids.html">MP3 Players</a></li>
-                      <li><a href="product-grids.html">Microphones</a></li>
-                      <li><a href="product-grids.html">Chargers</a></li>
-                      <li><a href="product-grids.html">Batteries</a></li>
-                      <li>
-                        <a href="product-grids.html">Cables & Adapters</a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li><a href="product-grids.html">accessories</a></li>
-                  <li><a href="product-grids.html">Televisions</a></li>
-                  <li><a href="product-grids.html">best selling</a></li>
-                  <li><a href="product-grids.html">top 100 offer</a></li>
-                  <li><a href="product-grids.html">sunglass</a></li>
-                  <li><a href="product-grids.html">watch</a></li>
-                  <li><a href="product-grids.html">man’s product</a></li>
-                  <li><a href="product-grids.html">Home Audio & Theater</a></li>
-                  <li><a href="product-grids.html">Computers & Tablets </a></li>
-                  <li><a href="product-grids.html">Video Games </a></li>
-                  <li><a href="product-grids.html">Home Appliances </a></li>
+                    ></a></li>
                 </ul>
               </div>
               <!-- End Mega Category Menu -->
@@ -332,7 +337,7 @@
                   <ul id="nav" class="navbar-nav ms-auto">
                     <li class="nav-item">
                       <a
-                        href="/views/user/homepage.html"
+                        href="/"
                         class="active"
                         aria-label="Toggle navigation"
                         >Home</a

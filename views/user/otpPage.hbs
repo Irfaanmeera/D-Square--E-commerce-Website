@@ -72,9 +72,9 @@
 <div class="d-flex justify-content-center align-items-center container">
     <div class="card py-5 px-3">
         <form action="/verify" method="post">
-        <h5 class="text-center text-danger mb-2 mx-1 mx-md-4 mt-3">{{message}}</h5>
+        <h5 class="text-center text-white mb-2 mx-1 mx-md-4 mt-3">{{message}}</h5>
             <h6 class="m-0 text-center text-white">OTP Email verification</h6>
-            <span class="mobile-text mt-2">Please Enter the one time password to verify your account
+            <span class="mobile-text mt-2">Please enter the one time password send to your mail id to verify your account
               
                 <b class="text-danger">{{user.email}}</b></span>
                
@@ -84,10 +84,10 @@
                 <input type="number" maxlength="1" oninput="index" class="form-control a" name="otp" required />
                 <input type="number" maxlength="1" oninput="index" class="form-control a" name="otp" required />
             </div>
-            <div class="text-danger text-center mt-3"><p id="timer"></p></div>
+            <div class="text-white text-center mt-3"><p id="timer"></p></div>
             
             <div class="text-center mt-3"><span class="d-block mobile-text">Didn't
-                    receive the code?</span><a href="/resendOtp" class="font-weight-bold text-danger cursor">Resend</a>
+                    receive the code?</span><a href="/resendOtp" class="font-weight-bold text-white cursor">Resend</a>
             </div>
             <div class="text-center mt-3">
                 <span><input type="submit" value="Verify OTP" class="btn btn-primary" /></span>

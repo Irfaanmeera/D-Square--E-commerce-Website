@@ -1,4 +1,6 @@
 const userCollection = require("../models/userModel");
+const productCollection = require('../models/productModel')
+const categoryCollection = require('../models/categoryModel')
 const transporter = require('../services/sendOtp')
 const nodemailer = require('nodemailer')
 const bcrypt = require("bcrypt");
@@ -8,11 +10,13 @@ const saltRound = 10;
 //homepage
 const userHomeController = async(req,res)=>{
   let user = req.session.user;
-  
+  let productData = await productCollection.find({}).lean()
+  let categoryData = await categoryCollection.find({},{categoryName:true})
 if(req.session.user){
-        res.render('user/homepageUser',{user});
+
+        res.render('user/homepageUser',{user,productData,categoryData});
     }else{
-        res.redirect('/login')
+        res.render('user/homepageUser',{productData})
     }
 }
 
@@ -27,20 +31,26 @@ const loginControler = async (req, res) => {
 
 //lgoinpost conrtoler
 const loginPostControler = async (req, res) => {
+  const{email,password} =req.body;
 
-  const userFind = await userCollection.findOne({ email: req.body.email });
-  if (userFind) {
-    const password = await bcrypt.compare(req.body.password, userFind.password);
+  const user = await userCollection.findOne({email});
+  if (user) {
+    const password = await bcrypt.compare(req.body.password, user.password);
 
-    if (password) {
-      req.session.user = req.body;
-
-    console.log(req.session.user);
-    res.redirect('/');
-    } else {
+     if (password) {
+      
+        if(user.isBlocked){
+          res.render("user/login", { message: "You are blocked by admin" });
+        }else{
+          req.session.user = user;
+          res.redirect('/');
+        }
+      console.log(req.session.user);
+   
+     }else{
       res.render("user/login", { message: "Invalid Password" });
     }
-  } else {
+  }else{
     res.render("user/login", { message: "Invalid Email" });
   }
 };
@@ -135,9 +145,6 @@ const signupPostControler = async (req, res) => {
 
 //resend otp
 
-
-//signup post controller
-
 const resendOtp = async (req, res) => {
 
   const email = req.session.email || req.body.email;
@@ -196,12 +203,31 @@ const verifyOtp = async(req,res)=>{
   console.log(otp)
   
   if (sessionOTP == otp) {
-      return res.render('user/otpSuccess');
+       res.render('user/otpSuccess');
   } else {
-      return res.render('user/otpPage',{message:'Invalid otp'});
+      res.render('user/otpPage',{message:'Invalid otp'});
   }
 
 };
+
+//product details page
+
+const productDetails = async(req,res)=>{
+  try{
+    const currentProduct = await productCollection.findOne({_id:req.query.id})
+    const productData = await productCollection.find({})
+    if(req.session.user){
+      res.render('user/product-details',{user:req.session.user,currentProduct,productData})
+    }else{
+      res.render('user/product-details',{currentProduct,productData})
+    }
+  }catch(error){
+    console.log(error)
+  }
+}
+
+
+
 
 
 //logout
@@ -221,6 +247,8 @@ module.exports = {
   logoutControler,
   verifyOtp,
   resendOtp,
+  productDetails,
+
 
 
 };

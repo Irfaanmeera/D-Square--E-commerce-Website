@@ -1,12 +1,11 @@
 const userCollection = require("../models/userModel");
-const bcrypt = require("bcrypt");
-const saltRound = 10;
+const adminCollection= require('../models/adminModel')
+
 
 //load homepage
 const adminHomeController = async (req, res) => {
-  const userData = await userCollection.find({}).lean();
   if (req.session.admin) {
-    res.render("admin/home", { userData });
+    res.render("admin/home");
   } else {
     res.redirect("/admin/login");
   }
@@ -19,124 +18,64 @@ const adminLogin = (req, res) => {
 
 //login post page
 
-const adminLoginPostController = (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
+const adminLoginPostController = async (req, res) => {
+  const{email,password} =req.body;
 
-  if (email == "admin@gmail.com" && password == "admin") {
-    req.session.admin = req.body;
-    console.log(req.session.admin);
-    req.session.admin.loggedIn = true;
-    res.redirect("/admin");
-  } else {
+  const admin = await adminCollection.findOne(req.body);
+  if (admin){
+
+      req.session.admin= admin;
+
+      console.log(req.session.admin);
+      res.redirect('/admin');
+    } else {
     res.render("admin/login", { message: "Invalid Email or password" });
   }
 };
 
-//adduser
-const addUser = async (req, res) => {
-  if (req.session.admin) {
-    res.render("admin/add-user");
-  } else {
-    res.send("Unauthorized request");
+
+//user management
+
+const userManagement = async (req, res) => {
+  try {
+    let allUsersData = await userCollection.find({}, { password: false });
+    res.render("admin/userManagement", { allUsersData });
+  } catch (error) {
+    console.error(error);
   }
-};
+}
 
-//adduser post page
-
-const addUserPost = async (req, res) => {
-  // Validate input data
-  const { name, email, mobile } = req.body;
-
-  if (!name || name.trim() === "" || name.length < 0 || !email || !mobile) {
-    return res.status(400).send("Name, email, and mobile are required.");
-  }
-
-  // Additional validation for email format
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    return res.status(400).send("Invalid email address.");
-  }
-
-  //validation for mobile number
-  const mobileRegex = /^\d{10}$/;
-  if (!mobileRegex.test(mobile)) {
-    return res
-      .status(400)
-      .send("Invalid mobile number. It should be a ten-digit number.");
-  }
-
-  //checking existing user
-  const existingUser = await userCollection.findOne({ email });
-  if (existingUser) {
-    res.render("admin/add-user", { message: "User Name already exists" });
-  } else {
-    const password = await bcrypt.hash(req.body.password, saltRound);
-
-    req.body.password = password;
-    const newUser = await userCollection.create(req.body);
-    
-    res.redirect("/admin");
-  }
-};
-
-//edit user
-const editUser = async (req, res) => {
-  if (req.session.admin) {
-    const userData = await userCollection.findOne({ _id: req.query.id }).lean();
-    console.log(userData);
-    res.render("admin/edit-user", { userData });
-  } else {
-    res.send("Unauthorized request");
-  }
-};
-
-//edit user post
-
-const editUserPost = async (req, res) => {
-  // Validate input data
-  const { name, email, mobile } = req.body;
-
-  if (!name || name.trim() === "" || name.length < 0 || !email || !mobile) {
-    return res.status(400).send("Name, email, and mobile are required.");
-  }
-
-  // Additional validation for email format
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    return res.status(400).send("Invalid email address.");
-  }
-
-  //validation for mobile number
-  const mobileRegex = /^\d{10}$/;
-  if (!mobileRegex.test(mobile)) {
-    return res
-      .status(400)
-      .send("Invalid mobile number. It should be a ten-digit number.");
-  }
-
-  const updatedUser = await userCollection
-    .findByIdAndUpdate(
+//block user
+const blockUser = async (req, res) => {
+  try {
+  const blockedUser =  await userCollection.findOneAndUpdate(
       { _id: req.query.id },
-      {
-        $set: {
-          name: req.body.name,
-          email: req.body.email,
-          mobile: req.body.mobile,
-        },
-      }
-    )
-    .lean();
-  console.log(updatedUser);
+      { $set: { isBlocked: true } }
+    );
+    console.log(blockedUser)
+    res.json({success: true})
+  } catch (error) {
+    console.error(error);
+  }
+}
 
-  res.redirect("/admin");
-};
+//unblock user
+const unBlockUser = async (req, res) => {
+  try {
+    await userCollection.findOneAndUpdate(
+      { _id: req.query.id },
+      { $set: { isBlocked: false } }
+    );
+    res.json({success: true})
+  } catch (error) {
+    console.error(error);
+  }
+}
 
-//delete user
-const deleteUser = async (req, res) => {
-  await userCollection.findByIdAndDelete({ _id: req.query.id });
-  res.redirect("/admin");
-};
+
+
+
+
 
 //admin logout
 
@@ -151,10 +90,8 @@ module.exports = {
   adminHomeController,
   adminLogin,
   adminLoginPostController,
-  addUser,
-  editUser,
-  editUserPost,
-  deleteUser,
-  addUserPost,
   adminlogout,
+  userManagement,
+  blockUser,
+  unBlockUser,
 };
