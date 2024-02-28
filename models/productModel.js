@@ -13,8 +13,7 @@ const productSchema = mongoose.Schema({
     
   },
   category:{
-    type: mongoose.Types.ObjectId,
-    
+    type:String,
   },
   brand:{
     type:String,
@@ -56,7 +55,9 @@ const productSchema = mongoose.Schema({
 
 },{
   timestamps:true
-})
+},
+
+)
 
 
 const productCollection= mongoose.model('products',productSchema)

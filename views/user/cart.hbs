@@ -1,4 +1,22 @@
 {{>userHeader}} 
+
+<div class="breadcrumbs">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 col-md-6 col-12">
+                    <div class="breadcrumbs-content">
+                        <h1 class="page-title">Cart</h1>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-12">
+                    <ul class="breadcrumb-nav">
+                        <li><a href="/"><i class="lni lni-home"></i> Home</a></li>
+                        <li>Cart</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
         <section class="h-100 gradient-custom">
             <div class="container py-5">
               <div class="row d-flex justify-content-center my-4">
@@ -9,23 +27,28 @@
                     </div>
                     <div class="card-body">
                       <!-- Single item -->
+                      {{#each userCart}}  
                       <div class="row">
+                          
                         <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
                           <!-- Image -->
                           <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
-                            <img src="https://rukminim2.flixcart.com/image/832/832/k5vcya80pkrrdj/speaker/laptop-desktop-speaker/9/h/z/zebronics-zeb-warrior-original-imafmyptqxt2dubt.jpeg?q=70&crop=false"
-                              class="w-70" alt="Blue Jeans Jacket" />
-                            <a href="#!">
+                            <img src="/images/productImages/{{this.productId.productImage1}}"
+                              class="w-70" alt="{{this.productId.productName}}" />
+                            <a href="/addToCart/?id={{this.productId._id}}">
                               <div class="mask" style="background-color: rgba(185, 174, 174, 0.2)"></div>
                             </a>
                           </div>
                           <!-- Image -->
                         </div>
-          
+                         
+      
+             
+
                         <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
                           <!-- Data -->
-                          <p><strong>Zebronics Speaker</strong></p>
-                          <p>Color: black</p>
+                          <p><strong>{{this.productId.productName}}</strong></p>
+                          
                           <button type="button" class="btn btn-dark btn-sm me-1 mb-2" data-mdb-toggle="tooltip"
                             title="Remove item">
                             <i class="fas fa-trash"></i>
@@ -36,6 +59,7 @@
                           </button>
                           <!-- Data -->
                         </div>
+                        
           
                         <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
                           <!-- Quantity -->
@@ -46,7 +70,7 @@
                             </button>
           
                             <div class="form-outline">
-                              <input id="form1" min="0" name="quantity" value="1" type="number" class="form-control" />
+                              <input id="form1" min="0" name="quantity" value="{{this.productId.productQuantity}}" type="number" class="form-control" />
                               <label class="form-label" for="form1">Quantity</label>
                             </div>
           
@@ -59,17 +83,19 @@
           
                           <!-- Price -->
                           <p class="text-start text-md-center">
-                            <strong>$17.99</strong>
+                            <strong>{{this.productId.productPrice}}</strong>
                           </p>
                           <!-- Price -->
                         </div>
+                         
                       </div>
+                    {{/each}}
                       <!-- Single item -->
           
                       <hr class="my-4" />
           
                       <!-- Single item -->
-                      <div class="row">
+                      {{!-- <div class="row">
                         <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
                           <!-- Image -->
                           <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
@@ -125,7 +151,7 @@
                           </p>
                           <!-- Price -->
                         </div>
-                      </div>
+                      </div> --}}
                       <!-- Single item -->
                     </div>
                   </div>

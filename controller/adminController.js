@@ -4,7 +4,9 @@ const adminCollection= require('../models/adminModel')
 
 //load homepage
 const adminHomeController = async (req, res) => {
+
   if (req.session.admin) {
+    console.log(req.session.admin)
     res.render("admin/home");
   } else {
     res.redirect("/admin/login");
@@ -13,7 +15,11 @@ const adminHomeController = async (req, res) => {
 
 //login page
 const adminLogin = (req, res) => {
+  if(req.session.admin){
+    res.redirect('/admin')
+  }else{
   res.render("admin/login"); 
+  }
 };
 
 //login post page
@@ -38,8 +44,10 @@ const adminLoginPostController = async (req, res) => {
 
 const userManagement = async (req, res) => {
   try {
+    if(req.session.admin){
     let allUsersData = await userCollection.find({}, { password: false });
     res.render("admin/userManagement", { allUsersData });
+    }
   } catch (error) {
     console.error(error);
   }
@@ -48,13 +56,15 @@ const userManagement = async (req, res) => {
 //block user
 const blockUser = async (req, res) => {
   try {
+    if(req.session.admin){
   const blockedUser =  await userCollection.findOneAndUpdate(
       { _id: req.query.id },
       { $set: { isBlocked: true } }
     );
     console.log(blockedUser)
     res.json({success: true})
-  } catch (error) {
+  }
+  }catch (error) {
     console.error(error);
   }
 }
@@ -62,11 +72,13 @@ const blockUser = async (req, res) => {
 //unblock user
 const unBlockUser = async (req, res) => {
   try {
+    if(req.session.admin){
     await userCollection.findOneAndUpdate(
       { _id: req.query.id },
       { $set: { isBlocked: false } }
     );
     res.json({success: true})
+    }
   } catch (error) {
     console.error(error);
   }

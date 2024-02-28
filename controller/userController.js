@@ -4,6 +4,7 @@ const categoryCollection = require('../models/categoryModel')
 const transporter = require('../services/sendOtp')
 const nodemailer = require('nodemailer')
 const bcrypt = require("bcrypt");
+const cartCollection = require("../models/cartModel");
 const saltRound = 10;
 
 
@@ -45,7 +46,6 @@ const loginPostControler = async (req, res) => {
           req.session.user = user;
           res.redirect('/');
         }
-      console.log(req.session.user);
    
      }else{
       res.render("user/login", { message: "Invalid Password" });
@@ -214,13 +214,23 @@ const verifyOtp = async(req,res)=>{
 
 const productDetails = async(req,res)=>{
   try{
-    const currentProduct = await productCollection.findOne({_id:req.query.id})
+    const currentProduct = await productCollection.findOne({_id:req.params.id})
+    console.log(currentProduct._id)
+
     const productData = await productCollection.find({})
     if(req.session.user){
-      res.render('user/product-details',{user:req.session.user,currentProduct,productData})
-    }else{
-      res.render('user/product-details',{currentProduct,productData})
+      const cartProduct = await cartCollection.findOne({userId:req.session.user._id,productId:req.params.id})
+      if(cartProduct){
+         var cartProductQuantity = cartProduct.productQuantity
+      }
     }
+      let productQtyLimit =[],i=0;
+      while(i<(currentProduct.productStock-cartProductQuantity)){
+        productQtyLimit.push(i+1)
+        i++;
+      }
+      res.render('user/product-details',{user:req.session.user,currentProduct,productData,productQtyLimit})
+    
   }catch(error){
     console.log(error)
   }

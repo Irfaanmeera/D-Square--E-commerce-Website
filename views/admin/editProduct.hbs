@@ -142,6 +142,13 @@
         {{!-- <div class="mb-3">
              <input name="category" id="category" type="text" class="form-control" value="{{product.category}}">
         </div> --}}
+		    <div class="mb-3">
+            <label for="productName" class="form-label">Select Category</label>
+            <select name="category" class="form-select"  aria-label="Default select example">
+              {{#each categoryData}}
+                <option>{{this.categoryName}}</option>
+                {{/each}}
+        </div>
         <div class="mb-3">
            
             <input name="brand" id="brand" type="text" class="form-control" value="{{product.brand}}">

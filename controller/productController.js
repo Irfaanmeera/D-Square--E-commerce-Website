@@ -5,13 +5,16 @@ const sharpImage= require('../services/sharp')
 
 
 
+
+
 //get product controller
 
 const loadProduct = async(req,res)=>{
     try{
       if(req.session.admin){
-      const productData = await productCollection.find({}).lean()
-      let categoryData= await categoryCollection.find({},{ categoryName: true }).lean();
+      const productData = await productCollection.find({});
+      
+      const categoryData= await categoryCollection.find({},{categoryName: true });
         res.render('admin/product',{productData,categoryData})
       }else{
         res.redirect('/admin/login')
@@ -75,7 +78,8 @@ const editProduct = async(req,res)=>{
      if(req.session.admin){
    
        const product= await productCollection.findOne({_id:req.query.id}).lean()
-       res.render('admin/editProduct',{product})
+       let categoryData= await categoryCollection.find({},{ categoryName: true }).lean();
+       res.render('admin/editProduct',{product,categoryData})
      }else{
       res.redirect('/admin/login')
      }
@@ -88,11 +92,13 @@ const editProduct = async(req,res)=>{
 //edit product post controller
 const editProductPost = async (req, res) => {
   try {
+    if(req.session.admin){
     const updateFields = {
       $set: {
         productName: req.body.productName,
         productPrice: req.body.productPrice,
         productDescription:req.body.productDescription,
+        category:req.body.category,
         brand: req.body.brand,
         productStock: req.body.productStock,
       },
@@ -125,6 +131,7 @@ const editProductPost = async (req, res) => {
     console.log(updatedProduct);
 
     res.redirect("/admin/product");
+    }
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
@@ -135,11 +142,12 @@ const editProductPost = async (req, res) => {
 
 const deleteProduct = async(req,res)=>{
   try{
-  
+    if(req.session.admin){
     const deletedProduct = await productCollection.findByIdAndDelete({_id:req.query.id})
     res.redirect('/admin/product')
     
     console.log(deletedProduct)
+    }
   }catch(error){
     console.log(error)
   }

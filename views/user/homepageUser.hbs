@@ -126,11 +126,11 @@
             
             <div class="single-product ">
               <div class="product-image">
-                <a href="/productDetails/?id={{this._id}}">
+                <a href="/productDetails/{{this._id}}">
                 <img style="width:150px;height:200px; margin-left:27px;" src="/images/productImages/{{this.productImage1}}" alt="Product Image" /></a>
                {{#if user}}
                 <div class="button">
-                  <a href="/productDetails/?id={{this._id}}" class="btn"
+                  <a href="/productDetails/{{this._id}}" class="btn"
                     ><i class="lni lni-cart"></i> Add to Cart</a
                   >
                 </div>
@@ -140,7 +140,7 @@
               <div class="product-info">
                 
                 <h4 class="title">
-                  <a href="/productDetails/?id={{this._id}}">{{this.productName}}</a>
+                  <a href="/productDetails/{{this._id}}">{{this.productName}}</a>
                 </h4>
                 <ul class="review">
                   <li><i class="lni lni-star-filled"></i></li>

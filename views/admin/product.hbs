@@ -133,7 +133,7 @@
 				<img src="https://media.licdn.com/dms/image/C5603AQFSg4R-IWdHpg/profile-displayphoto-shrink_200_200/0/1652343116317?e=1714003200&v=beta&t=pmFIU8GF6HCKqo4Wt4oyk5Ws-GDJy-mHECO-4ejmtdE">
 			</a>
 		    	
-<a href="/admin/login" class="btn text-white px-4" id="logoutbtn">Logout</a>	
+<a href="/admin/logout" class="btn text-white px-4" id="logoutbtn">Logout</a>	
 
 		</nav>
 		<!-- NAVBAR -->
@@ -179,9 +179,9 @@
                     {{#each productData}}
                     <tr>
                         <td>{{this.productName}}</td>
-						<td>₹ {{this.productPrice}}</td> 
+						<td>₹ {{this.productPrice}}</td>
                          <td> {{this.category}}</td>
-       
+                    
                       
                        
                         <td><img src="/images/productImages/{{this.productImage1}}"  style="width: 50px; height: 50px"></td>
