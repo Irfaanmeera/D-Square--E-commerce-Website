@@ -87,7 +87,7 @@ const cartLoad = async(req,res)=>{
     const count = await cartCollection.countDocuments({ userId:req.session.user._id  });
 
     console.log(req.session.grandTotal)
-    res.render('user/cartDetail',{user:req.session.user,cartData,grandTotal:req.session.grandTotal,count})
+    res.render('user/cart',{user:req.session.user,cartData,grandTotal:req.session.grandTotal,count})
 
     }catch(error){
        console.log(error)
