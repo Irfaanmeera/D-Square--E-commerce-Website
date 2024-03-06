@@ -2,7 +2,6 @@ const express = require ('express')
 const app = express();
 const nocache = require("nocache");
 const bodyparser = require("body-parser");
-const authRouter = require('./routes/authRoute')
 const userRouter = require("./routes/user");
 const adminRouter = require("./routes/admin");
 const hbs = require('hbs');
@@ -40,7 +39,7 @@ app.use(flash());
 
 
 
-app.use('/api/user',authRouter);
+
 app.use("/", userRouter);
 app.use("/admin", adminRouter);
 

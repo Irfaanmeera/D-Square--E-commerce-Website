@@ -192,7 +192,7 @@
                                 </div>
                             </div>
                             
-        <button type="submit" onclick="addProduct()" class="btn ms-auto" id="submitbtn" >Save Product</button>
+        <button  onclick="addProduct()" class="btn ms-auto" id="submitbtn" >Save Product</button>
     </form>
 </div>
 </div>
@@ -254,8 +254,14 @@
             Swal.fire({
                 icon: 'success',
                 title: 'Your Product Added Successfully!',
+				
                 showConfirmButton: false,
-                timer: 1000
+                timer: 3000,
+				
+				didClose: () => {
+        // Submit the form programmatically after the SweetAlert message is closed
+                document.getElementById("addProductForm").submit();
+      }
             })
         }
     </script>

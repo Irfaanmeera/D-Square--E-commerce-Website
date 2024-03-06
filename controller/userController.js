@@ -1,25 +1,35 @@
 const userCollection = require("../models/userModel");
-const productCollection = require('../models/productModel')
-const categoryCollection = require('../models/categoryModel')
-const transporter = require('../services/sendOtp')
-const nodemailer = require('nodemailer')
+const productCollection = require("../models/productModel");
+const categoryCollection = require("../models/categoryModel");
+const transporter = require("../services/sendOtp");
 const bcrypt = require("bcrypt");
 const cartCollection = require("../models/cartModel");
 const saltRound = 10;
 
-
 //homepage
-const userHomeController = async(req,res)=>{
+const userHomeController = async (req, res) => {
   let user = req.session.user;
-  let productData = await productCollection.find({}).lean()
-  let categoryData = await categoryCollection.find({},{categoryName:true})
-if(req.session.user){
-
-        res.render('user/homepageUser',{user,productData,categoryData});
-    }else{
-        res.render('user/homepageUser',{productData})
-    }
-}
+  let productData = await productCollection.find({}).lean();
+  let categoryData = await categoryCollection.find({}, { categoryName: true });
+  const cartData = await cartCollection
+    .find({ userId: req.session?.user?._id })
+    .populate("productId");
+  const count = await cartCollection.countDocuments({
+    userId: req.session?.user?._id,
+  });
+  if (req.session.user) {
+    res.render("user/homepageUser", {
+      user,
+      productData,
+      categoryData,
+      grandTotal: req.session.grandTotal,
+      count,
+      cartData,
+    });
+  } else {
+    res.render("user/homepageUser", { productData });
+  }
+};
 
 //logincontroller
 const loginControler = async (req, res) => {
@@ -32,29 +42,26 @@ const loginControler = async (req, res) => {
 
 //lgoinpost conrtoler
 const loginPostControler = async (req, res) => {
-  const{email,password} =req.body;
+  const { email, password } = req.body;
 
-  const user = await userCollection.findOne({email});
+  const user = await userCollection.findOne({ email });
   if (user) {
     const password = await bcrypt.compare(req.body.password, user.password);
 
-     if (password) {
-      
-        if(user.isBlocked){
-          res.render("user/login", { message: "You are blocked by admin" });
-        }else{
-          req.session.user = user;
-          res.redirect('/');
-        }
-   
-     }else{
+    if (password) {
+      if (user.isBlocked) {
+        res.render("user/login", { message: "You are blocked by admin" });
+      } else {
+        req.session.user = user;
+        res.redirect("/");
+      }
+    } else {
       res.render("user/login", { message: "Invalid Password" });
     }
-  }else{
+  } else {
     res.render("user/login", { message: "Invalid Email" });
   }
 };
-
 
 //signup
 const signupControler = async (req, res) => {
@@ -65,200 +72,250 @@ const signupControler = async (req, res) => {
   }
 };
 
+//userLoginModel
+const userLoginModel = async (req, res, next) => {
+  try {
+   
+    const { name, email, mobile } = req.body;
 
-//signup post controller
+    if (!name || name.trim() === "" || name.length < 0 || !email || !mobile) {
+      return res.render("user/signup", {
+        message: "Name, email, and mobile are required",
+      });
+    }
+   
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.render("user/signup", { message: "Invalid email id" });
+    }
 
-const signupPostControler = async (req, res) => {
-  // Validate input data
-  const { name, email, mobile } = req.body;
+    const mobileRegex = /^\d{10}$/;
+    if (!mobileRegex.test(mobile)) {
+      return res.render("user/signup", { message: "Invalid mobile number" });
+    }
 
-  if (!name || name.trim() === "" || name.length < 0 || !email || !mobile) {
-      return res.render('user/signup',{message:"Name, email, and mobile are required"});
-  }
+    const existingUser = await userCollection.findOne({
+      email,
+      isBlocked: false,
+    });
 
-  // Additional validation for email format
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-      return res.render('user/signup',{message:"Invalid email id"});
-  }
-
-  //validation for mobile number
-  const mobileRegex = /^\d{10}$/;
-  if (!mobileRegex.test(mobile)) {
-      return res.render('user/signup',{message:"Invalid mobile number"});
-  }
-
-  const existingUser = await userCollection.findOne({ email, isBlocked:false});
-
-  if (existingUser) {
+    if (existingUser) {
       return res.render("user/signup", { message: "User Name already exists" });
+    }
+
+    const password = await bcrypt.hash(req.body.password, saltRound);
+
+    req.session.tempUserData = {
+      name: req.body.name,
+      email: req.body.email,
+      mobile: req.body.mobile,
+      password: password,
+    };
+    // req.session.user = req.body;
+    // req.session.loggedIn = true;
+    console.log(req.session.tempUserData);
+    next();
+  } catch (error) {
+    console.log(error);
   }
-
-  const password = await bcrypt.hash(req.body.password, saltRound);
-  req.body.password = password;
-
-  const newUser = await userCollection.create(req.body);
-  req.session.user = req.body;
-  req.session.loggedIn = true;
-  
-//noedmailer email verification
-
-  const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
-    requireTLS: true,
-    auth: {
-        user: 'irfaanmeera@gmail.com',
-        pass: 'tayk wqro aapk jryl'
-    }
-  });
-  
-  const otp = Math.floor(1000 + Math.random() * 9000);
-  
-  req.session.otp = otp;
-  req.session.email = email;
-  
-  const expirationTime = new Date();
-  expirationTime.setMinutes(expirationTime.getMinutes() + 5);
-  
-  req.session.otpExpiration = expirationTime;
-  console.log(req.session.otpExpiration)
-  
-  const mailOptions = {
-    from: 'irfaanmeera@gmail.com',
-    to: email,
-    subject: 'Registration OTP for D Square',
-    html: `Your OTP is ${otp}`
-  };
-  
-  transporter.sendMail(mailOptions, function(error, info) {
-    if (error) {
-        console.log(error);
-        return res.status(500).send("Error sending OTP");
-    } else {
-        console.log('Email has been sent:', info.response);
-         res.render("user/otpPage",{ expirationTime: expirationTime.toISOString() });
-    }
-  })
-  };
-
-//resend otp
-
-const resendOtp = async (req, res) => {
-
-  const email = req.session.email || req.body.email;
-
-//noedmailer email verification
-
-  const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
-    requireTLS: true,
-    auth: {
-        user: 'irfaanmeera@gmail.com',
-        pass: 'tayk wqro aapk jryl'
-    }
-  });
-  
-  const otp = Math.floor(1000 + Math.random() * 9000);
-  
-  req.session.otp = otp;
-  req.session.email = email;
-
-  
-  const expirationTime = new Date();
-  expirationTime.setMinutes(expirationTime.getMinutes() + 5);
-  
-  req.session.otpExpiration = expirationTime;
-  console.log(req.session.otpExpiration)
-  
-  const mailOptions = {
-    from: 'irfaanmeera@gmail.com',
-    to: email,
-    subject: 'Registration OTP for D Square',
-    html: `Your OTP is ${otp}`
-  };
-  
-  transporter.sendMail(mailOptions, function(error, info) {
-    if (error) {
-        console.log(error);
-        return res.status(500).send("Error sending OTP");
-    } else {
-        console.log('Email has been sent:', info.response);
-         res.render("user/otpPage",{ expirationTime: expirationTime.toISOString(),message:'OTP Resent'});
-    }
-  })
-  };
-
-//otp post controller
-const verifyOtp = async(req,res)=>{
-  const otp = req.body.otp.join('');
-  const email = req.session.email;
-  const sessionOTP = req.session.otp;
-  const expirationTime = req.session.otpExpirationTime;
-
-  console.log(sessionOTP);
-  console.log(otp)
-  
-  if (sessionOTP == otp) {
-       res.render('user/otpSuccess');
-  } else {
-      res.render('user/otpPage',{message:'Invalid otp'});
-  }
-
 };
 
-//product details page
+//sendOtp
+const sendOtp = async (req, res) => {
+  const otp = Math.floor(1000 + Math.random() * 9000);
+  req.session.otp = otp;
+  req.session.emailofNewUser = req.body.email;
 
-const productDetails = async(req,res)=>{
-  try{
-    const currentProduct = await productCollection.findOne({_id:req.params.id})
-    console.log(currentProduct._id)
+  const expirationTime = new Date();
+  expirationTime.setMinutes(expirationTime.getMinutes() + 5);
 
-    const productData = await productCollection.find({})
-    if(req.session.user){
-      const cartProduct = await cartCollection.findOne({userId:req.session.user._id,productId:req.params.id})
-      if(cartProduct){
-         var cartProductQuantity = cartProduct.productQuantity
-      }
+  req.session.otpExpiration = expirationTime;
+  console.log(req.session.otpExpiration);
+
+  const mailOptions = {
+    from: "irfaanmeera@gmail.com",
+    to: `${req.session.emailofNewUser}`,
+    subject: "Registration OTP for D Square",
+    html: `Your OTP is ${otp}`,
+  };
+
+  await transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+      return res.status(500).send("Error sending OTP");
+    } else {
+      console.log("Email has been sent:", info.response);
+      res.render("user/otpPage", {
+        expirationTime: expirationTime.toISOString(),
+      });
     }
-      let productQtyLimit =[],i=0;
-      while(i<(currentProduct.productStock-cartProductQuantity)){
-        productQtyLimit.push(i+1)
-        i++;
-      }
-      res.render('user/product-details',{user:req.session.user,currentProduct,productData,productQtyLimit})
-    
+  });
+};
+
+//signup Post controller
+const signupPostController = async (req, res) => {
+  try {
+    const otp = req.body.otp.join("");
+    const sessionOTP = req.session.otp;
+
+    if (sessionOTP == otp) {
+      await userCollection.create(req.session.tempUserData);
+      req.session.user = await userCollection.findOne({
+        email: req.session.tempUserData.email,
+      });
+      res.redirect("/");
+
+      console.log(req.session.user);
+    } else {
+      res.render("user/otpPage", { message: "Invalid otp" });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+//forgot password
+const forgotPassword = async(req,res)=>{
+  try{
+    res.render('user/forgotPassword')
   }catch(error){
     console.log(error)
   }
 }
 
+//forgot user post controller
+const forgotPasswordUsermodel = async (req,res,next)=>{
+  try{
+    console.log(req.body)
+     const forgotUserData = await userCollection.findOne({email:req.body.email})
+     if(!forgotUserData){
+      res.render('user/forgotPassword',{message:'Email not Exist,Enter registered email id'})
+     }else{
+      req.session.forgotUserData = forgotUserData;
+      next();
+     }
+  }catch(error){
+    console.log(error)
+  }
+}
 
+//send otp for forgot password
+const sendForgotPwdOtp = async (req,res)=>{
+  try{
+    const otp = Math.floor(1000 + Math.random() * 9000);
+    req.session.otp = otp;
+ 
+  
+    const expirationTime = new Date();
+    expirationTime.setMinutes(expirationTime.getMinutes() + 5);
+  
+    req.session.otpExpiration = expirationTime;
+    console.log(req.session.otpExpiration);
+  
+    const mailOptions = {
+      from: "irfaanmeera@gmail.com",
+      to: `${req.body.email}`,
+      subject: "Password Reset OTP for D Square",
+      html: `Your OTP is ${otp}`,
+    };
+  
+    await transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+        return res.status(500).send("Error sending OTP");
+      } else {
+        console.log("Email has been sent:", info.response);
+        res.render("user/forgotPasswordOtp", {
+          expirationTime: expirationTime.toISOString(),
+        });
+      }
+    });
+  }catch(error){
+    console.log(error)
+  }
+}
+//forgot password reset get controller
+const forgotPasswordResetPage = async(req,res)=>{
+  try{
+   res.render('user/forgotPasswordReset')
+  }catch(error){
+    console.log(error)
+  }
+}
 
+//forgot password reset post controller
+  const forgotPasswordReset = async(req,res)=>{
+    try{
+        let encryptedPassword = await bcrypt.hashSync(req.body.newPassword,saltRound)
+       let resetPasswordUser = await userCollection.findOneAndUpdate({_id:req.session.forgotUserData._id},{$set:{password:encryptedPassword}})
+        res.redirect('/login')
+        console.log(resetPasswordUser)
+    }catch(error){
+      console.log(error)
+    }
+  }
+
+//product details page
+const productDetails = async (req, res) => {
+  try {
+    const currentProduct = await productCollection.findOne({
+      _id: req.params.id,
+    });
+    console.log(currentProduct._id);
+    const count = await cartCollection.countDocuments({
+      userId: req.session?.user?._id,
+    });
+
+    const productData = await productCollection.find({});
+    if (req.session.user) {
+      const cartProduct = await cartCollection.findOne({
+        userId: req.session.user._id,
+        productId: req.params.id,
+      });
+      if (cartProduct) {
+        var cartProductQuantity = cartProduct.productQuantity;
+      }
+    }
+    let productQtyLimit = [],
+      i = 0;
+    while (i < currentProduct.productStock - cartProductQuantity) {
+      productQtyLimit.push(i + 1);
+      i++;
+    }
+    res.render("user/product-details", {
+      user: req.session.user,
+      currentProduct,
+      productData,
+      productQtyLimit,
+      count,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 
 //logout
-
 const logoutControler = async (req, res) => {
   req.session.destroy();
   res.redirect("/login");
 };
 
-
 module.exports = {
   userHomeController,
   loginControler,
   signupControler,
-  signupPostControler,
+  userLoginModel,
+  signupPostController,
   loginPostControler,
   logoutControler,
-  verifyOtp,
-  resendOtp,
+  sendOtp,
   productDetails,
-
-
+  forgotPassword,
+  forgotPasswordUsermodel,
+  sendForgotPwdOtp,
+  forgotPasswordResetPage,
+  forgotPasswordReset,
 
 };

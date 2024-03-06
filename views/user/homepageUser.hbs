@@ -1,5 +1,4 @@
-
-    {{> userHeader}}
+{{> userHeader}}
 
     <!-- Start Hero Area -->
     <section class="hero-area">
@@ -117,8 +116,8 @@
           </div>
         </div>
         </div>
-       
-        <div class="container p-5">
+{{!--        
+        <div class="container">
         <div class="row">
            {{#each productData}}
           <div class="col-md-3 col-sm-12">
@@ -128,13 +127,8 @@
               <div class="product-image">
                 <a href="/productDetails/{{this._id}}">
                 <img style="width:150px;height:200px; margin-left:27px;" src="/images/productImages/{{this.productImage1}}" alt="Product Image" /></a>
-               {{#if user}}
-                <div class="button">
-                  <a href="/productDetails/{{this._id}}" class="btn"
-                    ><i class="lni lni-cart"></i> Add to Cart</a
-                  >
-                </div>
-                {{/if}}
+            
+               
               </div>
               
               <div class="product-info">
@@ -166,7 +160,44 @@
              
           </div>
          
-        </div>  
+        </div>   --}}
+
+        <div class="container">
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+    {{#each productData}}
+    <div class="col">
+      <!-- Start Single Product -->
+      <div class="single-product">
+        <div class="product-image">
+          <a href="/productDetails/{{this._id}}">
+            <img style="width:150px;height:200px; margin-left:27px;" src="/images/productImages/{{this.productImage1}}" alt="Product Image" />
+          </a>
+        </div>
+        <div class="product-info">
+          <h4 class="title">
+            <a href="/productDetails/{{this._id}}">{{this.productName}}</a>
+          </h4>
+          <ul class="review">
+            <li><i class="lni lni-star-filled"></i></li>
+            <li><i class="lni lni-star-filled"></i></li>
+            <li><i class="lni lni-star-filled"></i></li>
+            <li><i class="lni lni-star-filled"></i></li>
+            <li><i class="lni lni-star"></i></li>
+            <li><span>4.0 Review(s)</span></li>
+          </ul>
+          <div class="price">
+            <span>₹ {{this.productPrice}}</span>
+            <i class="fa-regular fa-heart" style="color: #1f59ea; margin-left: 20px;"></i>
+          </div>
+        </div>
+      </div>
+      <!-- End Single Product -->
+    </div>
+    {{/each}} 
+    <!-- End Single Product -->
+  </div>
+</div>
+
         
     </section>
     <!-- End Trending Product Area -->
@@ -267,3 +298,41 @@
     <!-- End Shipping Info -->
 
     {{>userFooter}}
+
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+     <script>
+    async function addToCart(id) {
+      try {
+        console.log('clicked' + id)
+
+        let productQuantity = document.getElementById('productQuantityInput').value
+        let bodyData = { productQuantity }
+        console.log(productQuantity)
+
+        let response = await fetch('/addToCart/' + id, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(bodyData)
+        })
+        let result = await response.json()
+        console.log('result' + result)
+        if (result.success) {
+          return await Swal.fire({
+            title: "<strong>Added to cart</strong>",
+            icon: "success",
+            showCloseButton: true,
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: `<a style="color: #ffffff;" href="/cart">Go to cart!</a>`,
+            confirmButtonColor: '#00008b',
+            confirmButtonAriaLabel: "Thumbs up, great!",
+            cancelButtonText: `Continue browsing`,
+            cancelButtonAriaLabel: "Thumbs down"
+          });
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  </script>
+    

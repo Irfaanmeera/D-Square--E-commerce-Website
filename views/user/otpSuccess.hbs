@@ -19,7 +19,14 @@
                 text: 'Your OTP has been successfully verified.',
                 onClose: function() {
                     // Redirect to the homepage after the alert is closed
-                    window.location.href = '/';
+               
+                    fetch('/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ /* Include any necessary data for the signup post function */ })
+        })
                 }
             });
         };
