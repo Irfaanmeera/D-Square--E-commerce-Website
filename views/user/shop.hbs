@@ -20,7 +20,7 @@ body {
   padding-right: 0;
 }
 
-#header {
+/*#header {
   width: 100%;
   margin:0;
   padding:0;
@@ -28,6 +28,7 @@ body {
   box-shadow: 5px 5px 15px #d3d2d2;
   
 }
+*/
 button.btn.btn-hide {
 
   background-color: #0066FF;
@@ -333,7 +334,7 @@ label {
   width: 100%;
   margin-top: 25px;
 }
-.slider {
+/*.slider {
   position: relative;
   z-index: 1;
   height: 5px;
@@ -394,6 +395,7 @@ label {
 .slider > .thumb.active {
   box-shadow: 0 0 0 10px rgba(63, 204, 75, 0.623);
 }
+*/
 input[type="range"] {
   position: absolute;
   pointer-events: none;
@@ -660,7 +662,7 @@ input[type="range"]::-webkit-slider-thumb {
             </div>
             <div class="product-info">
               <h4 class="title">
-                <a href="/productDetails/{{this._id}}">{{this.productName}}</a>
+                <a style="font-size:14px;" href="/productDetails/{{this._id}}">{{this.productName}}</a>
               </h4>
               <ul class="review">
                 <li><i class="lni lni-star-filled"></i></li>
@@ -671,12 +673,27 @@ input[type="range"]::-webkit-slider-thumb {
                 <li><span>4.0 Review(s)</span></li>
               </ul>
               <div class="price">
-                <span>₹ {{this.productPrice}}</span>
+                <span style="font-size:14px;" >₹ {{this.productPrice}}</span>
                 <i class="fa-regular fa-heart" style="color: #1f59ea; margin-left:80px;"></i>
               </div>
+          {{!-- {{#if user}}
+               <div>
+                <button onclick="addToCart('{{this._id}}')" class="btn btn-primary btn-sm mt-3"><i class="lni lni-cart"></i> Add to Cart</button>
+               </div>
+            {{else}}
+               <div>
+          <a href="/login"><button onclick="addToCart('{{this._id}}')" class="btn btn-primary btn-sm mt-3"><i class="lni lni-cart"></i> Add to Cart</button></a> 
+          {{/if}}
+               </div> --}}
+
             </div>
+            
+
+
+
           </div>
           <!-- End Single Product -->
+         
         </div>
         {{/each}}
       </div>
@@ -850,7 +867,7 @@ $(document).ready(function() {
         type: "double",
         grid: true,
         min: 0,
-        max: 200000,
+        max: 100000,
         from: 2000,
         to: 20000,
         step: 100,
@@ -867,6 +884,46 @@ $(document).ready(function() {
 });
 
 </script>
+
+
+
+   <!-- ========================= add to cart ========================= -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+     <script>
+    async function addToCart(id) {
+      try {
+        console.log('clicked' + id)
+
+   
+        let response = await fetch('/addToCart/' + id, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(bodyData)
+        })
+        let result = await response.json()
+        console.log('result' + result)
+        if (result.success) {
+          return await Swal.fire({
+            title: "<strong>Added to cart</strong>",
+            icon: "success",
+            showCloseButton: true,
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: `<a style="color: #ffffff;" href="/cart">Go to cart!</a>`,
+            confirmButtonColor: '#00008b',
+            confirmButtonAriaLabel: "Thumbs up, great!",
+            cancelButtonText: `Continue browsing`,
+            cancelButtonAriaLabel: "Thumbs down"
+          });
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  </script>
+
+
 
 
 {{> userFooter}}

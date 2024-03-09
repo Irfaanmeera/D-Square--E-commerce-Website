@@ -33,9 +33,15 @@ const addCategoryLoad =async(req,res)=>{
 const addCategory = async(req,res)=>{
     try{
       if(req.session.admin){
+       
       const { categoryName,categoryDescription } = req.body;
       //  await sharpImage.cropImage(req.files)
-     
+      let categoryExists = await categoryCollection.findOne({
+        categoryName: { $regex: new RegExp(req.body.categoryName, "i") },
+      });
+      console.log(categoryExists);
+
+      if(!categoryExists){
  
     const category = new categoryCollection({
       categoryName,
@@ -50,6 +56,11 @@ const addCategory = async(req,res)=>{
     res.redirect('/admin/category');
  }
 }
+      }else{
+        req.session.categoryExists = categoryExists;
+      
+        res.redirect("/admin/category");
+      }
 }catch(error){
     console.log(error.message)
 }
@@ -60,6 +71,7 @@ const editCategory = async(req,res)=>{
     try{
        if(req.session.admin){
      
+      
          const category= await categoryCollection.findOne({_id:req.query.id}).lean()
          res.render('admin/editCategory',{category})
        }
@@ -71,6 +83,7 @@ const editCategory = async(req,res)=>{
 //edit category post controller
 const editCategoryPost = async (req, res) => {
     try {
+      
       const updateFields = {
         $set: {
           categoryName: req.body.productName,
@@ -89,6 +102,7 @@ const editCategoryPost = async (req, res) => {
       console.log(updatedCategory);
   
       res.redirect("/admin/category");
+    
     } catch (error) {
       console.error(error);
       res.status(500).send("Internal Server Error");

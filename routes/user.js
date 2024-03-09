@@ -3,12 +3,12 @@ const { userHomeController, loginControler, signupControler, loginPostControler,
 const app =express.Router();
 const blockedUser = require('../middlewares/blockedUserCheck');
 const userAuth = require('../middlewares/userAuth')
-const {addToCart,cartLoad, deleteCart, increaseCart, decreaseCart,} = require("../controller/cartController");
+const {addToCart,cartLoad, deleteCart, increaseCart, decreaseCart, checkout, checkoutPageLoad, addAddressCheckout, placeOrder, orderList, orderDetails, getOrderStatus, orderPlacedEnd,} = require("../controller/cartController");
 const{shopPage, filterCategoryPage, filterBrandPage, priceRange, filterPriceRange, sortPriceAscending, sortPriceDescending} = require('../controller/shopPageController');
-const { userAccountPageLoad, addAddressPost, deleteAddress, editAddress } = require("../controller/accountPageController");
+const { userAccountPageLoad, addAddressPost, deleteAddress, editAddress, cancelOrder,} = require("../controller/accountPageController");
 
 
-app.get("/",userAuth, userHomeController);
+app.get("/",blockedUser,userHomeController);
 app.get("/login",loginControler);
 app.get("/signup",signupControler);
 app.post('/otp',userLoginModel,sendOtp);
@@ -26,7 +26,7 @@ app.post('/forgotPasswordReset', forgotPasswordReset)
 
 
 //product details
-app.get('/productDetails/:id',userAuth, productDetails)
+app.get('/productDetails/:id', productDetails)
 
 
 //cart controller
@@ -34,24 +34,36 @@ app.get('/productDetails/:id',userAuth, productDetails)
 app.get('/cart', blockedUser,userAuth,cartLoad);
 app.post('/addToCart/:id',blockedUser,userAuth,addToCart);
 app.delete('/deleteCart/:id',blockedUser,userAuth,deleteCart)
-app.put('/increaseQty/:id',userAuth,increaseCart)
-app.put('/decreaseQty/:id', userAuth,decreaseCart)
+app.put('/increaseQty/:id',blockedUser,userAuth,increaseCart)
+app.put('/decreaseQty/:id',blockedUser, userAuth,decreaseCart)
 
 
 //shop page controller
 app.get('/shop',blockedUser, userAuth, shopPage)
-app.get('/filterCategory/:categoryName',filterCategoryPage)
-app.get('/filterBrand/:brand',filterBrandPage)
-app.get('/filterPriceRange',filterPriceRange)
-app.get('/sortPriceAscending', sortPriceAscending)
-app.get('/sortPriceDescending', sortPriceDescending)
+app.get('/filterCategory/:categoryName',blockedUser,filterCategoryPage)
+app.get('/filterBrand/:brand',blockedUser,userAuth,filterBrandPage)
+app.get('/filterPriceRange',blockedUser,userAuth,filterPriceRange)
+app.get('/sortPriceAscending',blockedUser,userAuth, sortPriceAscending)
+app.get('/sortPriceDescending',blockedUser,userAuth, sortPriceDescending)
 
 
 //user account controller
 app.get('/userAccount',userAuth,userAccountPageLoad)
-app.post('/addAddress',addAddressPost )
-app.post('/editAddress/:id',editAddress)
-app.get('/deleteAddress/:id',deleteAddress )
+app.post('/addAddress',blockedUser,userAuth,addAddressPost )
+app.post('/editAddress/:id',blockedUser,userAuth,editAddress)
+app.get('/deleteAddress/:id',blockedUser,userAuth,deleteAddress )
+app.get('/orderList',blockedUser,userAuth,orderList)
+app.get('/orderDetails/:id',blockedUser,userAuth,orderDetails)
+app.get('/orderStatus/:id',blockedUser,userAuth,getOrderStatus)
+app.put('/cancelOrder/:id',blockedUser,userAuth,cancelOrder)
+
+//checkout page
+app.get('/checkout',blockedUser,userAuth,checkoutPageLoad)
+app.post('/addAddressCheckout',blockedUser,userAuth,addAddressCheckout)
+app.get('/placeOrder',blockedUser,userAuth,orderPlacedEnd)
+
+
+
 
 
 

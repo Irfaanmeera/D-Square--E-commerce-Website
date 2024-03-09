@@ -2,6 +2,8 @@ const addressCollection = require('../models/addressModel')
 const userCollection = require('../models/userModel')
 const cartCollection = require('../models/cartModel')
 const categoryCollection = require('../models/categoryModel')
+const formatDate = require("../helpers/formatDate");
+const orderCollection = require('../models/orderModel')
 
 //user account page get controller
 const userAccountPageLoad = async (req,res)=>{
@@ -12,11 +14,16 @@ const userAccountPageLoad = async (req,res)=>{
             userId: req.session?.user?._id,
           });
         let categoryData = await categoryCollection.find({})
+        let orderData = await orderCollection.find({userId:req.session.user._id}).sort({orderDate:-1}).limit(2).populate('addressChosen')
 
-
+        orderData = orderData.map((v) => {
+            v.orderDateFormatted = formatDate(v.orderDate);
+            return v;
+          });
+      
         console.log(addressData)
 
-        res.render('user/userProfile',{userData, user:req.session.user,addressData,count,categoryData})
+        res.render('user/userProfile',{userData, user:req.session.user,addressData,count,categoryData,orderData})
     }catch(error){
         console.log(error)
     }
@@ -77,6 +84,18 @@ const deleteAddress = async(req,res)=>{
 }
 
 
+//cancel order
+const cancelOrder= async(req,res)=>{
+    try{
+       await orderCollection.findByIdAndUpdate({_id:req.params.id},{$set:{orderStatus:"Cancelled"}})
+       res.json({success:true})
+    }catch(error){
+       console.log(error)
+    }
+}
+
+  
 
 
-module.exports = {userAccountPageLoad,addAddressPost,editAddress,deleteAddress}
+
+module.exports = {userAccountPageLoad,addAddressPost,editAddress,deleteAddress,cancelOrder}

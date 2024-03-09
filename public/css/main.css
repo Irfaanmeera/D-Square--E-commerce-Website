@@ -30,6 +30,9 @@ p {
   margin: 0;
   padding: 0;
 }
+a{
+  text-decoration: none !important;
+}
 
 .navbar-toggler:focus,
 a:focus,
@@ -4933,3 +4936,159 @@ top: 2px;
 .CartProduct{
   margin-bottom: 200px;
 }
+
+
+/* .title{
+  color: rgb(251, 112, 13);
+  font-weight: 600;
+  margin-bottom: 2vh;
+  padding: 0 8%;
+  font-size: initial;
+  text-align: center;
+} */
+#details{
+  font-weight: 400;
+}
+.info{
+  padding: 2% 5%;
+}
+.info .col-5{
+  padding: 0;
+}
+#heading{
+  color: grey;
+  line-height: 6vh;
+}
+.pricing{
+  background-color: #ddd3;
+  padding: 2vh 8%;
+  font-weight: 400;
+  line-height: 2.5;
+}
+.pricing .col-3{
+  padding: 0;
+}
+.total{
+  padding: 2vh 8%;
+  color: rgb(252, 103, 49);
+  font-weight: bold;
+}
+.total .col-3{
+  padding: 0;
+}
+
+
+#progressbar {
+  margin-bottom: 11vh;
+  overflow: hidden;
+  color: rgb(2, 2, 99);
+  padding-left: 15px;
+  margin-left: 10px;
+  padding-top: 10px;
+  margin-top: 4vh;
+ 
+}
+
+#progressbar li {
+  list-style-type: none;
+  font-size: x-small;
+  width: 33%;
+  float: left;
+  position: relative;
+  font-weight: 600;
+  font-size:14px;
+  color: rgb(160, 159, 159);
+  
+  line-height: 40px; 
+}
+
+#progressbar #step1:before {
+  content: "";
+  color: rgb(252, 103, 49);
+  width: 10px;
+  height: 10px;
+  margin-left: 0px !important;
+  /* padding-left: 11px !important */
+}
+
+#progressbar #step2:before {
+  content: "";
+  color: #fff;
+  width: 10px;
+  height: 10px;
+  margin-left: 42%;
+ 
+}
+
+/* #progressbar #step3:before {
+  content: "";
+  color: #fff;
+  width: 5px;
+  height: 15px;
+  margin-right: 25% ; 
+  /* padding-right: 11px !important */
+/* } */
+
+#progressbar #step4:before {
+  content: "";
+  color: #fff;
+  width: 10px;
+  height: 10px;
+  margin-right: 0px !important;
+  margin-left:90px;
+  /* padding-right: 11px !important */
+}
+
+#progressbar li:before {
+  line-height: 29px;
+  display: block;
+  font-size: 12px;
+  background: #ddd;
+  border-radius: 50%;
+  margin: auto;
+  z-index: -1;
+  margin-bottom: 1vh;
+}
+
+#progressbar li:after {
+  content: '';
+  height: 2px;
+  background: #ddd;
+  position: absolute;
+  left: 0%;
+  right: 0%;
+  margin-bottom: 2vh;
+  top: 1px;
+  z-index: 1;
+}
+.progress-track{
+  padding: 0 10%;
+}
+#progressbar li:nth-child(2):after {
+  margin-right: auto;
+}
+
+#progressbar li:nth-child(1):after {
+  margin: auto;
+}
+
+#progressbar li:nth-child(3):after {
+  float: left;
+  width: 68%;
+}
+#progressbar li:nth-child(4):after {
+  margin-left: auto;
+  width: 132%;
+}
+
+#progressbar  li.active{
+  color: black;
+}
+
+#progressbar li.active:before,
+#progressbar li.active:after {
+  background: rgb(252, 103, 49);
+} 
+
+
+

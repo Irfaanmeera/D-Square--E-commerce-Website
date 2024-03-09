@@ -1,0 +1,134 @@
+
+{{> userHeader}}
+
+
+  <div class="container py-5 h-100" style="margin-left:40px;margin-right:40px;margin-bottom:150px;">
+    <div class="row d-flex justify-content-center align-items-center h-100 text-center">
+      <div class="col">
+
+
+        <div class=" mt-5 mb-5"><p style="color:rgb(6, 159, 65); font-size:30px;">Your Order has been Placed Successfully</p></div>
+        <div>
+            <h5 class=" text-uppercase  mb-5" >{{user.name}}</h5>
+                <h4 class="mb-5" style="color: #35558a;">Thanks for your order</h4>
+                <p class="mb-0" style="color: #35558a;">Payment summary</p>
+                <hr class="mt-2 mb-4"
+                  style="height: 0; background-color: transparent; opacity: .75; border-top: 2px dashed #9e9e9e;">
+                {{#each cartData}}
+                <div class="d-flex justify-content-between">
+                  <p class="fw-bold mb-0">{{this.productId.productName}}(Qty:{{this.productQuantity}})</p>
+                  <p class="text-muted mb-0">{{this.totalCostPerProduct}}</p>
+                </div>
+                {{/each}}
+                <div class="d-flex justify-content-between">
+                  <p class="small mb-0">Shipping</p>
+                  <p class="small mb-0">Free Shipping</p>
+                </div>
+
+       
+                <div class="d-flex justify-content-between">
+                  <p class="fw-bold">Total</p>
+                  <p class="fw-bold" style="color: #35558a;">{{orderData.grandTotalCost}}</p>
+                </div>
+        </div>
+
+        <!-- Button trigger modal -->
+         <div class="pt-3">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Track you order
+            </button>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content text-dark" style="background-color: #e6e6e9; border-radius: 10px;">
+              <div class="modal-header border-bottom-0">
+                <button type="button" class="btn-close btn-close-white" data-mdb-dismiss="modal"
+                  aria-label="Close"></button>
+              </div>
+              <div class="modal-body text-start px-4 pt-0 pb-4">
+             <div class="title" style="margin-left:300px;font-size:20px;color:chocolate">Your Order</div>
+            <div class="info">
+                <div class="row">
+                    
+                    <div class="col-8">
+                        <span style="margin-left:30px;" id="heading">Date : {{orderDateFormatted}}</span><br>
+                      
+                    </div>
+                    <div class="col-4 pull-right">
+                        <span id="heading">Order No: {{orderData.orderNumber}}</span><br>
+                       
+                    </div>
+                     <div class="col-5" style="margin-left:40px;margin-top:10px;">
+                    <span><i class="fa fa-map-marker-alt me-2"></i>Shipping Address: {{orderData.addressChosen.addressLine1}} {{orderData.addressChosen.addressLine2}}</span>
+                </div> 
+                </div> 
+                   
+            </div>    
+            
+            <div class="pricing">
+                {{#each orderData.cartData}} 
+                <div class="row">
+                    <div class="col-9">
+                        <span id="name">{{this.productId.productName}} (Qty: {{this.productQuantity}})</span>  
+                     
+                    
+                    </div>
+                    <div class="col-3">
+                        <span id="price">{{this.totalCostPerProduct}}</span>
+                    </div>
+                </div>
+                {{/each}}
+                <div class="row">
+                    <div class="col-9">
+                        <span id="name">Shipping</span>
+                    </div>
+                    <div class="col-3">
+                        <span id="price">Free Shipping</span>
+                    </div>
+                </div>
+            </div>
+      
+            <div class="total">
+                <div class="row">
+                    <div class="col-9">Total</div>
+                    <div class="col-3"><big>{{orderData.grandTotalCost}}</big></div>
+                </div>
+            </div>
+           
+            
+            <div class="tracking">
+                <div class="title"style="margin-left:300px;font-size:18px;color:chocolate">Tracking Order</div>
+            </div>
+            <div class="progress-track">
+                <ul id="progressbar">
+                    <li class="step0 active " id="step1">Pending</li>
+                    <li class="step0 text-center" id="step2">Shipped</li>
+                    <li class="step0 text-center" id="step4">Delivered</li>
+                </ul>
+            </div>
+ 
+
+        </div>
+                      <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                       <a href="/orderList" class="btn btn-primary" >
+                      Back to orders
+                   </a>
+                        </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+{{> userFooter}}

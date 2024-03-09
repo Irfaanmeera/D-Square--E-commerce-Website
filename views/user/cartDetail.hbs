@@ -76,15 +76,12 @@
           </div>
           <!--cartContent-->
 
-          <div class="cartFooter w100">
+          <div class="mb-5 w100 ">
             <div class="box-footer">
-              <div class="pull-left"><a href="/" class="btn btn-default"> <i class="fa fa-arrow-left"></i>
-                   Continue shopping </a></div>
-              <div class="pull-right">
-                <a href="/cart">
-                  <button class="btn btn-default"><i class="fa fa-undo"></i> &nbsp; Update cart </button>
-                </a>
+              <div><a href="/shop" class="btn btn-default"> <i class="fa fa-arrow-left"></i>
+                   Continue shopping </a>
               </div>
+             
             </div>
           </div>
           <!--/ cartFooter -->
@@ -117,7 +114,7 @@
               </table>
             </div>
             {{#if cartData.length}}
-          <div class="table-block mx-4" id="order-detail-content" ><a class="btn  btn-dark"
+          <div class="table-block mx-4" id="order-detail-content" ><a class="btn  btn-primary"
               title="checkout" href="/checkout"> 
              Proceed to Checkout &nbsp; </a>
             {{/if}}

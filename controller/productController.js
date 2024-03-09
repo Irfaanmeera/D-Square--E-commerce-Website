@@ -45,7 +45,7 @@ const addProduct = async(req,res)=>{
     try{
       if(req.session.admin){
       const { productName, productPrice, category, brand, productStock,productDescription } = req.body;
-      //  await sharpImage.cropImage(req.files)
+       await sharpImage.cropImage(req.files)
      
  
     const product = new productCollection({

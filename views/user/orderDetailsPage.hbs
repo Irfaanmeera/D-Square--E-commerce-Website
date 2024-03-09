@@ -1,0 +1,118 @@
+   {{>userHeader}}
+   <section class="mb-5" style="background-color: #eee;">
+  <div class="container pt-3 pb-5 ">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-lg-8 col-xl-6 ">
+        <div class="card border-top border-bottom border-3 mb-5" style="border-color: #c4c4c7 !important;">
+          
+          <div class="card pt-3">
+            <div class="title" style="margin-left:200px;font-size:20px;">Your Order</div>
+            <div class="info">
+                <div class="row">
+                    
+                    <div class="col-8">
+                        <span style="margin-left:30px;" id="heading">Date : {{orderDateFormatted}}</span><br>
+                      
+                    </div>
+                    <div class="col-4 pull-right">
+                        <span id="heading">Order No: {{orderData.orderNumber}}</span><br>
+                       
+                    </div>
+                     <div class="col-5" style="margin-left:40px;margin-top:10px;">
+                    <span><i class="fa fa-map-marker-alt me-2"></i>Shipping Address: {{orderData.addressChosen.addressLine1}} {{orderData.addressChosen.addressLine2}}</span>
+                </div> 
+                </div> 
+                   
+            </div>    
+            
+            <div class="pricing">
+                {{#each orderData.cartData}} 
+                <div class="row">
+                    <div class="col-9">
+                        <span id="name">{{this.productId.productName}} (Qty: {{this.productQuantity}})</span>  
+                     
+                    
+                    </div>
+                    <div class="col-3">
+                        <span id="price">{{this.totalCostPerProduct}}</span>
+                    </div>
+                </div>
+                {{/each}}
+                <div class="row">
+                    <div class="col-9">
+                        <span id="name">Shipping</span>
+                    </div>
+                    <div class="col-3">
+                        <span id="price">Free Shipping</span>
+                    </div>
+                </div>
+            </div>
+      
+            <div class="total">
+                <div class="row">
+                    <div class="col-9">Total</div>
+                    <div class="col-3"><big>{{orderData.grandTotalCost}}</big></div>
+                </div>
+            </div>
+           
+            
+            <div class="tracking">
+                <div class="title" style="margin-left:200px;font-size:18px;">Tracking Order</div>
+            </div>
+            <div class="progress-track">
+                <ul id="progressbar">
+                    <li class="step0 active " id="step1">Ordered</li>
+                    <li class="step0 active text-center" id="step2">Shipped</li>
+                    <li class="step0 text-center" id="step4">Delivered</li>
+                </ul>
+            </div>
+ 
+    <div >
+             <a href="/orderList" class="btn btn-primary" style="margin-left:200px;margin-top:-30px;margin-bottom:30px;">
+        Back to orders
+    </a>
+    </div>
+ 
+        </div>
+     
+        </div>
+     
+      </div>
+    </div>
+  </div>
+</section>
+
+
+{{!-- <script>
+    // Function to update the progress bar based on the order status
+function updateProgressBar(orderId) {
+  // Make an AJAX request to fetch the order status from the server
+  $.ajax({
+    url: `/orderStatus/:${orderId}`, // Endpoint to retrieve order status
+    method: 'GET',
+    success: function(response) {
+      // Update progress bar based on the retrieved status
+      const status = response.status;
+      if (status === 'Pending') {
+        $('.progress-bar').css('width', '25%').text('25% Complete');
+      } else if (status === 'Shipped') {
+        $('.progress-bar').css('width', '50%').text('50% Complete');
+      } else if (status === 'Delivered') {
+        $('.progress-bar').css('width', '100%').text('100% Complete');
+      }
+    },
+    error: function(xhr, status, error) {
+      console.error('Error fetching order status:', error);
+    }
+  });
+}
+
+// Call the function to update the progress bar for a specific order
+  $(document).ready(function() {
+    const orderId = $('#orderDetails').data('order-id');
+    updateProgressBar(orderId);
+  });
+
+</script> --}}
+
+       {{> userFooter}}

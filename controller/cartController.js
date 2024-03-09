@@ -1,6 +1,8 @@
 const cartCollection = require('../models/cartModel')
 const productCollection = require('../models/productModel')
-
+const addressCollection = require('../models/addressModel')
+const orderCollection = require('../models/orderModel')
+const formatDate = require("../helpers/formatDate");
 
 
 
@@ -8,7 +10,7 @@ const productCollection = require('../models/productModel')
 async function grandTotal(req) {
     try {
       let userCartData = await cartCollection
-        .find({ userId: req.session.user._id })
+        .find({userId: req.session.user._id })
         .populate("productId");
       let grandTotal = 0;
       for (const item of userCartData) {
@@ -45,14 +47,15 @@ const addToCart = async(req,res)=>{
         const productId = req.params.id;
         const productQuantity = req.body.productQuantity;
 
-    //    let existingProduct = await cartCollection.findOne(
-    //     {userId:req.session.user._id, 
-    //     productId:req.params.id});
+       let existingProduct = await cartCollection.findOne(
+        {userId:req.session.user._id, 
+        productId:req.params.id});
 
-    //     if(existingProduct){
-    //         await cartCollection.updateOne(
-    //             {_id:existingProduct._id},{$inc:{productQuantity:req.body.productQuantity}});
-    //     }else{
+        if(existingProduct){
+            await cartCollection.updateOne(
+                {_id:existingProduct._id},{$inc:{productQuantity:req.body.productQuantity}});
+                res.status(200).json({ success: true });
+        }else{
               console.log(req.session.user._id)
           
            
@@ -67,6 +70,7 @@ const addToCart = async(req,res)=>{
         // Save the cart item to the database
         const userCart = await cart.save();
         res.status(200).json({ success: true });
+      }
     
     } catch (error) {
         console.error(error);
@@ -83,11 +87,10 @@ const cartLoad = async(req,res)=>{
     try{
         
     let cartData = await grandTotal(req);
-    // const count = await countCartItemsPerUser()
     const count = await cartCollection.countDocuments({ userId:req.session.user._id  });
 
     console.log(req.session.grandTotal)
-    res.render('user/cart',{user:req.session.user,cartData,grandTotal:req.session.grandTotal,count})
+    res.render('user/cartDetail',{user:req.session.user,cartData,grandTotal:req.session.grandTotal,count})
 
     }catch(error){
        console.log(error)
@@ -138,6 +141,167 @@ const decreaseCart = async (req,res)=>{
 }
 
 
+//checkout page
+
+const checkoutPageLoad = async(req,res)=>{
+  try{
+    let cartData = await grandTotal(req);
+    const count = await cartCollection.countDocuments({userId:req.session.user._id});
+    let addressData = await addressCollection.find({userId:req.session.user._id})
 
 
-module.exports = {addToCart,cartLoad,deleteCart,increaseCart,decreaseCart};
+    if(addressData.length>0){
+      req.session.orderData = await orderCollection.create({
+        userId: req.session.user._id,
+        orderNumber: (await orderCollection.countDocuments()) + 1,
+        orderDate: new Date(),
+        addressChosen: JSON.parse(JSON.stringify(addressData[0])), //default address
+        cartData: await grandTotal(req),
+        grandTotalCost: req.session.grandTotal,
+      })
+    }
+      res.render('user/checkout',{user:req.session.user,cartData,grandTotal:req.session.grandTotal,count,addressData})
+
+  }catch(error){
+    console.log(error)
+  }
+}
+
+//add address
+const addAddressCheckout= async(req,res)=>{
+  try{
+
+      const address =new addressCollection({
+          userId: req.session.user._id,
+          addressTitle: req.body.addressTitle,
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          addressLine1: req.body.addressLine1,
+          addressLine2: req.body.addressLine2,
+          phone: req.body.phone,
+        });
+
+        const addressData = await address.save()
+        console.log(addressData)
+
+        res.redirect('/checkout')
+      
+  }catch(error){
+      console.log(error)
+  }
+}
+
+//place order controller
+const placeOrder = async (req,res)=>{
+  try{
+    let cartData = await grandTotal(req);
+    const count = await cartCollection.countDocuments({userId:req.session.user._id});
+    let addressData = await addressCollection.find({userId:req.session.user._id})
+    let orderData = await orderCollection.find({userId:req.session.user._id})
+  
+   
+ //reducing from stock qty
+
+      // await orderCollection.updateOne(
+      //   { _id: req.session.order._id },
+      //   {
+      //     $set: {
+      //       paymentId: "generatedAtDelivery",
+      //       paymentType: "COD",
+      //     },
+      //   }
+      // );
+
+    res.render('user/orderPlacedPage',{user:req.session.user,cartData,count,grandTotal:req.session.grandTotal,orderData})
+    
+
+  }catch(error){
+     console.log(error)
+  }
+}
+
+
+//after orderPlaced changes
+const orderPlacedEnd = async (req,res)=>{
+  try{
+    let cartData = await cartCollection
+    .find({ userId: req.session.user._id })
+    .populate("productId");
+    let orderData= await orderCollection.findOne({ _id: req.session.orderData._id}).populate('addressChosen')
+    const count = await cartCollection.countDocuments({userId:req.session.user._id});
+
+    //reducing from stock qty
+    cartData.map(async (item) => {
+      item.productId.productStock -= item.productQuantity;
+      await item.productId.save();
+      return item;
+    });
+
+    res.render('user/orderPlacedPage',{user:req.session.user,cartData,count,orderData,grandTotal:req.session.grandTotal})
+    
+     //delete the cart- since the order is placed
+     await cartCollection.deleteMany({ userId: req.session.user._id });
+     console.log("deleting finished");
+   
+
+  }catch(error){
+    console.log(error)
+  }
+}
+
+
+//order List Page
+const orderList = async(req,res)=>{
+  try{
+      let cartData = await grandTotal(req);
+    const count = await cartCollection.countDocuments({userId:req.session.user._id});
+    let orderData = await orderCollection.find({userId:req.session.user._id}).sort({orderNumber:-1})
+
+
+    orderData = orderData.map((v) => {
+      v.orderDateFormatted = formatDate(v.orderDate);
+      return v;
+    });
+
+
+    res.render('user/orderList',{user:req.session.user,count,orderData,cartData,grandTotal:req.session.grandTotal})
+  }catch(error){
+    console.log(error)
+  }
+}
+
+
+//get single order Details page
+const orderDetails = async (req,res)=>{
+  try{
+    
+    const count = await cartCollection.countDocuments({userId:req.session.user._id});
+    let orderData = await orderCollection.findOne({_id:req.params.id}).populate('addressChosen')
+
+console.log(orderData)
+    
+     const orderDateFormatted = formatDate(orderData.orderDate);
+    
+
+      res.render('user/orderDetailsPage',{user:req.session.user,count,orderData,orderDateFormatted})
+  }catch(error){
+    console.log(error)
+  }
+}
+
+//get order status
+const getOrderStatus= async (req, res) => {
+  try {
+    // Fetch the order status from the database
+    const order = await orderCollection.findOne({_id:req.params.id});
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    res.json({ status: order.orderStatus });
+  } catch (error) {
+    console.error('Error fetching order status:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+module.exports = {addToCart,cartLoad,deleteCart,increaseCart,decreaseCart,checkoutPageLoad,addAddressCheckout,placeOrder,orderList,orderDetails,getOrderStatus,orderPlacedEnd};
