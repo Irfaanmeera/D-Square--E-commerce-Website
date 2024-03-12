@@ -133,15 +133,15 @@
           <form id="addProductForm" action="/admin/addProduct" method="POST" enctype="multipart/form-data">
           <div class="mb-3" style="width=400px;" >
             
-            <input name="productName" id="productName" type="text" class="form-control" placeholder="Product Name">
+            <input name="productName" id="productName" type="text" class="form-control" placeholder="Product Name" required>
         </div>
         <div class="mb-3">
           
-            <input name="productPrice" type="number" class="form-control" min="100" placeholder="Product Price">
+            <input name="productPrice" type="number" class="form-control" min="100" placeholder="Product Price" required>
         </div>
 		<div class="mb-3">
           
-            <input name="productDescription" type="text" class="form-control" placeholder="Product Description">
+            <input name="productDescription" type="text" class="form-control" placeholder="Product Description" required>
         </div>
         <div class="mb-3">
             <label for="productName" class="form-label">Select Category</label>
@@ -153,18 +153,19 @@
         </div>
         <div class="mb-3">
            
-            <input name="brand" id="brand" type="text" class="form-control" placeholder="Brand">
+            <input name="brand" id="brand" type="text" class="form-control" placeholder="Brand" required>
         </div>
         <div class="mb-3">
           
-            <input name="productStock" type="number" class="form-control" min="0" placeholder="Product Stock">
+            <input name="productStock" type="number" class="form-control" min="0" placeholder="Product Stock" required>
         </div>
                               <div class="mb-3">
+								<p>{{message}}</p>
 								<label for="productName" class="form-label">Image 1</label>
                                 <img id="preview1" src="" style="width: 100px; height: 100px; display:none" alt="Img">
                                 <div class="input-group mb-3">
                                     <input id="productImage1" name="productImage1" type="file" class="form-control"
-                                        placeholder="Product Image 1" onchange="displayImage1()" >
+                                        placeholder="Product Image 1" onchange="displayImage1()" required>
                                 </div>
                             </div>
                             <div class="mb-3">
@@ -172,7 +173,7 @@
                                 <img id="preview2" src="" style="width: 100px; height: 100px; display:none" alt="Img">
                                 <div class="input-group mb-3">
                                     <input id="productImage2" name="productImage2" type="file" class="form-control"
-                                        placeholder="Product Image 2" onchange="displayImage2()" >
+                                        placeholder="Product Image 2" onchange="displayImage2()" required>
                                 </div>
                             </div>
                             <div class="mb-3">
@@ -180,7 +181,7 @@
                                 <img id="preview3" src="" style="width: 100px; height: 100px; display:none;" alt="Img">
                                 <div class="input-group mb-3">
                                     <input id="productImage3" name="productImage3" type="file" class="form-control"
-                                        placeholder="Product Image 3" onchange="displayImage3()" >
+                                        placeholder="Product Image 3" onchange="displayImage3()" required>
                                 </div>
                             </div>
 							<div class="mb-3">
@@ -188,11 +189,11 @@
                                 <img id="preview3" src="" style="width: 100px; height: 100px; display:none;" alt="Img">
                                 <div class="input-group mb-3">
                                     <input id="productImage3" name="productImage3" type="file" class="form-control"
-                                        placeholder="Product Image 3" onchange="displayImage3()" >
+                                        placeholder="Product Image 3" onchange="displayImage3()" required>
                                 </div>
                             </div>
                             
-        <button  onclick="addProduct()" class="btn ms-auto" id="submitbtn" >Save Product</button>
+        <button type="submit" class="btn ms-auto" id="submitbtn" >Save Product</button>
     </form>
 </div>
 </div>
@@ -245,7 +246,7 @@
                 }
             </script>
 
-            <script>
+            {{!-- <script>
 
 
         // Sweet Alert Function
@@ -264,7 +265,9 @@
       }
             })
         }
-    </script>
+    </script> --}}
+
+
 	
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>	
 </body>

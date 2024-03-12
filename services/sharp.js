@@ -5,7 +5,7 @@ module.exports = {
     try {
       await sharp(imagePath)
         .extract({ left: 0, width: 1500, height: 1500, top: 0 })
-        .toFile("public/images/sharp/hhh.jpg");
+        .toFile("/public/images/sharp/cropped.jpg");
       console.log("sharpening done");
     } catch (error) {
       console.error(error);

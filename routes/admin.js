@@ -2,8 +2,8 @@ const express = require('express');
 const upload= require('../services/multer.js')
 const adminAuth = require('../middlewares/adminAuth')
 const { adminHomeController,adminLogin, adminLoginPostController,adminlogout, userManagement, blockUser, unBlockUser} = require('../controller/adminController');
-const{addProduct, loadProduct, addProductLoad, editProduct, editProductPost, deleteProduct}= require('../controller/productController');
-const { loadCategory, addCategory, addCategoryLoad, editCategoryPost, editCategory, deleteCategory } = require('../controller/categoryController.js');
+const{addProduct, loadProduct, addProductLoad, editProduct, editProductPost, deleteProduct, listProduct, unlistProduct}= require('../controller/productController');
+const { loadCategory, addCategory, addCategoryLoad, editCategoryPost, editCategory, deleteCategory, listCategory, unlistCategory } = require('../controller/categoryController.js');
 const { orderManagement, changePendingStatus, changeStatus } = require('../controller/orderController.js')
 const app = express.Router()
 
@@ -23,6 +23,8 @@ app.post('/addProduct',adminAuth,upload.any(),addProduct)
 app.get('/editProduct',adminAuth,editProduct)
 app.post('/editProduct',adminAuth,upload.any(),editProductPost);
 app.get('/deleteProduct',adminAuth,deleteProduct)
+app.patch('/listProduct/:id',adminAuth,listProduct)
+app.patch('/unlistProduct/:id',adminAuth,unlistProduct)
 
 
 //category management
@@ -32,6 +34,8 @@ app.post('/addCategory',adminAuth,addCategory)
 app.get('/editCategory',adminAuth,editCategory)
 app.post('/editCategory',adminAuth,editCategoryPost)
 app.get('/deleteCategory',adminAuth,deleteCategory)
+app.patch('/listCategory/:id',adminAuth,listCategory)
+app.patch('/unlistCategory/:id',adminAuth,unlistCategory)
 
 
 //user management

@@ -9,9 +9,13 @@ const saltRound = 10;
 //homepage
 const userHomeController = async (req, res) => {
   let user = req.session.user;
-  let productData = await productCollection.find({}).lean();
-  let categoryData = await categoryCollection.find({}, { categoryName: true });
-  const cartData = await cartCollection
+  let productData = await productCollection.find({ is_listed: true }).lean();
+  let categoryData = await categoryCollection.find(
+    { is_listed: true },
+    { categoryName: true }
+  );
+
+  const cartProduct = await cartCollection
     .find({ userId: req.session?.user?._id })
     .populate("productId");
   const count = await cartCollection.countDocuments({
@@ -24,10 +28,10 @@ const userHomeController = async (req, res) => {
       categoryData,
       grandTotal: req.session.grandTotal,
       count,
-      cartData,
+      cartProduct,
     });
   } else {
-    res.render("user/homepageUser", { productData });
+    res.render("user/homepageUser", { productData, categoryData });
   }
 };
 
@@ -75,7 +79,6 @@ const signupControler = async (req, res) => {
 //userLoginModel
 const userLoginModel = async (req, res, next) => {
   try {
-   
     const { name, email, mobile } = req.body;
 
     if (!name || name.trim() === "" || name.length < 0 || !email || !mobile) {
@@ -83,7 +86,7 @@ const userLoginModel = async (req, res, next) => {
         message: "Name, email, and mobile are required",
       });
     }
-   
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return res.render("user/signup", { message: "Invalid email id" });
@@ -174,52 +177,54 @@ const signupPostController = async (req, res) => {
   }
 };
 
-
 //forgot password
-const forgotPassword = async(req,res)=>{
-  try{
-    res.render('user/forgotPassword')
-  }catch(error){
-    console.log(error)
+const forgotPassword = async (req, res) => {
+  try {
+    res.render("user/forgotPassword");
+  } catch (error) {
+    console.log(error);
   }
-}
+};
 
 //forgot user post controller
-const forgotPasswordUsermodel = async (req,res,next)=>{
-  try{
-    console.log(req.body)
-     const forgotUserData = await userCollection.findOne({email:req.body.email})
-     if(!forgotUserData){
-      res.render('user/forgotPassword',{message:'Email not Exist,Enter registered email id'})
-     }else{
+const forgotPasswordUsermodel = async (req, res, next) => {
+  try {
+    console.log(req.body);
+    const forgotUserData = await userCollection.findOne({
+      email: req.body.email,
+    });
+    if (!forgotUserData) {
+      res.render("user/forgotPassword", {
+        message: "Email not Exist,Enter registered email id",
+      });
+    } else {
       req.session.forgotUserData = forgotUserData;
       next();
-     }
-  }catch(error){
-    console.log(error)
+    }
+  } catch (error) {
+    console.log(error);
   }
-}
+};
 
 //send otp for forgot password
-const sendForgotPwdOtp = async (req,res)=>{
-  try{
+const sendForgotPwdOtp = async (req, res) => {
+  try {
     const otp = Math.floor(1000 + Math.random() * 9000);
     req.session.otp = otp;
- 
-  
+
     const expirationTime = new Date();
     expirationTime.setMinutes(expirationTime.getMinutes() + 5);
-  
+
     req.session.otpExpiration = expirationTime;
     console.log(req.session.otpExpiration);
-  
+
     const mailOptions = {
       from: "irfaanmeera@gmail.com",
       to: `${req.body.email}`,
       subject: "Password Reset OTP for D Square",
       html: `Your OTP is ${otp}`,
     };
-  
+
     await transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
         console.log(error);
@@ -231,30 +236,36 @@ const sendForgotPwdOtp = async (req,res)=>{
         });
       }
     });
-  }catch(error){
-    console.log(error)
+  } catch (error) {
+    console.log(error);
   }
-}
+};
 //forgot password reset get controller
-const forgotPasswordResetPage = async(req,res)=>{
-  try{
-   res.render('user/forgotPasswordReset')
-  }catch(error){
-    console.log(error)
+const forgotPasswordResetPage = async (req, res) => {
+  try {
+    res.render("user/forgotPasswordReset");
+  } catch (error) {
+    console.log(error);
   }
-}
+};
 
 //forgot password reset post controller
-  const forgotPasswordReset = async(req,res)=>{
-    try{
-        let encryptedPassword = await bcrypt.hashSync(req.body.newPassword,saltRound)
-       let resetPasswordUser = await userCollection.findOneAndUpdate({_id:req.session.forgotUserData._id},{$set:{password:encryptedPassword}})
-        res.redirect('/login')
-        console.log(resetPasswordUser)
-    }catch(error){
-      console.log(error)
-    }
+const forgotPasswordReset = async (req, res) => {
+  try {
+    let encryptedPassword = await bcrypt.hashSync(
+      req.body.newPassword,
+      saltRound
+    );
+    let resetPasswordUser = await userCollection.findOneAndUpdate(
+      { _id: req.session.forgotUserData._id },
+      { $set: { password: encryptedPassword } }
+    );
+    res.redirect("/login");
+    console.log(resetPasswordUser);
+  } catch (error) {
+    console.log(error);
   }
+};
 
 //product details page
 const productDetails = async (req, res) => {
@@ -295,7 +306,6 @@ const productDetails = async (req, res) => {
   }
 };
 
-
 //logout
 const logoutControler = async (req, res) => {
   req.session.destroy();
@@ -317,5 +327,4 @@ module.exports = {
   sendForgotPwdOtp,
   forgotPasswordResetPage,
   forgotPasswordReset,
-
 };

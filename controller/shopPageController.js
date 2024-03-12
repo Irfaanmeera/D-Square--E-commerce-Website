@@ -1,117 +1,151 @@
-const categoryCollection = require('../models/categoryModel')
-const productCollection = require('../models/productModel')
-const cartCollection = require('../models/cartModel')
-
+const categoryCollection = require("../models/categoryModel");
+const productCollection = require("../models/productModel");
+const cartCollection = require("../models/cartModel");
 
 //shop page get controller
-const shopPage = async (req,res)=>{
-    try{
-   const categoryData = await categoryCollection.find({})
+const shopPage = async (req, res) => {
+  try {
+    const categoryData = await categoryCollection.find({});
+    const cartProduct = await cartCollection
+      .find({ userId: req.session?.user?._id })
+      .populate("productId");
+    const count = await cartCollection.countDocuments({
+      userId: req.session?.user?._id,
+    });
+    const productsInOnePage = 6;
+    const pageNo = parseInt(req.query.pageNo) || 1;
+    const skip = (pageNo - 1) * productsInOnePage;
+    const limit = productsInOnePage;
 
-   const count = await cartCollection.countDocuments({
-    userId: req.session?.user?._id,
-  });
+    console.log(pageNo);
 
-  let productsInOnePage = 9
-      let pageNo = req.query.pageNo ||  1
-      let skip= (pageNo-1) * productsInOnePage 
-      let limit= productsInOnePage
-      let productDataWithPagination= await productCollection.find({}).skip(skip).limit(limit)
-      
-      let productData =
-        req.session?.shopProductData || productDataWithPagination;
+    const productDataWithPagination = await productCollection
+      .find({})
+      .skip(skip)
+      .limit(limit);
+    const productData =
+      req.session?.shopProductData || productDataWithPagination;
 
-    //   let totalPages=  Math.ceil(  await productCollection.countDocuments() / productsInOnePage )
-    //   console.log(totalPages);
-    //   let totalPagesArray = new Array(totalPages).fill(null)
+    const totalProducts = await productCollection.countDocuments();
+    const totalPages = Math.ceil(totalProducts / productsInOnePage);
+    const totalPagesArray = new Array(totalPages).fill(null);
 
-   res.render('user/shop',{user:req.session.user,categoryData,productData,count})
-   req.session.shopProductData = null;
+    
+    const previousPage = Math.max(pageNo - 1, 1);
+    const nextPage = Math.min(pageNo + 1, totalPages);
 
-    }catch(error){
-        console.log(error)
-    }
+    res.render("user/shop", {
+      user: req.session.user,
+      categoryData,
+      cartProduct,
+      productData,
+      count,
+      totalPagesArray,
+      currentPage: pageNo,
+      previousPage,
+      nextPage,
+    });
+    req.session.shopProductData = null;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 //filter Category
-const filterCategoryPage = async (req,res)=>{
-    try{
-       req.session.shopProductData = await productCollection.find({category:req.params.categoryName})
-       res.redirect('/shop')
-    }catch(error){
-        console.log(error)
-    }
-}
+const filterCategoryPage = async (req, res) => {
+  try {
+    req.session.shopProductData = await productCollection.find({
+      category: req.params.categoryName,
+    });
+    res.redirect("/shop");
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 //filter brand
-const filterBrandPage = async (req,res)=>{
-    try{
-       req.session.shopProductData = await productCollection.find({brand:req.params.brand})
-       res.redirect('/shop')
-    }catch(error){
-        console.log(error)
-    }
-}
+const filterBrandPage = async (req, res) => {
+  try {
+    req.session.shopProductData = await productCollection.find({
+      brand: req.params.brand,
+    });
+    res.redirect("/shop");
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 
-//filter price range
-// const filterPriceRange = async (req, res) => {
-//     try {
-//          req.session.shopProductData = await productCollection.find({
-//         price: {
-//           $gt: 0 + 500 * req.query.priceRange,
-//           $lte: 500 + 500 * req.query.priceRange,
-//         },
-//       });
-        
-//         console.log(req.session.shopProductData);
-//         res.redirect('/shop');
-//     } catch (error) {
-//         console.log(error);
-//         // Handle errors appropriately
-//         res.status(500).send("Internal Server Error");
-//     }
-// };
-
-
-
-// 
+//filter price
 const filterPriceRange = async (req, res) => {
-    try {
-        const minPrice =parseInt(req.query.minPrice);
-        const maxPrice = parseInt(req.query.maxPrice);
-        console.log(minPrice); // Log the parsed minPrice for debugging
-        console.log(req.query.minPrice)
-        // Query the database to get filtered data based on the price range
-        req.session.shopProductData = await productCollection.find({ 
-            productPrice: { $gte: minPrice, $lte: maxPrice } 
-        });
+  try {
+    const minPrice = parseInt(req.query.minPrice);
+    const maxPrice = parseInt(req.query.maxPrice);
+    console.log(minPrice);
+    console.log(req.query.minPrice);
+   
+    req.session.shopProductData = await productCollection.find({
+      productPrice: { $gte: minPrice, $lte: maxPrice },
+    });
+    res.redirect("/shop");
+    console.log(req.session.shopProductData); 
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
 
-        // Render the Handlebars template with the filtered data
-        res.redirect('/shop');
-        console.log(req.session.shopProductData); // Log the filtered data for debugging
-    } catch (error) {
-        console.log(error);
-        res.status(500).send('Internal Server Error');
-    }
-}
 
-const sortPriceAscending = async(req,res)=>{
-    try{
-         req.session.shopProductData = await productCollection.find().sort({productPrice:1})
-         res.redirect('/shop')
-    }catch(error){
-        console.log(error)
-    }
-}
+//sort price low to high
+const sortPriceAscending = async (req, res) => {
+  try {
+    req.session.shopProductData = await productCollection
+      .find()
+      .sort({ productPrice: 1 });
+    res.redirect("/shop");
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-const sortPriceDescending = async(req,res)=>{
-    try{
-         req.session.shopProductData = await productCollection.find().sort({productPrice:-1})
-         res.redirect('/shop')
-    }catch(error){
-        console.log(error)
-    }
-}
+//sort price high to low
+const sortPriceDescending = async (req, res) => {
+  try {
+    req.session.shopProductData = await productCollection
+      .find()
+      .sort({ productPrice: -1 });
+    res.redirect("/shop");
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-module.exports = {shopPage,filterCategoryPage,filterBrandPage,filterPriceRange,sortPriceAscending,sortPriceDescending};
+//search product
+const searchProduct = async (req, res) => {
+  try {
+    const searchQuery = req.query.q;
+    const productData = await productCollection.find({
+      $or: [
+        { productName: { $regex: searchQuery, $options: "i" } },
+        { category: { $regex: searchQuery, $options: "i" } },
+        { brand: { $regex: searchQuery, $options: "i" } },
+      ],
+    });
+    const categoryData = await categoryCollection.find({});
+    
+    res.render("user/shop", { searchQuery, productData, categoryData });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+module.exports = {
+  shopPage,
+  filterCategoryPage,
+  filterBrandPage,
+  filterPriceRange,
+  sortPriceAscending,
+  sortPriceDescending,
+  searchProduct,
+};

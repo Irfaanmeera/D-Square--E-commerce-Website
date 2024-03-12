@@ -4,7 +4,7 @@ const app =express.Router();
 const blockedUser = require('../middlewares/blockedUserCheck');
 const userAuth = require('../middlewares/userAuth')
 const {addToCart,cartLoad, deleteCart, increaseCart, decreaseCart, checkout, checkoutPageLoad, addAddressCheckout, placeOrder, orderList, orderDetails, getOrderStatus, orderPlacedEnd,} = require("../controller/cartController");
-const{shopPage, filterCategoryPage, filterBrandPage, priceRange, filterPriceRange, sortPriceAscending, sortPriceDescending} = require('../controller/shopPageController');
+const{shopPage, filterCategoryPage, filterBrandPage, priceRange, filterPriceRange, sortPriceAscending, sortPriceDescending, searchProduct} = require('../controller/shopPageController');
 const { userAccountPageLoad, addAddressPost, deleteAddress, editAddress, cancelOrder,} = require("../controller/accountPageController");
 
 
@@ -45,6 +45,7 @@ app.get('/filterBrand/:brand',blockedUser,userAuth,filterBrandPage)
 app.get('/filterPriceRange',blockedUser,userAuth,filterPriceRange)
 app.get('/sortPriceAscending',blockedUser,userAuth, sortPriceAscending)
 app.get('/sortPriceDescending',blockedUser,userAuth, sortPriceDescending)
+app.get('/search',searchProduct)
 
 
 //user account controller

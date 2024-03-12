@@ -11,6 +11,7 @@ connection();
 const session = require("express-session");
 const flash = require('express-flash')
 
+
 const PORT = 3000;
 
 app.use(
@@ -30,13 +31,20 @@ app.set('views', path.join(__dirname, 'views'));
 // Register partials
 hbs.registerPartials(path.join(__dirname, 'views', 'partials'));
 
+//register helpers
+hbs.registerHelper("product", (val1, val2) => val1 * val2);
+hbs.registerHelper("sum", (val1, val2) => val1 + val2);
+hbs.registerHelper("lessThan", (val1, val2) => val1 < val2);
+hbs.registerHelper("equal", (val1, val2) => val1 == val2);
+hbs.registerHelper("arrayLength", (val) => val.length);
+
+
+
 
 app.use(express.static(__dirname + '/public'));
 // app.use(express.static('public'));
 app.use(nocache());
 app.use(flash());
-
-
 
 
 
