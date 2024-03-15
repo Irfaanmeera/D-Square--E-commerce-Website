@@ -4,6 +4,8 @@ const categoryCollection = require("../models/categoryModel");
 const transporter = require("../services/sendOtp");
 const bcrypt = require("bcrypt");
 const cartCollection = require("../models/cartModel");
+const walletCollection = require('../models/walletModel')
+const wishlistCollection = require('../models/wishlistModel')
 const saltRound = 10;
 
 //homepage
@@ -21,6 +23,11 @@ const userHomeController = async (req, res) => {
   const count = await cartCollection.countDocuments({
     userId: req.session?.user?._id,
   });
+  const wishlistCount = await wishlistCollection.countDocuments({
+    userId: req.session?.user?._id,
+  });
+  const wishlistData= await wishlistCollection.find({userId:req.session?.user?._id})
+
   if (req.session.user) {
     res.render("user/homepageUser", {
       user,
@@ -29,6 +36,8 @@ const userHomeController = async (req, res) => {
       grandTotal: req.session.grandTotal,
       count,
       cartProduct,
+      wishlistCount,
+      wishlistData
     });
   } else {
     res.render("user/homepageUser", { productData, categoryData });
@@ -79,9 +88,9 @@ const signupControler = async (req, res) => {
 //userLoginModel
 const userLoginModel = async (req, res, next) => {
   try {
-    const { name, email, mobile } = req.body;
+    const { name, email, mobile, password} = req.body;
 
-    if (!name || name.trim() === "" || name.length < 0 || !email || !mobile) {
+    if (!name || name.trim() === "" || name.length < 0 || !email || !mobile || !password) {
       return res.render("user/signup", {
         message: "Name, email, and mobile are required",
       });
@@ -97,6 +106,10 @@ const userLoginModel = async (req, res, next) => {
       return res.render("user/signup", { message: "Invalid mobile number" });
     }
 
+    if (password.length < 6) {
+      return res.render("user/signup", { message: "Password must be at least 6 characters long" });
+    }
+
     const existingUser = await userCollection.findOne({
       email,
       isBlocked: false,
@@ -106,13 +119,13 @@ const userLoginModel = async (req, res, next) => {
       return res.render("user/signup", { message: "User Name already exists" });
     }
 
-    const password = await bcrypt.hash(req.body.password, saltRound);
+    const encryptedPassword = await bcrypt.hash(req.body.password, saltRound);
 
     req.session.tempUserData = {
       name: req.body.name,
       email: req.body.email,
       mobile: req.body.mobile,
-      password: password,
+      password: encryptedPassword,
     };
     // req.session.user = req.body;
     // req.session.loggedIn = true;
@@ -166,6 +179,9 @@ const signupPostController = async (req, res) => {
       req.session.user = await userCollection.findOne({
         email: req.session.tempUserData.email,
       });
+
+      await walletCollection.create({userId:req.session.user._id})
+
       res.redirect("/");
 
       console.log(req.session.user);
@@ -277,17 +293,21 @@ const productDetails = async (req, res) => {
     const count = await cartCollection.countDocuments({
       userId: req.session?.user?._id,
     });
+    const categoryData= await categoryCollection.find({})
+    const cartProduct = await cartCollection.find({userId: req.session?.user?._id,});
+    const wishlistData= await wishlistCollection.find({userId:req.session?.user?._id})
+    const wishlistCount = await wishlistCollection.countDocuments({userId:req.session?.user?._id})
 
     const productData = await productCollection.find({});
-    if (req.session.user) {
-      const cartProduct = await cartCollection.findOne({
-        userId: req.session.user._id,
+    
+      const cartData = await cartCollection.findOne({
+        userId: req.session?.user?._id,
         productId: req.params.id,
       });
-      if (cartProduct) {
-        var cartProductQuantity = cartProduct.productQuantity;
+      if (cartData) {
+        var cartProductQuantity = cartData.productQuantity;
       }
-    }
+    
     let productQtyLimit = [],
       i = 0;
     while (i < currentProduct.productStock - cartProductQuantity) {
@@ -300,8 +320,11 @@ const productDetails = async (req, res) => {
       productData,
       productQtyLimit,
       count,
+      wishlistCount,
+      wishlistData,
+      cartProduct,categoryData,
     });
-  } catch (error) {
+  }catch (error) {
     console.log(error);
   }
 };

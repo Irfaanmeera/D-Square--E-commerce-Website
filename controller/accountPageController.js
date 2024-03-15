@@ -4,6 +4,8 @@ const cartCollection = require("../models/cartModel");
 const categoryCollection = require("../models/categoryModel");
 const formatDate = require("../helpers/formatDate");
 const orderCollection = require("../models/orderModel");
+const walletCollection = require ('../models/walletModel')
+const wishlistCollection = require('../models/wishlistModel')
 
 //user account page get controller
 const userAccountPageLoad = async (req, res) => {
@@ -12,9 +14,12 @@ const userAccountPageLoad = async (req, res) => {
     let addressData = await addressCollection.find({
       userId: req.session.user._id,
     });
+    const cartProduct = await cartCollection.find({userId: req.session?.user?._id,});
     const count = await cartCollection.countDocuments({
       userId: req.session?.user?._id,
     });
+    const wishlistData= await wishlistCollection.find({userId:req.session.user._id})
+    const wishlistCount = await wishlistCollection.countDocuments({userId:req.session.user._id})
     let categoryData = await categoryCollection.find({});
     let orderData = await orderCollection
       .find({ userId: req.session.user._id })
@@ -36,6 +41,9 @@ const userAccountPageLoad = async (req, res) => {
       count,
       categoryData,
       orderData,
+      wishlistData,
+      wishlistCount,
+      cartProduct,
     });
   } catch (error) {
     console.log(error);
@@ -97,10 +105,24 @@ const deleteAddress = async (req, res) => {
 //cancel order
 const cancelOrder = async (req, res) => {
   try {
-    await orderCollection.findByIdAndUpdate(
+   const orderData= await orderCollection.findByIdAndUpdate(
       { _id: req.params.id },
       { $set: { orderStatus: "Cancelled" } }
     );
+    let walletTransaction = {
+      transactionDate: new Date(),
+      transactionAmount: orderData.grandTotalCost,
+      transactionType: "Refund from cancelled Order",
+    };
+
+    const wallet= await walletCollection.findOneAndUpdate(
+      { userId: req.session.user._id },
+      {
+        $inc: { walletBalance: orderData.grandTotalCost },
+        $push: { walletTransaction },
+      }
+    );
+console.log(wallet)
     res.json({ success: true });
   } catch (error) {
     console.log(error);

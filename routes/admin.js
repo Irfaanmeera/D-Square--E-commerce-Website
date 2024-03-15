@@ -6,7 +6,8 @@ const{addProduct, loadProduct, addProductLoad, editProduct, editProductPost, del
 const { loadCategory, addCategory, addCategoryLoad, editCategoryPost, editCategory, deleteCategory, listCategory, unlistCategory } = require('../controller/categoryController.js');
 const { orderManagement, changePendingStatus, changeStatus } = require('../controller/orderController.js')
 const app = express.Router()
-
+const{ couponPageLoad, addCoupon, addCouponLoad, editCouponLoad, editCoupon, deleteCoupon } = require('../controller/couponController.js')
+const { salesReport } = require('../controller/salesReportController.js')
 
 
 //admin login & home page
@@ -46,5 +47,16 @@ app.patch('/unblockUser',adminAuth,unBlockUser)
 //order management
 app.get('/orderManagement',adminAuth,orderManagement)
 app.post('/changeStatus/:id',adminAuth,changeStatus)
+
+//coupon management
+app.get('/couponManagement', adminAuth,couponPageLoad)
+app.get('/addCoupon',adminAuth,addCouponLoad)
+app.post('/addCoupon',adminAuth,addCoupon)
+app.get('/editCoupon',adminAuth,editCouponLoad)
+app.post('/editCoupon',adminAuth,editCoupon)
+app.get('/deleteCoupon',adminAuth,deleteCoupon)
+
+//salesReport management
+app.get('/salesReport',adminAuth,salesReport)
 
 module.exports = app;     

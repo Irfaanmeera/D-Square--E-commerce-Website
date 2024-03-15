@@ -36,7 +36,7 @@
               <div class="login-space">
                 <div class="login">
 
-                  <form
+                  <form id="regForm"
                   class="mx-1 mx-md-1"
                   action="/otp"
                   method="POST"
@@ -84,6 +84,7 @@
                         data-type="password"
                         placeholder="Password"
                         name="password"
+                        onkeyup="checkPasswordStrength();"
                         required
                       />
                     </div>
@@ -105,7 +106,46 @@
         </div>
       </div>
     </div>
+ <!-- include validate.js // jquery plugin   -->
+  <script src="assets/js/jquery.validate.js"></script>
 
+  <script>
+    $().ready(function () {
+      // validate the comment form when it is submitted
+      $("#regForm").validate();
+
+      // validate signup form on keyup and submit
+      $(".regForm").validate({
+        errorLabelContainer: $(".regForm div.error")
+      });
+    });
+
+    function checkPasswordStrength() {
+    var number = /([0-9])/;
+    var alphabets = /([a-zA-Z])/;
+    var special_characters = /([~,!,@,#,$,%,^,&,*,-,_,+,=,?,>,<])/;
+    var password = document.getElementById('pass').value.trim();
+    var passwordStrengthStatus = document.getElementById('password-strength-status');
+
+    if (password.length < 6) {
+        passwordStrengthStatus.className = 'weak-password';
+        passwordStrengthStatus.innerHTML = "Weak (should be at least 6 characters.)";
+        passwordStrengthStatus.style.color = "red";
+    } else {
+        if (password.match(number) && password.match(alphabets) && password.match(special_characters)) {
+            passwordStrengthStatus.className = 'strong-password';
+            passwordStrengthStatus.innerHTML = "Strong";
+            passwordStrengthStatus.style.color = "green";
+        } else {
+            passwordStrengthStatus.className = 'medium-password';
+            passwordStrengthStatus.innerHTML = "Medium (should include alphabets, numbers and special characters.)";
+            passwordStrengthStatus.style.color = "orange";
+        }
+    }
+}
+
+
+  </script>
     <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
       integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"

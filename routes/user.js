@@ -3,10 +3,10 @@ const { userHomeController, loginControler, signupControler, loginPostControler,
 const app =express.Router();
 const blockedUser = require('../middlewares/blockedUserCheck');
 const userAuth = require('../middlewares/userAuth')
-const {addToCart,cartLoad, deleteCart, increaseCart, decreaseCart, checkout, checkoutPageLoad, addAddressCheckout, placeOrder, orderList, orderDetails, getOrderStatus, orderPlacedEnd,} = require("../controller/cartController");
+const {addToCart,cartLoad, deleteCart, increaseCart, decreaseCart, checkout, checkoutPageLoad, addAddressCheckout, placeOrder, orderList, orderDetails, getOrderStatus, orderPlacedEnd, razorpayCreateOrderId, orderPlaced, applyCoupon,} = require("../controller/cartController");
 const{shopPage, filterCategoryPage, filterBrandPage, priceRange, filterPriceRange, sortPriceAscending, sortPriceDescending, searchProduct} = require('../controller/shopPageController');
 const { userAccountPageLoad, addAddressPost, deleteAddress, editAddress, cancelOrder,} = require("../controller/accountPageController");
-
+const{ wishlistGetController, addToWishlist, removeWishlist } = require('../controller/wishlistController')
 
 app.get("/",blockedUser,userHomeController);
 app.get("/login",loginControler);
@@ -37,6 +37,11 @@ app.delete('/deleteCart/:id',blockedUser,userAuth,deleteCart)
 app.put('/increaseQty/:id',blockedUser,userAuth,increaseCart)
 app.put('/decreaseQty/:id',blockedUser, userAuth,decreaseCart)
 
+//wishlist controller
+app.get('/wishlist',blockedUser,userAuth,wishlistGetController)
+app.post('/wishlist/:id',userAuth,addToWishlist)
+app.delete('/removeWishlist/:id',userAuth,removeWishlist)
+
 
 //shop page controller
 app.get('/shop',blockedUser, userAuth, shopPage)
@@ -58,10 +63,16 @@ app.get('/orderDetails/:id',blockedUser,userAuth,orderDetails)
 app.get('/orderStatus/:id',blockedUser,userAuth,getOrderStatus)
 app.put('/cancelOrder/:id',blockedUser,userAuth,cancelOrder)
 
-//checkout page
+//order routes checkout page
 app.get('/checkout',blockedUser,userAuth,checkoutPageLoad)
 app.post('/addAddressCheckout',blockedUser,userAuth,addAddressCheckout)
-app.get('/placeOrder',blockedUser,userAuth,orderPlacedEnd)
+app.all('/orderPlaced',blockedUser,userAuth,orderPlaced)
+app.all('/orderPlacedEnd',blockedUser,userAuth,orderPlacedEnd)
+app.post('/razorpay/create/orderId',blockedUser,userAuth,razorpayCreateOrderId)
+
+
+//coupon apply 
+app.post('/applyCoupon',blockedUser,userAuth,applyCoupon)
 
 
 

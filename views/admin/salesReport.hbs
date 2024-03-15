@@ -1,0 +1,320 @@
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Boxicons -->
+	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+	<!-- My CSS -->
+	
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="/css/adminPanel.css">
+	
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<title>D SQUARE</title>
+</head>
+<body>
+
+    <style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #dddddd;
+    }
+
+    img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+
+
+
+
+	<!-- SIDEBAR -->
+	<section id="sidebar">
+		<a href="#" class="brand">
+			<i class='bx bxs-cart'></i>
+			<span class="text">D SQUARE</span>
+		</a>
+		<ul class="side-menu top ">
+			<li>
+				<a href="/admin">
+					<i class='bx bxs-dashboard' ></i>
+					<span class="text">Dashboard</span>
+				</a>
+			</li>
+			<li>
+				<a href="/admin/category">
+					<i class='bx bxs-package'></i>
+					<span class="text">Categories</span>
+				</a>
+			</li>
+			<li >
+				<a href="/admin/product">
+					<i class='bx bxs-shopping-bags'></i>
+					<span class="text">Products</span>
+				</a>
+			</li>
+			<li>
+				<a href="/admin/orderManagement">
+					<i class='bx bxs-purchase-tag-alt'></i>
+					<span class="text">Orders</span>
+				</a>
+			</li>
+			<li>
+				<a href="/admin/userManagement">
+					<i class='bx bxs-group' ></i>
+					<span class="text">Users</span>
+				</a>
+			</li>
+            <li>
+				<a href="#">
+					<i class='bx bxs-coupon'></i>
+					<span class="text">Coupons</span>
+				</a>
+			</li>
+             <li>
+				<a href="#">
+					<i class='bx bxs-receipt'></i>
+					<span class="text">Product Offers</span>
+				</a>
+			</li>
+            <li class="active">
+				<a href="#">
+					<i class='bx bxs-receipt'></i>
+					<span class="text">Sales Report</span>
+				</a>
+			</li>
+            <li>
+				<a href="#">
+					<i class='bx bxs-receipt'></i>
+					<span class="text">Banner</span>
+				</a>
+			</li>
+		</ul>
+		<ul class="side-menu">
+			<li>
+				<a href="#">
+					<i class='bx bxs-cog' ></i>
+					<span class="text">Settings</span>
+				</a>
+			</li>
+			<li>
+				<a href="/admin/logout" class="logout">
+					<i class='bx bxs-log-out-circle' ></i>
+					<span class="text-danger">Logout</span>
+				</a>
+			</li>
+		</ul>
+	</section>
+	<!-- SIDEBAR -->
+
+
+
+	<!-- CONTENT -->
+	<section id="content">
+		<!-- NAVBAR -->
+		<nav>
+			<i class='bx bx-menu' ></i>
+			<a href="#" class="nav-link">Admin Panel</a>
+		
+			
+			<a href="#" class="profile">
+				<img src="https://media.licdn.com/dms/image/C5603AQFSg4R-IWdHpg/profile-displayphoto-shrink_200_200/0/1652343116317?e=1714003200&v=beta&t=pmFIU8GF6HCKqo4Wt4oyk5Ws-GDJy-mHECO-4ejmtdE">
+			</a>
+		    	
+<a href="/admin/logout" class="btn text-white px-4" id="logoutbtn">Logout</a>	
+
+		</nav>
+		<!-- NAVBAR -->
+
+
+		<!-- MAIN -->
+		<main>
+			<div class="head-title">
+				<div class="left">
+					<h1>Product List</h1>
+					<ul class="breadcrumb">
+						<li>
+							<a href="#">Home</a>
+						</li>
+						<li><i class='bx bx-chevron-right' ></i></li>
+						<li>
+							<a class="active" href="#">Products</a>
+						</li>
+					</ul>
+				</div>
+				
+			</div>
+
+    <!-- Page content -->
+<div class="container p-3">
+    <div class="row">
+        <div class="col-2 p-1">
+            <a href="/admin/salesReport/download/xlsx" class="btn btn-secondary">Download(xlsx)</a>
+        </div>
+        <div class="col-2 p-1">
+            <div  class="btn btn-secondary" id="downloadPDF" style="width:160px;margin-right:20px;">Download (PDF)</div>
+        </div>
+        {{#if dateValues}}
+        <div class="col-3 ms-2" >
+            <label for="startDate">From: </label>
+            <input id="startDate" type="date" value="{{dateValues.startDate}}">
+        </div>
+        <div class="col-3">
+            <label for="startDate">To: </label>
+            <input id="endDate" type="date" value="{{dateValues.endDate}}">
+        </div>
+        {{else}}
+        <div class="col-3 ms-3">
+            <label for="startDate">From: </label>
+            <input id="startDate" type="date">
+        </div>
+        <div class="col-3">
+            <label for="startDate">To: </label>
+            <input id="endDate" type="date">
+        </div>
+        {{/if}}
+        <div class="col-1">
+            <button id="filterBtn" class="btn btn-secondary p-1">Filter</button>
+        </div>
+    </div>
+</div>
+        <!-- Product Management table -->
+        <div class="container ">
+             <table id="salesReportTable" class="display" style="width:100%">
+        <thead>
+            <tr >
+                <th >Id</th>
+                <th >User Name</th>
+                <th >Date</th>
+                <th >Products</th>
+                <th >No of items</th>
+                <th >Total Cost</th>
+                <th >Payment</th>
+                <th >Status</th>
+            </tr>
+        </thead>
+        <tbody style="font-size:12px;">
+            {{#each salesData}}
+            <tr>
+                <td>{{sum @index 1}}</td>
+                <td>{{this.userId.name}}</td>
+                <td>{{this.orderDateFormatted}}</td>
+                <td>
+                    <ul>
+                        {{#each this.cartData}}
+                        <li>{{this.productId.productName}}</li>
+                        {{/each}}
+                    </ul>
+                </td>
+                <td>
+                    <ul>
+                        {{#each this.cartData}}
+                        <li>{{this.productQuantity}}</li>
+                        {{/each}}
+                    </ul>
+                </td>
+                <td>₹{{this.grandTotalCost}}</td>
+                <td>{{this.paymentType}}</td>
+                <td>{{this.orderStatus}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+        </div>
+
+       
+
+
+
+      
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+    $('#salesReportTable').DataTable();
+});
+
+</script>
+
+  
+<script
+      type="text/javascript"
+      charset="utf8"
+      src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/jquery.dataTables.min.js"
+    ></script>
+
+
+ <script>
+        let startDate = document.getElementById('startDate')
+        let endDate = document.getElementById('endDate')
+
+        startDate.addEventListener('change', function () {
+            let startDateValue = startDate.value;
+            endDate.setAttribute('min', startDateValue);
+        });
+
+        endDate.addEventListener('change', function () {
+            let endDateValue = endDate.value;
+            startDate.setAttribute('max', endDateValue);
+        });
+
+    </script>
+
+
+    <script>
+        let filterBtn = document.getElementById('filterBtn')
+        filterBtn.addEventListener('click', async (e) => {
+            e.preventDefault()
+            let startDate = document.getElementById('startDate').value
+            let endDate = document.getElementById('endDate').value
+            let formData = { startDate, endDate }
+            console.log(formData)
+
+            let response = await fetch('/admin/salesReport/filter',
+                {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(formData)
+                })
+            let result = await response.json()
+
+            if (result.success) {
+                location.reload()
+            }
+        })
+    </script>
+
+    <script>
+        let downloadPDF = document.getElementById('downloadPDF')
+        downloadPDF.addEventListener('click', () =>  window.print() )
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>	
+</body>
+</html>

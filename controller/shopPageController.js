@@ -1,6 +1,7 @@
 const categoryCollection = require("../models/categoryModel");
 const productCollection = require("../models/productModel");
 const cartCollection = require("../models/cartModel");
+const wishlistCollection = require('../models/wishlistModel')
 
 //shop page get controller
 const shopPage = async (req, res) => {
@@ -12,6 +13,8 @@ const shopPage = async (req, res) => {
     const count = await cartCollection.countDocuments({
       userId: req.session?.user?._id,
     });
+    const wishlistData= await wishlistCollection.find({userId:req.session.user._id})
+    const wishlistCount = await wishlistCollection.countDocuments({userId:req.session.user._id})
     const productsInOnePage = 6;
     const pageNo = parseInt(req.query.pageNo) || 1;
     const skip = (pageNo - 1) * productsInOnePage;
@@ -20,7 +23,7 @@ const shopPage = async (req, res) => {
     console.log(pageNo);
 
     const productDataWithPagination = await productCollection
-      .find({})
+      .find({is_listed:true})
       .skip(skip)
       .limit(limit);
     const productData =
@@ -44,6 +47,8 @@ const shopPage = async (req, res) => {
       currentPage: pageNo,
       previousPage,
       nextPage,
+      wishlistData,
+      wishlistCount,
     });
     req.session.shopProductData = null;
   } catch (error) {
@@ -55,6 +60,7 @@ const shopPage = async (req, res) => {
 const filterCategoryPage = async (req, res) => {
   try {
     req.session.shopProductData = await productCollection.find({
+      is_listed:true,
       category: req.params.categoryName,
     });
     res.redirect("/shop");
@@ -67,6 +73,7 @@ const filterCategoryPage = async (req, res) => {
 const filterBrandPage = async (req, res) => {
   try {
     req.session.shopProductData = await productCollection.find({
+      is_listed:true,
       brand: req.params.brand,
     });
     res.redirect("/shop");
@@ -85,6 +92,7 @@ const filterPriceRange = async (req, res) => {
     console.log(req.query.minPrice);
    
     req.session.shopProductData = await productCollection.find({
+      is_listed:true,
       productPrice: { $gte: minPrice, $lte: maxPrice },
     });
     res.redirect("/shop");
@@ -100,7 +108,7 @@ const filterPriceRange = async (req, res) => {
 const sortPriceAscending = async (req, res) => {
   try {
     req.session.shopProductData = await productCollection
-      .find()
+      .find({is_listed:true})
       .sort({ productPrice: 1 });
     res.redirect("/shop");
   } catch (error) {
@@ -112,7 +120,7 @@ const sortPriceAscending = async (req, res) => {
 const sortPriceDescending = async (req, res) => {
   try {
     req.session.shopProductData = await productCollection
-      .find()
+      .find({is_listed:true})
       .sort({ productPrice: -1 });
     res.redirect("/shop");
   } catch (error) {
@@ -125,15 +133,22 @@ const searchProduct = async (req, res) => {
   try {
     const searchQuery = req.query.q;
     const productData = await productCollection.find({
+      is_listed:true,
       $or: [
         { productName: { $regex: searchQuery, $options: "i" } },
         { category: { $regex: searchQuery, $options: "i" } },
         { brand: { $regex: searchQuery, $options: "i" } },
       ],
     });
+    const count = await cartCollection.countDocuments({
+      userId: req.session.user._id,
+    });
+    const cartProduct = await cartCollection.find({userId: req.session?.user?._id,});
+    const wishlistData= await wishlistCollection.find({userId:req.session?.user?._id})
+    const wishlistCount = await wishlistCollection.countDocuments({userId:req.session?.user?._id})
     const categoryData = await categoryCollection.find({});
     
-    res.render("user/shop", { searchQuery, productData, categoryData });
+    res.render("user/shop", { user:req.session.user,searchQuery, productData, categoryData,cartProduct,wishlistData,wishlistCount,count });
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");

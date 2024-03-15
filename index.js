@@ -6,6 +6,7 @@ const userRouter = require("./routes/user");
 const adminRouter = require("./routes/admin");
 const hbs = require('hbs');
 const path = require('path');
+const dotenv = require("dotenv").config();
 const connection = require("./config/dbConnect");
 connection();
 const session = require("express-session");

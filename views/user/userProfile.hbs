@@ -8,7 +8,7 @@
             <nav class="nav flex-lg-column w-100 d-flex nav-pills mb-4">
               <a class="nav-link my-0 active" href="#"><p class="pb-0 mb-0" style="width: 100px">Account main</p></a>
               <a class="nav-link my-0 bg-light" href="/orderList"><p class="pb-0 mb-0" style="width: 100px">Orders history</p></a>
-              <a class="nav-link my-0 bg-light" href="#"><p class="pb-0 mb-0" style="width: 100px">My wishlist</p></a>
+              <a class="nav-link my-0 bg-light" href="/wishlist"><p class="pb-0 mb-0" style="width: 100px">My wishlist</p></a>
               <a class="nav-link my-0 bg-light" href="#"><p class="pb-0 mb-0" style="width: 100px">Transactions</p></a>
               <a class="nav-link my-0 bg-light" href="#"><p class="pb-0 mb-0" style="width: 100px">Profile setting</p></a>
               <a class="nav-link my-0 bg-light" href="#"><p class="pb-0 mb-0" style="width: 100px">Log out</p></a>
@@ -242,9 +242,9 @@
                         </p>
                       </div>
                       <div class="col-lg-4 border-start">
-                        <p class="mb-0 text-muted">Payment</p>
+                        <p class="mb-0 text-muted">Payment Mode: {{this.paymentType}}</p>
                         <p class="m-0">
-                          <span class="text-success"> Cash on Delivery</span> <br />
+                          <span class="text-success"></span> <br />
                           Shipping fee: Free <br />
                          <strong> Total paid: {{this.grandTotalCost}}</strong>
                         </p>
@@ -332,7 +332,7 @@ $(document).on('submit', '#addAddressForm', function(e) {
                 confirmButtonText: "Yes, Cancel the order"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    fetch('/account/orderList/orderStatus/cancelOrder/' + orderId, { method: 'PUT' }).then(d => console.log(d))
+                    fetch('/cancelOrder/' + orderId, { method: 'PUT' }).then(d => console.log(d))
                     /*let cancelBtnElement = document.getElementById('cancelBtn')
                     let cancelledBtnElement = document.getElementById('597a5bdf082df5a383c94b')
 
