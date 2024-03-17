@@ -501,7 +501,7 @@ console.log(couponData)
               ? maximumDiscount
               : (grandTotal * discountPercentage) / 100;
 
-        
+              // req.session.totalDiscount = discountAmount;
         
 const order = await orderCollection.findOne({_id:req.session.orderData._id})
 console.log(order)
@@ -510,13 +510,13 @@ console.log(order)
           await orderCollection.findByIdAndUpdate(
             { _id:req.session.orderData._id },
             {
-              $set: { couponApplied: couponData._id },
+              $set: { couponApplied: couponData._id,totalDiscount: discountAmount},
               $inc: { grandTotalCost: -discountAmount },
             }
           );
 
           req.session.grandTotal -= discountAmount;
-          req.session.totalDiscount = discountAmount;
+        
 
           console.log(req.session.totalDiscount)
 

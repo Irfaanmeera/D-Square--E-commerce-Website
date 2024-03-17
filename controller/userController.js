@@ -6,6 +6,8 @@ const bcrypt = require("bcrypt");
 const cartCollection = require("../models/cartModel");
 const walletCollection = require('../models/walletModel')
 const wishlistCollection = require('../models/wishlistModel')
+const productOfferCollection = require('../models/offerModel')
+const applyReferralOffer = require('../helpers/applyReferralOffer')
 const saltRound = 10;
 
 //homepage
@@ -27,6 +29,8 @@ const userHomeController = async (req, res) => {
     userId: req.session?.user?._id,
   });
   const wishlistData= await wishlistCollection.find({userId:req.session?.user?._id})
+  const productOffer = await productOfferCollection.find().populate('productId')
+  
 
   if (req.session.user) {
     res.render("user/homepageUser", {
@@ -37,7 +41,8 @@ const userHomeController = async (req, res) => {
       count,
       cartProduct,
       wishlistCount,
-      wishlistData
+      wishlistData,
+      productOffer
     });
   } else {
     res.render("user/homepageUser", { productData, categoryData });
@@ -82,6 +87,8 @@ const signupControler = async (req, res) => {
     res.redirect("/");
   } else {
     res.render("user/signup");
+    console.log(req.query?.referralCode)
+    req.session.tempUserReferralCode = req.query?.referralCode
   }
 };
 
@@ -114,6 +121,7 @@ const userLoginModel = async (req, res, next) => {
       email,
       isBlocked: false,
     });
+    let referralCode= Math.floor(1000 + Math.random() * 9000);
 
     if (existingUser) {
       return res.render("user/signup", { message: "User Name already exists" });
@@ -126,6 +134,7 @@ const userLoginModel = async (req, res, next) => {
       email: req.body.email,
       mobile: req.body.mobile,
       password: encryptedPassword,
+      referralCode,
     };
     // req.session.user = req.body;
     // req.session.loggedIn = true;
@@ -179,6 +188,12 @@ const signupPostController = async (req, res) => {
       req.session.user = await userCollection.findOne({
         email: req.session.tempUserData.email,
       });
+
+      //adding money to wallet if referral code exists
+     let tempUserReferralCode = req.session?.tempUserReferralCode
+     if(tempUserReferralCode){
+      await applyReferralOffer(tempUserReferralCode)
+     }
 
       await walletCollection.create({userId:req.session.user._id})
 

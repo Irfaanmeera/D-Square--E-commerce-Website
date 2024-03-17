@@ -9,7 +9,7 @@
               <a class="nav-link my-0 active" href="#"><p class="pb-0 mb-0" style="width: 100px">Account main</p></a>
               <a class="nav-link my-0 bg-light" href="/orderList"><p class="pb-0 mb-0" style="width: 100px">Orders history</p></a>
               <a class="nav-link my-0 bg-light" href="/wishlist"><p class="pb-0 mb-0" style="width: 100px">My wishlist</p></a>
-              <a class="nav-link my-0 bg-light" href="#"><p class="pb-0 mb-0" style="width: 100px">Transactions</p></a>
+              <a class="nav-link my-0 bg-light" href="/userCoupons"><p class="pb-0 mb-0" style="width: 100px">My Coupons</p></a>
               <a class="nav-link my-0 bg-light" href="#"><p class="pb-0 mb-0" style="width: 100px">Profile setting</p></a>
               <a class="nav-link my-0 bg-light" href="#"><p class="pb-0 mb-0" style="width: 100px">Log out</p></a>
             </nav>
@@ -22,11 +22,20 @@
                     <img src="https://media.licdn.com/dms/image/C5603AQFSg4R-IWdHpg/profile-displayphoto-shrink_200_200/0/1652343116317?e=1713398400&v=beta&t=pId84GVug1OrDmLQlVhqEfuBRnRisStJoqqM4qmCgrc" class="rounded-circle" style="height: 60px; width: 60px;" />
                   </div>
                   <div class="pt-2">
-                    <h6 class="pt-2">{{userData.name}}</h6>
+                    <h6 class="pt-2">{{userData.name}} </h6>
+                    <span class="pt-2 pb-2">Your Wallet Balance:₹ {{walletData.walletBalance}}</span>
                     <p>
                       {{userData.email}}, {{userData.mobile}}, 
                       <a href="#" class="px-2"><i class="fa fa-pen"></i></a>
                     </p>
+                
+            <h6>Referral code:</h6>
+            <input type="text" value="/signup?referralCode={{userData.referralCode}}" id="copyText" disabled>
+            <button class="btn btn-secondary btn-sm" id="copyReferralCode">Copy</button>
+        
+        
+            <h6>Refer your friends! Get Rs.500 added to your wallet for each new user</h6>
+        
                   </div>
                 </div>
     
@@ -348,7 +357,20 @@ $(document).on('submit', '#addAddressForm', function(e) {
         }
     </script>
 
+ <script>
+        let copyReferralCode = document.getElementById('copyReferralCode')
+        let copyText = document.getElementById('copyText')
+        copyReferralCode.addEventListener('click', () => {
+            // Select the text field
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); //For mobile devices
 
+            // Copy the text inside the text field
+            navigator.clipboard.writeText(copyText.value);
+
+            Swal.fire("Copied your referral code");
+        })
+    </script>
                      
 
    {{> userFooter}}

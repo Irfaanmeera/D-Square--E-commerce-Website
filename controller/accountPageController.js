@@ -6,6 +6,7 @@ const formatDate = require("../helpers/formatDate");
 const orderCollection = require("../models/orderModel");
 const walletCollection = require ('../models/walletModel')
 const wishlistCollection = require('../models/wishlistModel')
+const couponCollection = require('../models/couponModel')
 
 //user account page get controller
 const userAccountPageLoad = async (req, res) => {
@@ -19,8 +20,9 @@ const userAccountPageLoad = async (req, res) => {
       userId: req.session?.user?._id,
     });
     const wishlistData= await wishlistCollection.find({userId:req.session.user._id})
-    const wishlistCount = await wishlistCollection.countDocuments({userId:req.session.user._id})
-    let categoryData = await categoryCollection.find({});
+    const wishlistCount = await wishlistCollection.countDocuments({userId:req.session?.user?._id})
+    const categoryData = await categoryCollection.find({});
+    const walletData = await walletCollection.findOne({userId:req.session?.user?._id})
     let orderData = await orderCollection
       .find({ userId: req.session.user._id })
       .sort({ orderDate: -1 })
@@ -44,6 +46,7 @@ const userAccountPageLoad = async (req, res) => {
       wishlistData,
       wishlistCount,
       cartProduct,
+      walletData,
     });
   } catch (error) {
     console.log(error);
@@ -129,10 +132,26 @@ console.log(wallet)
   }
 };
 
+const userCoupons = async (req,res)=>{
+  try{
+    let couponData= await couponCollection.find()
+    couponData = couponData.map((coupon)=>{
+       coupon.startDateFormatted=formatDate(coupon.startDate);
+       coupon.expiryDateFormatted=formatDate(coupon.expiryDate);
+       return coupon;})
+       
+    res.render('user/coupons',{couponData,user:req.session.user})
+
+  }catch(error){
+    console.log(error)
+  }
+}
+
 module.exports = {
   userAccountPageLoad,
   addAddressPost,
   editAddress,
   deleteAddress,
   cancelOrder,
+  userCoupons,
 };

@@ -90,13 +90,13 @@
 				</a>
 			</li>
             <li>
-				<a href="#">
+				<a href="/admin/couponManagement">
 					<i class='bx bxs-coupon'></i>
 					<span class="text">Coupons</span>
 				</a>
 			</li>
              <li>
-				<a href="#">
+				<a href="/admin/offerManagement">
 					<i class='bx bxs-receipt'></i>
 					<span class="text">Product Offers</span>
 				</a>
@@ -155,14 +155,14 @@
 		<main>
 			<div class="head-title">
 				<div class="left">
-					<h1>Product List</h1>
+					<h1>Sales Report</h1>
 					<ul class="breadcrumb">
 						<li>
 							<a href="#">Home</a>
 						</li>
 						<li><i class='bx bx-chevron-right' ></i></li>
 						<li>
-							<a class="active" href="#">Products</a>
+							<a class="active" href="#">Sales Report</a>
 						</li>
 					</ul>
 				</div>
@@ -173,7 +173,7 @@
 <div class="container p-3">
     <div class="row">
         <div class="col-2 p-1">
-            <a href="/admin/salesReport/download/xlsx" class="btn btn-secondary">Download(xlsx)</a>
+            <a href="/admin/salesReportDownload" class="btn btn-secondary">Download(xlsx)</a>
         </div>
         <div class="col-2 p-1">
             <div  class="btn btn-secondary" id="downloadPDF" style="width:160px;margin-right:20px;">Download (PDF)</div>
@@ -193,7 +193,7 @@
             <input id="startDate" type="date">
         </div>
         <div class="col-3">
-            <label for="startDate">To: </label>
+            <label for="endDate">To: </label>
             <input id="endDate" type="date">
         </div>
         {{/if}}
@@ -212,6 +212,8 @@
                 <th >Date</th>
                 <th >Products</th>
                 <th >No of items</th>
+                 <th >Coupon Applied</th>
+                <th >Total Discount</th>
                 <th >Total Cost</th>
                 <th >Payment</th>
                 <th >Status</th>
@@ -237,6 +239,8 @@
                         {{/each}}
                     </ul>
                 </td>
+                <td>{{this.couponApplied.couponCode}}</td>
+                <td>{{this.totalDiscount}}</td>
                 <td>₹{{this.grandTotalCost}}</td>
                 <td>{{this.paymentType}}</td>
                 <td>{{this.orderStatus}}</td>
@@ -267,7 +271,7 @@ $(document).ready(function(){
       src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/jquery.dataTables.min.js"
     ></script>
 
-
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
  <script>
         let startDate = document.getElementById('startDate')
         let endDate = document.getElementById('endDate')
@@ -294,7 +298,7 @@ $(document).ready(function(){
             let formData = { startDate, endDate }
             console.log(formData)
 
-            let response = await fetch('/admin/salesReport/filter',
+            let response = await fetch('/admin/salesReportFilter',
                 {
                     method: 'POST',
                     headers: { "Content-Type": "application/json" },

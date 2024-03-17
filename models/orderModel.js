@@ -7,15 +7,17 @@ const orderSchema= new mongoose.Schema({
         ref:'users',
       },
     orderNumber: { type: Number, required: true},
-    orderDate: { type: Date, required:true, default: new Date().toLocaleString()},
+    orderDate: { type: Date, required:true, default: function() {
+      // Get current date and format it to 'YYYY-MM-DD'
+      return new Date().toISOString().slice(0, 10);}},
     paymentType: {type: String, default:'toBeChosen'},
     orderStatus: {type: String, default:'Pending'},
-    addressChosen : { type: mongoose.Types.ObjectId, required: true, ref: 'addresses'},
+    addressChosen : { type: mongoose.Types.ObjectId,required: true, ref: 'addresses'},
     cartData: { type: Array},
     grandTotalCost: { type: Number},
     paymentId: {type: String},
-    couponApplied : { type:  mongoose.Types.ObjectId, default: null, ref: 'coupons'},
-    totalDiscounts :{type:Number}
+    couponApplied : { type:  mongoose.Types.ObjectId, ref: 'coupons'},
+    totalDiscount :{type:String,default:'Nil'}
 })
 
 const orderCollection= mongoose.model( 'orders', orderSchema )

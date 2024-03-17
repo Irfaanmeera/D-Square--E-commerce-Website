@@ -5,7 +5,7 @@ const blockedUser = require('../middlewares/blockedUserCheck');
 const userAuth = require('../middlewares/userAuth')
 const {addToCart,cartLoad, deleteCart, increaseCart, decreaseCart, checkout, checkoutPageLoad, addAddressCheckout, placeOrder, orderList, orderDetails, getOrderStatus, orderPlacedEnd, razorpayCreateOrderId, orderPlaced, applyCoupon,} = require("../controller/cartController");
 const{shopPage, filterCategoryPage, filterBrandPage, priceRange, filterPriceRange, sortPriceAscending, sortPriceDescending, searchProduct} = require('../controller/shopPageController');
-const { userAccountPageLoad, addAddressPost, deleteAddress, editAddress, cancelOrder,} = require("../controller/accountPageController");
+const { userAccountPageLoad, addAddressPost, deleteAddress, editAddress, cancelOrder, userCoupons,} = require("../controller/accountPageController");
 const{ wishlistGetController, addToWishlist, removeWishlist } = require('../controller/wishlistController')
 
 app.get("/",blockedUser,userHomeController);
@@ -73,6 +73,7 @@ app.post('/razorpay/create/orderId',blockedUser,userAuth,razorpayCreateOrderId)
 
 //coupon apply 
 app.post('/applyCoupon',blockedUser,userAuth,applyCoupon)
+app.get('/userCoupons',blockedUser,userAuth,userCoupons )
 
 
 

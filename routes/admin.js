@@ -7,8 +7,8 @@ const { loadCategory, addCategory, addCategoryLoad, editCategoryPost, editCatego
 const { orderManagement, changePendingStatus, changeStatus } = require('../controller/orderController.js')
 const app = express.Router()
 const{ couponPageLoad, addCoupon, addCouponLoad, editCouponLoad, editCoupon, deleteCoupon } = require('../controller/couponController.js')
-const { salesReport } = require('../controller/salesReportController.js')
-
+const { salesReport, salesReportDownload, salesReportFilter } = require('../controller/salesReportController.js')
+const{ offerManagement, addOffer, editOffer, categoryOffer } = require('../controller/offerController.js')
 
 //admin login & home page
 app.get('/',adminAuth,adminHomeController)
@@ -56,7 +56,15 @@ app.get('/editCoupon',adminAuth,editCouponLoad)
 app.post('/editCoupon',adminAuth,editCoupon)
 app.get('/deleteCoupon',adminAuth,deleteCoupon)
 
+//offer management
+app.get('/offerManagement',adminAuth,offerManagement)
+app.post('/addOffer',adminAuth,addOffer)
+app.put('/editOffer/:id',adminAuth,editOffer)
+app.post('/categoryOffer',adminAuth,categoryOffer)
+
 //salesReport management
 app.get('/salesReport',adminAuth,salesReport)
+app.get('/salesReportDownload',adminAuth,salesReportDownload)
+app.post('/salesReportFilter',adminAuth, salesReportFilter)
 
 module.exports = app;     

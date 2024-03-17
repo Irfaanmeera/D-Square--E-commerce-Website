@@ -171,6 +171,9 @@
         <div class="product-image">
           <a href="/productDetails/{{this._id}}">
             <img style="width:150px;height:200px; margin-left:27px;" src="/images/productImages/{{this.productImage1}}" alt="Product Image" />
+            {{#if this.productOfferPercentage}}
+            <span class="sale-tag">{{this.productOfferPercentage}}% Off</span>
+            {{/if}}
           </a>
         </div>
         <div class="product-info">
@@ -186,10 +189,13 @@
             <li><span>4.0 Review(s)</span></li>
           </ul>
           <div class="price">
-            <span>₹ {{this.productPrice}}</span>
+            {{#if this.priceBeforeOffer}}
+            <span style="color:darkgray;text-decoration:line-through; margin-right:5px; font-size:14px;">₹ {{this.priceBeforeOffer}}</span> 
+            {{/if}}
+            <span style="margin-right:20px;">₹ {{this.productPrice}}</span>
        {{!-- <i class="fa-regular fa-heart" style="color: #1f59ea; margin-left: 20px;"></i> --}}
 
-       <button id="productQuantityInput" onclick="addToWishlist('{{this._id}}')"  class="btn btn-outline-secondary" style=" margin-left: 80px;" ><i class="lni lni-heart"></i></button>
+       <button id="productQuantityInput" onclick="addToWishlist('{{this._id}}')"  class="btn btn-outline-secondary" style="margin-left:auto" ><i class="lni lni-heart"></i></button>
           </div>
         </div>
       </div>

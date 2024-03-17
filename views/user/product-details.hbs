@@ -30,6 +30,7 @@
                                   <div class="img" style="margin-left:100px;">
                                   <div class='image-hover-zoom' scale="2.5">
                                      <img src="/images/productImages/{{currentProduct.productImage1}}"  id="current" alt="#" style="width:300px; height:100%;">
+
                                   </div>
                                    </div> 
                                 
@@ -45,9 +46,21 @@
                     </div>
                     <div class="col-lg-6 col-md-12 col-12">
                         <div class="product-info">
-                            <h2 class="title">{{currentProduct.productName}}</h2>
                            
-                            <h3 class="price" style="color:rgb(37, 76, 247)">₹ {{currentProduct.productPrice}}<span></span></h3>
+                           <h2 class="title">
+    {{currentProduct.productName}}
+    
+</h2>
+                               
+                            <h3 class="price" style="color:rgb(37, 76, 247)">₹ {{currentProduct.productPrice}}
+                                {{#if currentProduct.priceBeforeOffer}}
+            <span style="color:darkgray;text-decoration:line-through; margin-right:5px; font-size:15px;">₹ {{currentProduct.priceBeforeOffer}}</span> 
+            {{/if}}
+                                {{#if currentProduct.productOfferPercentage}}
+    <span class="sale-tag" style="font-size:14px;text-decoration:none;color:rgb(9, 175, 9);font-weight:bold;">{{currentProduct.productOfferPercentage}}% Off</span>
+    {{/if}}
+                            </h3>
+                            
                             <p class="info-text">{{currentProduct.productDescription}}</p>
                            
            
