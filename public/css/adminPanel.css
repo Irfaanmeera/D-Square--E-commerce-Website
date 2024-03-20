@@ -382,7 +382,7 @@ body {
 	margin-top: 5px;
 }
 #content main .box-info li {
-	padding: 20px;
+	padding: 10px;
 	background: var(--light);
 	border-radius: 10px;
 	display: flex;
@@ -411,7 +411,7 @@ body {
 	color: var(--orange);
 }
 #content main .box-info li .text h3 {
-	font-size: 24px;
+	font-size: 20px;
 	font-weight: 600;
 	color: var(--dark);
 }
@@ -638,7 +638,6 @@ body {
 .details .recentOrders {
   position: relative;
   display: grid;
-  min-height: 500px;
   background: var(--white);
   padding: 20px;
   box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
@@ -650,7 +649,7 @@ body {
   justify-content: space-between;
   align-items: flex-start;
 }
-.cardHeader h4 {
+.cardHeader h5 {
   font-weight: 600;
   color: var(--blue);
 }
@@ -730,34 +729,19 @@ body {
 .recentCustomers {
   position: relative;
   display: grid;
-  min-height: 500px;
   padding: 20px;
   background: var(--white);
   box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
   border-radius: 20px;
 }
-.recentCustomers .imgBx {
-  position: relative;
-  width: 40px;
-  height: 40px;
-  border-radius: 50px;
-  overflow: hidden;
-}
-.recentCustomers .imgBx img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+
 .recentCustomers table tr td {
-  padding: 12px 10px;
+  padding:12px 10px;
 }
 .recentCustomers table tr td h4 {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
-  line-height: 1.2rem;
+  /* line-height: 1.2rem; */
 }
 .recentCustomers table tr td h4 span {
   font-size: 14px;

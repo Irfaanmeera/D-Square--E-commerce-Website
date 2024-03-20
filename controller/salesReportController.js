@@ -163,4 +163,42 @@ const salesReportFilter = async (req, res) => {
     }
   }
 
-module.exports = {salesReport,salesReportDownload,salesReportFilter}
+
+  //weekly sales report
+  const salesReportFilterWeekly = async (req, res) => {
+    try {
+        // Calculate the start and end date of the current week
+        let currentDate = new Date();
+        let firstDayOfWeek = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay());
+        let lastDayOfWeek = new Date(firstDayOfWeek);
+        lastDayOfWeek.setDate(lastDayOfWeek.getDate() + 6);
+
+        let salesDataFiltered = await orderCollection
+            .find({
+                orderDate: { $gte: firstDayOfWeek, $lte: lastDayOfWeek },
+            })
+            .populate("userId couponApplied");
+
+        let salesData = salesDataFiltered.map((v) => {
+            v.orderDateFormatted = formatDate(v.orderDate);
+            return v;
+        });
+
+        req.session.admin = {};
+        req.session.admin.dateValues = { startDate: firstDayOfWeek, endDate: lastDayOfWeek };
+        req.session.admin.salesData = JSON.parse(JSON.stringify(salesData));
+
+        res.status(200).json({ success: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+}
+
+
+
+
+
+
+
+module.exports = {salesReport,salesReportDownload,salesReportFilter,salesReportFilterWeekly}

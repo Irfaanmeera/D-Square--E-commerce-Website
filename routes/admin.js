@@ -1,21 +1,23 @@
 const express = require('express');
 const upload= require('../services/multer.js')
 const adminAuth = require('../middlewares/adminAuth')
-const { adminHomeController,adminLogin, adminLoginPostController,adminlogout, userManagement, blockUser, unBlockUser} = require('../controller/adminController');
+const { adminHomeController,adminLogin, adminLoginPostController,adminlogout, userManagement, blockUser, unBlockUser, adminDashboard, dashboardData} = require('../controller/adminController');
 const{addProduct, loadProduct, addProductLoad, editProduct, editProductPost, deleteProduct, listProduct, unlistProduct}= require('../controller/productController');
 const { loadCategory, addCategory, addCategoryLoad, editCategoryPost, editCategory, deleteCategory, listCategory, unlistCategory } = require('../controller/categoryController.js');
 const { orderManagement, changePendingStatus, changeStatus } = require('../controller/orderController.js')
 const app = express.Router()
 const{ couponPageLoad, addCoupon, addCouponLoad, editCouponLoad, editCoupon, deleteCoupon } = require('../controller/couponController.js')
-const { salesReport, salesReportDownload, salesReportFilter } = require('../controller/salesReportController.js')
+const { salesReport, salesReportDownload, salesReportFilter, salesReportFilterWeekly } = require('../controller/salesReportController.js')
 const{ offerManagement, addOffer, editOffer, categoryOffer } = require('../controller/offerController.js')
 
 //admin login & home page
-app.get('/',adminAuth,adminHomeController)
 app.get('/login',adminLogin);
 app.post('/login',adminLoginPostController)
 app.get('/logout',adminlogout)
 
+//dashboard management
+app.get('/',adminAuth,adminDashboard)
+app.get('/dashboardData',adminAuth,dashboardData)
 
 //product management
 app.get('/product',adminAuth,loadProduct)
@@ -66,5 +68,6 @@ app.post('/categoryOffer',adminAuth,categoryOffer)
 app.get('/salesReport',adminAuth,salesReport)
 app.get('/salesReportDownload',adminAuth,salesReportDownload)
 app.post('/salesReportFilter',adminAuth, salesReportFilter)
+app.post('/salesReportFilterWeekly',adminAuth, salesReportFilterWeekly)
 
 module.exports = app;     

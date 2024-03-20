@@ -1,5 +1,4 @@
 
-
    {{> userHeader}}
     <section class="py-5 bg-light">
       <div class="container">
@@ -17,35 +16,6 @@
           <main class="col-lg-9 col-xl-9">
             <div class="card p-4 mb-0 shadow-0 border">
               <div class="content-body">
-             
- {{!-- <table class="cartTable table-responsive" style="font-color:rgb(35, 34, 34)">
-              <tbody>
-                <tr style="color:rgb(73, 71, 71);height: 80px;">
-                  <td style="width:15%;"> Product</td>
-                  <td style="width:25%">Details</td> 
-                   <td style="width:10%" class="delete">Remove</td>
-                </tr>
-                {{#each wishlistData}}
-                <tr class="CartProduct" id="cartProduct{{@index}}" style="height:120px;" >
-                  <td class="CartProductThumb ">
-                    <div><a href="/productDetails/{{this.productId._id}}"><img src="images/productImages/{{this.productId.productImage1}}" style="width:40%;height:40%;" alt="img"></a>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="CartDescription">
-                      <h6><a href="/productDetails/{{this.productId._id}}">{{this.productId.productName}}</a></h6>
-                      <div id="productPrice{{@index}}" class="price"><span>₹{{this.productId.productPrice}}</span>
-                      </div>
-                    </div>
-                  </td>
-                  
-                  <td class="delete"><a title="Delete" onclick="removeWishlist('{{this._id}}','{{@index}}')">  <i class="fas fa-trash"></i></a></td>
-                </tr>
-                {{/each}}
-               
-              </tbody>
-            </table> --}}
-
 
 <table class="cartTable table-responsive" style="font-color: rgb(35, 34, 34); width: 100%; border-collapse: collapse;">
     <tbody>

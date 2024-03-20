@@ -4,10 +4,10 @@ const categoryCollection = require("../models/categoryModel");
 const transporter = require("../services/sendOtp");
 const bcrypt = require("bcrypt");
 const cartCollection = require("../models/cartModel");
-const walletCollection = require('../models/walletModel')
-const wishlistCollection = require('../models/wishlistModel')
-const productOfferCollection = require('../models/offerModel')
-const applyReferralOffer = require('../helpers/applyReferralOffer')
+const walletCollection = require("../models/walletModel");
+const wishlistCollection = require("../models/wishlistModel");
+const productOfferCollection = require("../models/offerModel");
+const applyReferralOffer = require("../helpers/applyReferralOffer");
 const saltRound = 10;
 
 //homepage
@@ -28,9 +28,12 @@ const userHomeController = async (req, res) => {
   const wishlistCount = await wishlistCollection.countDocuments({
     userId: req.session?.user?._id,
   });
-  const wishlistData= await wishlistCollection.find({userId:req.session?.user?._id})
-  const productOffer = await productOfferCollection.find().populate('productId')
-  
+  const wishlistData = await wishlistCollection.find({
+    userId: req.session?.user?._id,
+  });
+  const productOffer = await productOfferCollection
+    .find()
+    .populate("productId");
 
   if (req.session.user) {
     res.render("user/homepageUser", {
@@ -42,7 +45,7 @@ const userHomeController = async (req, res) => {
       cartProduct,
       wishlistCount,
       wishlistData,
-      productOffer
+      productOffer,
     });
   } else {
     res.render("user/homepageUser", { productData, categoryData });
@@ -87,17 +90,24 @@ const signupControler = async (req, res) => {
     res.redirect("/");
   } else {
     res.render("user/signup");
-    console.log(req.query?.referralCode)
-    req.session.tempUserReferralCode = req.query?.referralCode
+    console.log(req.query?.referralCode);
+    req.session.tempUserReferralCode = req.query?.referralCode;
   }
 };
 
 //userLoginModel
 const userLoginModel = async (req, res, next) => {
   try {
-    const { name, email, mobile, password} = req.body;
+    const { name, email, mobile, password } = req.body;
 
-    if (!name || name.trim() === "" || name.length < 0 || !email || !mobile || !password) {
+    if (
+      !name ||
+      name.trim() === "" ||
+      name.length < 0 ||
+      !email ||
+      !mobile ||
+      !password
+    ) {
       return res.render("user/signup", {
         message: "Name, email, and mobile are required",
       });
@@ -114,14 +124,16 @@ const userLoginModel = async (req, res, next) => {
     }
 
     if (password.length < 6) {
-      return res.render("user/signup", { message: "Password must be at least 6 characters long" });
+      return res.render("user/signup", {
+        message: "Password must be at least 6 characters long",
+      });
     }
 
     const existingUser = await userCollection.findOne({
       email,
       isBlocked: false,
     });
-    let referralCode= Math.floor(1000 + Math.random() * 9000);
+    let referralCode = Math.floor(1000 + Math.random() * 9000);
 
     if (existingUser) {
       return res.render("user/signup", { message: "User Name already exists" });
@@ -190,12 +202,12 @@ const signupPostController = async (req, res) => {
       });
 
       //adding money to wallet if referral code exists
-     let tempUserReferralCode = req.session?.tempUserReferralCode
-     if(tempUserReferralCode){
-      await applyReferralOffer(tempUserReferralCode)
-     }
+      let tempUserReferralCode = req.session?.tempUserReferralCode;
+      if (tempUserReferralCode) {
+        await applyReferralOffer(tempUserReferralCode);
+      }
 
-      await walletCollection.create({userId:req.session.user._id})
+      await walletCollection.create({ userId: req.session.user._id });
 
       res.redirect("/");
 
@@ -308,21 +320,27 @@ const productDetails = async (req, res) => {
     const count = await cartCollection.countDocuments({
       userId: req.session?.user?._id,
     });
-    const categoryData= await categoryCollection.find({})
-    const cartProduct = await cartCollection.find({userId: req.session?.user?._id,});
-    const wishlistData= await wishlistCollection.find({userId:req.session?.user?._id})
-    const wishlistCount = await wishlistCollection.countDocuments({userId:req.session?.user?._id})
+    const categoryData = await categoryCollection.find({});
+    const cartProduct = await cartCollection.find({
+      userId: req.session?.user?._id,
+    });
+    const wishlistData = await wishlistCollection.find({
+      userId: req.session?.user?._id,
+    });
+    const wishlistCount = await wishlistCollection.countDocuments({
+      userId: req.session?.user?._id,
+    });
 
     const productData = await productCollection.find({});
-    
-      const cartData = await cartCollection.findOne({
-        userId: req.session?.user?._id,
-        productId: req.params.id,
-      });
-      if (cartData) {
-        var cartProductQuantity = cartData.productQuantity;
-      }
-    
+
+    const cartData = await cartCollection.findOne({
+      userId: req.session?.user?._id,
+      productId: req.params.id,
+    });
+    if (cartData) {
+      var cartProductQuantity = cartData.productQuantity;
+    }
+
     let productQtyLimit = [],
       i = 0;
     while (i < currentProduct.productStock - cartProductQuantity) {
@@ -337,9 +355,10 @@ const productDetails = async (req, res) => {
       count,
       wishlistCount,
       wishlistData,
-      cartProduct,categoryData,
+      cartProduct,
+      categoryData,
     });
-  }catch (error) {
+  } catch (error) {
     console.log(error);
   }
 };

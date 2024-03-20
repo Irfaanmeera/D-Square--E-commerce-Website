@@ -53,7 +53,6 @@ const addProduct = async (req, res) => {
       } = req.body;
       //  await sharpImage.cropImage(path.join(__dirname,'../public/images/sharp',req.files[0].filename))
 
-  
       if (!req.files || req.files.length < 4) {
         return res
           .status(400)
@@ -64,7 +63,6 @@ const addProduct = async (req, res) => {
       for (let i = 0; i < req.files.length; i++) {
         const file = req.files[i];
 
-      
         if (
           !["image/jpeg", "image/png", "image/gif", "image/webp"].includes(
             file.mimetype
@@ -174,7 +172,6 @@ const editProductPost = async (req, res) => {
 };
 
 //delete product
-
 const deleteProduct = async (req, res) => {
   try {
     if (req.session.admin) {
@@ -190,6 +187,7 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+//unlist product
 const unlistProduct = async (req, res) => {
   try {
     await productCollection.findOneAndUpdate(
@@ -202,6 +200,7 @@ const unlistProduct = async (req, res) => {
   }
 };
 
+//list product
 const listProduct = async (req, res) => {
   try {
     await productCollection.findOneAndUpdate(

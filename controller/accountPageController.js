@@ -4,9 +4,9 @@ const cartCollection = require("../models/cartModel");
 const categoryCollection = require("../models/categoryModel");
 const formatDate = require("../helpers/formatDate");
 const orderCollection = require("../models/orderModel");
-const walletCollection = require ('../models/walletModel')
-const wishlistCollection = require('../models/wishlistModel')
-const couponCollection = require('../models/couponModel')
+const walletCollection = require("../models/walletModel");
+const wishlistCollection = require("../models/wishlistModel");
+const couponCollection = require("../models/couponModel");
 
 //user account page get controller
 const userAccountPageLoad = async (req, res) => {
@@ -15,14 +15,22 @@ const userAccountPageLoad = async (req, res) => {
     let addressData = await addressCollection.find({
       userId: req.session.user._id,
     });
-    const cartProduct = await cartCollection.find({userId: req.session?.user?._id,});
+    const cartProduct = await cartCollection.find({
+      userId: req.session?.user?._id,
+    });
     const count = await cartCollection.countDocuments({
       userId: req.session?.user?._id,
     });
-    const wishlistData= await wishlistCollection.find({userId:req.session.user._id})
-    const wishlistCount = await wishlistCollection.countDocuments({userId:req.session?.user?._id})
+    const wishlistData = await wishlistCollection.find({
+      userId: req.session.user._id,
+    });
+    const wishlistCount = await wishlistCollection.countDocuments({
+      userId: req.session?.user?._id,
+    });
     const categoryData = await categoryCollection.find({});
-    const walletData = await walletCollection.findOne({userId:req.session?.user?._id})
+    const walletData = await walletCollection.findOne({
+      userId: req.session?.user?._id,
+    });
     let orderData = await orderCollection
       .find({ userId: req.session.user._id })
       .sort({ orderDate: -1 })
@@ -108,7 +116,7 @@ const deleteAddress = async (req, res) => {
 //cancel order
 const cancelOrder = async (req, res) => {
   try {
-   const orderData= await orderCollection.findByIdAndUpdate(
+    const orderData = await orderCollection.findByIdAndUpdate(
       { _id: req.params.id },
       { $set: { orderStatus: "Cancelled" } }
     );
@@ -118,34 +126,47 @@ const cancelOrder = async (req, res) => {
       transactionType: "Refund from cancelled Order",
     };
 
-    const wallet= await walletCollection.findOneAndUpdate(
+    const wallet = await walletCollection.findOneAndUpdate(
       { userId: req.session.user._id },
       {
         $inc: { walletBalance: orderData.grandTotalCost },
         $push: { walletTransaction },
       }
     );
-console.log(wallet)
+
+    let cartData = await cartCollection
+    .find({ userId: req.session.user._id })
+    .populate("productId");
+
+    //reducing from stock qty
+  cartData.map(async (v) => {
+    v.productId.productStock += v.productQuantity;
+    await v.productId.save();
+    return v;
+  });
+
+    console.log('productQuantity Added');
     res.json({ success: true });
   } catch (error) {
     console.log(error);
   }
 };
 
-const userCoupons = async (req,res)=>{
-  try{
-    let couponData= await couponCollection.find()
-    couponData = couponData.map((coupon)=>{
-       coupon.startDateFormatted=formatDate(coupon.startDate);
-       coupon.expiryDateFormatted=formatDate(coupon.expiryDate);
-       return coupon;})
-       
-    res.render('user/coupons',{couponData,user:req.session.user})
+//user coupon page
+const userCoupons = async (req, res) => {
+  try {
+    let couponData = await couponCollection.find();
+    couponData = couponData.map((coupon) => {
+      coupon.startDateFormatted = formatDate(coupon.startDate);
+      coupon.expiryDateFormatted = formatDate(coupon.expiryDate);
+      return coupon;
+    });
 
-  }catch(error){
-    console.log(error)
+    res.render("user/coupons", { couponData, user: req.session.user });
+  } catch (error) {
+    console.log(error);
   }
-}
+};
 
 module.exports = {
   userAccountPageLoad,

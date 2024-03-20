@@ -10,7 +10,6 @@ const loadCategory = async (req, res) => {
     res.render("admin/category", {
       category,
       categoryExists: req.session.categoryExists,
-    
     });
 
     req.session.categoryExists = null;
@@ -23,7 +22,7 @@ const loadCategory = async (req, res) => {
 const addCategoryLoad = async (req, res) => {
   try {
     if (req.session.admin) {
-      res.render("admin/addCategory",);
+      res.render("admin/addCategory");
     }
   } catch (error) {
     console.log(error);
@@ -41,22 +40,21 @@ const addCategoryLoad = async (req, res) => {
 //     console.log(categoryExists);
 
 //     if(!categoryExists){
- 
+
 //       const category = new categoryCollection({
 //         categoryName,
 //         categoryDescription,
-      
-     
+
 //     });
 //       const categoryData = await category.save();
 // console.log(categoryData);
- 
+
 //     if(categoryData){
 //     res.redirect('/admin/category');
 //  }
 //       }else{
 //         req.session.categoryExists = categoryExists;
-      
+
 //         res.redirect("/admin/category");
 //       }
 //   }catch(error){
@@ -64,34 +62,30 @@ const addCategoryLoad = async (req, res) => {
 // }
 // }
 
-
-
 const addCategory = async (req, res) => {
   try {
-      const { categoryName, categoryDescription } = req.body;
-   console.log(categoryName)
-      let categoryExists = await categoryCollection.findOne({
-          categoryName: { $regex: new RegExp(req.body.categoryName, "i") },
+    const { categoryName, categoryDescription } = req.body;
+    console.log(categoryName);
+    let categoryExists = await categoryCollection.findOne({
+      categoryName: { $regex: new RegExp(req.body.categoryName, "i") },
+    });
+    console.log("CAtegory Exists: ", categoryExists);
+    if (!categoryExists) {
+      const category = new categoryCollection({
+        categoryName,
+        categoryDescription,
       });
-console.log('CAtegory Exists: ',categoryExists)
-      if (!categoryExists) {
-          const category = new categoryCollection({
-              categoryName,
-              categoryDescription,
-          });
-          const categoryData = await category.save();
-          res.redirect('/admin/category')
-      } else {
-        req.session.categoryExists = categoryExists;
-        res.redirect('/admin/category')
-      }
+      const categoryData = await category.save();
+      res.redirect("/admin/category");
+    } else {
+      req.session.categoryExists = categoryExists;
+      res.redirect("/admin/category");
+    }
   } catch (error) {
-      console.log(error.message);
-      res.status(500).send('Internal server error');
+    console.log(error.message);
+    res.status(500).send("Internal server error");
   }
 };
-
-
 
 //edit category
 const editCategory = async (req, res) => {
@@ -144,29 +138,29 @@ const deleteCategory = async (req, res) => {
   }
 };
 
-const unlistCategory= async (req, res) => {
+const unlistCategory = async (req, res) => {
   try {
     await categoryCollection.findOneAndUpdate(
       { _id: req.params.id },
       { $set: { is_listed: false } }
     );
-    res.status(200).json({success: true})
+    res.status(200).json({ success: true });
   } catch (error) {
     console.error(error);
   }
-}
+};
 
-const listCategory= async (req, res) => {
+const listCategory = async (req, res) => {
   try {
     await categoryCollection.findOneAndUpdate(
       { _id: req.params.id },
       { $set: { is_listed: true } }
     );
-    res.status(200).json({success: true})
+    res.status(200).json({ success: true });
   } catch (error) {
     console.error(error);
   }
-}
+};
 
 module.exports = {
   loadCategory,
@@ -176,5 +170,5 @@ module.exports = {
   editCategoryPost,
   deleteCategory,
   listCategory,
-  unlistCategory
+  unlistCategory,
 };

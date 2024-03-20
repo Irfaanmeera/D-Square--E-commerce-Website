@@ -4,10 +4,10 @@ const addressCollection = require("../models/addressModel");
 const orderCollection = require("../models/orderModel");
 const formatDate = require("../helpers/formatDate");
 const razorpay = require("../services/razorpay.js");
-const walletCollection= require('../models/walletModel.js')
-const wishlistCollection = require('../models/wishlistModel.js')
-const couponCollection = require('../models/couponModel.js')
-const categoryCollection = require('../models/categoryModel.js')
+const walletCollection = require("../models/walletModel.js");
+const wishlistCollection = require("../models/wishlistModel.js");
+const couponCollection = require("../models/couponModel.js");
+const categoryCollection = require("../models/categoryModel.js");
 
 //calculating grandTotal
 async function grandTotal(req) {
@@ -81,11 +81,19 @@ const addToCart = async (req, res) => {
 const cartLoad = async (req, res) => {
   try {
     const cartData = await grandTotal(req);
-    const categoryData = await categoryCollection.find()
-    const cartProduct = await cartCollection.find({userId: req.session?.user?._id,});
-    const count = await cartCollection.countDocuments({userId: req.session?.user?._id,});
-    const wishlistData= await wishlistCollection.find({userId:req.session?.user?._id})
-    const wishlistCount = await wishlistCollection.countDocuments({userId:req.session?.user?._id})
+    const categoryData = await categoryCollection.find();
+    const cartProduct = await cartCollection.find({
+      userId: req.session?.user?._id,
+    });
+    const count = await cartCollection.countDocuments({
+      userId: req.session?.user?._id,
+    });
+    const wishlistData = await wishlistCollection.find({
+      userId: req.session?.user?._id,
+    });
+    const wishlistCount = await wishlistCollection.countDocuments({
+      userId: req.session?.user?._id,
+    });
     console.log(req.session.grandTotal);
     res.render("user/cartDetail", {
       user: req.session.user,
@@ -148,51 +156,22 @@ const decreaseCart = async (req, res) => {
   }
 };
 
-//update Cart
-const updateCart = async (req, res) => {
-  try {
-    let cartProduct = await cartCollection
-      .findOne({ _id: req.params.id })
-      .populate("productId");
-
-    // Get the action from the request body (increment or decrement)
-    const action = req.body.action;
-
-    // Check if the current quantity is less than the product's stock limit for increment action
-    if (
-      action === "increment" &&
-      cartProduct.productQuantity < cartProduct.productId.productStock
-    ) {
-      cartProduct.productQuantity++;
-    }
-    // Check if the current quantity is greater than 1 for decrement action
-    else if (action === "decrement" && cartProduct.productQuantity > 1) {
-      cartProduct.productQuantity--;
-    }
-
-    // Save the updated cart product
-    cartProduct = await cartProduct.save();
-
-    // Calculate the grand total
-    await grandTotal(req);
-
-    // Send response with updated cart product and grand total
-    res.json({ cartProduct, grandTotal: req.session.grandTotal });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};
-
 //checkout page
-
 const checkoutPageLoad = async (req, res) => {
   try {
     let cartData = await grandTotal(req);
-    const cartProduct = await cartCollection.find({userId: req.session?.user?._id,});
-    const count = await cartCollection.countDocuments({userId: req.session?.user?._id,});
-    const wishlistData= await wishlistCollection.find({userId:req.session?.user?._id})
-    const wishlistCount = await wishlistCollection.countDocuments({userId:req.session?.user?._id})
+    const cartProduct = await cartCollection.find({
+      userId: req.session?.user?._id,
+    });
+    const count = await cartCollection.countDocuments({
+      userId: req.session?.user?._id,
+    });
+    const wishlistData = await wishlistCollection.find({
+      userId: req.session?.user?._id,
+    });
+    const wishlistCount = await wishlistCollection.countDocuments({
+      userId: req.session?.user?._id,
+    });
     let addressData = await addressCollection.find({
       userId: req.session.user._id,
     });
@@ -244,40 +223,31 @@ const addAddressCheckout = async (req, res) => {
   }
 };
 
-
-  
 //razorpay- creating an orderId with razorpay
-const razorpayCreateOrderId= async (req, res) => {
-
-  if(req.query?.combinedWalletPayment){
-
-    let walletData = await walletCollection.findOne({userId: req.session.user._id})
+const razorpayCreateOrderId = async (req, res) => {
+  if (req.query?.combinedWalletPayment) {
+    let walletData = await walletCollection.findOne({
+      userId: req.session.user._id,
+    });
 
     var options = {
-      amount: req.session.grandTotal - walletData.walletBalance  + "00", // amount in the smallest currency unit
+      amount: req.session.grandTotal - walletData.walletBalance + "00", // amount in the smallest currency unit
       currency: "INR",
     };
-
-
-  }else{
-
+  } else {
     var options = {
-      amount: req.session.grandTotal + "00", // amount in the smallest currency unit
+      amount: req.session.grandTotal + "00",
       currency: "INR",
     };
   }
 
-
   razorpay.instance.orders.create(options, function (err, order) {
     res.json(order);
   });
-}
-
-
+};
 
 const orderPlaced = async (req, res) => {
   try {
-    
     if (req.body.razorpay_payment_id) {
       //razorpay payment
       await orderCollection.updateOne(
@@ -291,31 +261,31 @@ const orderPlaced = async (req, res) => {
       );
       res.redirect("/orderPlacedEnd");
     } else if (req.body.walletPayment) {
-      
       const walletData = await walletCollection.findOne({
-        userId : req.session.user._id,
+        userId: req.session.user._id,
       });
-      console.log(walletData)
+      console.log(walletData);
       if (walletData.walletBalance >= req.session.grandTotal) {
         walletData.walletBalance -= req.session.grandTotal;
 
         //wallet tranaction data
         let walletTransaction = {
-          transactionDate : new Date(),
+          transactionDate: new Date(),
           transactionAmount: -req.session.grandTotal,
           transactionType: "Debited for placed order",
         };
-        walletData.walletTransaction.push(walletTransaction)
+        walletData.walletTransaction.push(walletTransaction);
         await walletData.save();
 
         await orderCollection.updateOne(
           { _id: req.session.orderData._id },
           {
             $set: {
-              paymentId: Math.floor(Math.random() * 9000000000) + 1000000000 ,
+              paymentId: Math.floor(Math.random() * 9000000000) + 1000000000,
               paymentType: "Wallet",
             },
-          })
+          }
+        );
 
         res.json({ success: true });
       } else {
@@ -338,19 +308,25 @@ const orderPlaced = async (req, res) => {
   } catch (error) {
     console.error(error);
   }
-}
-
+};
 
 const orderPlacedEnd = async (req, res) => {
-
   let cartData = await cartCollection
     .find({ userId: req.session.user._id })
     .populate("productId");
-    const cartProduct = await cartCollection.find({userId: req.session?.user?._id,});
-    const count = await cartCollection.countDocuments({userId: req.session?.user?._id,});
-    const wishlistData= await wishlistCollection.find({userId:req.session?.user?._id})
-    const wishlistCount = await wishlistCollection.countDocuments({userId:req.session?.user?._id})
-    const categoryData = await categoryCollection.find()
+  const cartProduct = await cartCollection.find({
+    userId: req.session?.user?._id,
+  });
+  const count = await cartCollection.countDocuments({
+    userId: req.session?.user?._id,
+  });
+  const wishlistData = await wishlistCollection.find({
+    userId: req.session?.user?._id,
+  });
+  const wishlistCount = await wishlistCollection.countDocuments({
+    userId: req.session?.user?._id,
+  });
+  const categoryData = await categoryCollection.find();
   //reducing from stock qty
   cartData.map(async (v) => {
     v.productId.productStock -= v.productQuantity;
@@ -358,31 +334,30 @@ const orderPlacedEnd = async (req, res) => {
     return v;
   });
 
-  let orderData= await orderCollection.findOne({ _id: req.session.orderData._id})
-  if(orderData.paymentType =='toBeChosen'){
-    orderData.paymentType = 'COD'
-    orderData.save()
+  let orderData = await orderCollection.findOne({
+    _id: req.session.orderData._id,
+  });
+  if (orderData.paymentType == "toBeChosen") {
+    orderData.paymentType = "COD";
+    orderData.save();
   }
 
   res.render("user/orderPlacedPage", {
     user: req.session.user,
-          cartData,
-          count,
-          orderData,
-          grandTotal: req.session.grandTotal,
-          cartProduct,
-          wishlistData,
-          wishlistCount,
-          categoryData
-          
+    cartData,
+    count,
+    orderData,
+    grandTotal: req.session.grandTotal,
+    cartProduct,
+    wishlistData,
+    wishlistCount,
+    categoryData,
   });
 
   //delete the cart- since the order is placed
   await cartCollection.deleteMany({ userId: req.session.user._id });
   console.log("deleting finished");
-}
-
-
+};
 
 //order List Page
 const orderList = async (req, res) => {
@@ -391,10 +366,16 @@ const orderList = async (req, res) => {
     const count = await cartCollection.countDocuments({
       userId: req.session.user._id,
     });
-    const cartProduct = await cartCollection.find({userId: req.session?.user?._id,});
-    const wishlistData= await wishlistCollection.find({userId:req.session?.user?._id})
-    const wishlistCount = await wishlistCollection.countDocuments({userId:req.session?.user?._id})
-    const categoryData = await categoryCollection.find()
+    const cartProduct = await cartCollection.find({
+      userId: req.session?.user?._id,
+    });
+    const wishlistData = await wishlistCollection.find({
+      userId: req.session?.user?._id,
+    });
+    const wishlistCount = await wishlistCollection.countDocuments({
+      userId: req.session?.user?._id,
+    });
+    const categoryData = await categoryCollection.find();
     let orderData = await orderCollection
       .find({ userId: req.session.user._id })
       .sort({ orderNumber: -1 });
@@ -449,7 +430,7 @@ const orderDetails = async (req, res) => {
 const getOrderStatus = async (req, res) => {
   try {
     // Fetch the order status from the database
-    const order = await orderCollection.findOne({ _id: req.params.id });
+    const order = await orderCollection.findOne({ _id: req.params.id }).populate('addressChosen');
     if (!order) {
       return res.status(404).json({ error: "Order not found" });
     }
@@ -460,84 +441,83 @@ const getOrderStatus = async (req, res) => {
   }
 };
 
+//apply coupon
+const applyCoupon = async (req, res) => {
+  try {
+    let { couponCode } = req.body;
+    console.log(couponCode);
 
-  //apply coupon
-  const applyCoupon= async (req, res) => {
-    try {
-
-     
-      let { couponCode } = req.body;
-      console.log(couponCode)
-
-      //Retrive the coupon document from the database if it exists
-      let couponData = await couponCollection.findOne({ couponCode });
-console.log(couponData)
-      if (couponData) {
-
-        let order = await orderCollection.findOne({ _id: req.session.orderData._id });
-            if (order.couponApplied) {
-                // Respond with an error status if the coupon has already been applied to the order
-                return res.status(400).json({ error: "Coupon already applied to this order." });
-            }
-        /*if coupon exists:
+    //Retrive the coupon document from the database if it exists
+    let couponData = await couponCollection.findOne({ couponCode });
+    console.log(couponData);
+    if (couponData) {
+      let order = await orderCollection.findOne({
+        _id: req.session.orderData._id,
+      });
+      if (order.couponApplied) {
+        // Respond with an error status if the coupon has already been applied to the order
+        return res
+          .status(400)
+          .json({ error: "Coupon already applied to this order." });
+      }
+      /*if coupon exists:
         > check if it is applicable, i.e within minimum purchase limit & expiry date
         >proceed... */
 
-        let { grandTotal } = req.session;
-        let { minimumPurchase, expiryDate } = couponData;
-        let minimumPurchaseCheck = minimumPurchase < grandTotal;
-        let expiryDateCheck = new Date() < new Date(expiryDate);
+      let { grandTotal } = req.session;
+      let { minimumPurchase, expiryDate } = couponData;
+      let minimumPurchaseCheck = minimumPurchase < grandTotal;
+      let expiryDateCheck = new Date() < new Date(expiryDate);
 
-        if (minimumPurchaseCheck && expiryDateCheck) {
-          /* if coupon exists check if it is applicable :
+      if (minimumPurchaseCheck && expiryDateCheck) {
+        /* if coupon exists check if it is applicable :
           >calculate the discount amount
           >update the database's order document
           >update the grand total in the req.session for the payment page
           */
-          let { discountPercentage, maximumDiscount } = couponData;
+        let { discountPercentage, maximumDiscount } = couponData;
 
-          let discountAmount =
-            (grandTotal * discountPercentage) / 100 > maximumDiscount
-              ? maximumDiscount
-              : (grandTotal * discountPercentage) / 100;
+        let discountAmount =
+          (grandTotal * discountPercentage) / 100 > maximumDiscount
+            ? maximumDiscount
+            : (grandTotal * discountPercentage) / 100;
 
-              // req.session.totalDiscount = discountAmount;
-        
-const order = await orderCollection.findOne({_id:req.session.orderData._id})
-console.log(order)
+        // req.session.totalDiscount = discountAmount;
 
+        const order = await orderCollection.findOne({
+          _id: req.session.orderData._id,
+        });
+        console.log(order);
 
-          await orderCollection.findByIdAndUpdate(
-            { _id:req.session.orderData._id },
-            {
-              $set: { couponApplied: couponData._id,totalDiscount: discountAmount},
-              $inc: { grandTotalCost: -discountAmount },
-            }
-          );
+        await orderCollection.findByIdAndUpdate(
+          { _id: req.session.orderData._id },
+          {
+            $set: {
+              couponApplied: couponData._id,
+              totalDiscount: discountAmount,
+            },
+            $inc: { grandTotalCost: -discountAmount },
+          }
+        );
 
-          req.session.grandTotal -= discountAmount;
-        
+        req.session.grandTotal -= discountAmount;
 
-          console.log(req.session.totalDiscount)
+        console.log(req.session.totalDiscount);
 
-          // Respond with a success status and indication that the coupon was applied
-          res.status(202).json({ couponApplied: true, discountAmount });
-        } else {
-          // Respond with an error status if the coupon is not applicable
-          res.status(501).json({ couponApplied: false });
-        }
+        // Respond with a success status and indication that the coupon was applied
+        res.status(202).json({ couponApplied: true, discountAmount });
       } else {
-        // Respond with an error status if the coupon does not exist
+        // Respond with an error status if the coupon is not applicable
         res.status(501).json({ couponApplied: false });
       }
-    } catch (error) {
-      console.error(error);
+    } else {
+      // Respond with an error status if the coupon does not exist
+      res.status(501).json({ couponApplied: false });
     }
+  } catch (error) {
+    console.error(error);
   }
-
-
-
-
+};
 
 module.exports = {
   addToCart,
@@ -552,7 +532,6 @@ module.exports = {
   orderDetails,
   getOrderStatus,
   orderPlacedEnd,
-  updateCart,
   razorpayCreateOrderId,
-  applyCoupon
+  applyCoupon,
 };
