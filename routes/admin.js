@@ -1,10 +1,10 @@
 const express = require('express');
 const upload= require('../services/multer.js')
 const adminAuth = require('../middlewares/adminAuth')
-const { adminHomeController,adminLogin, adminLoginPostController,adminlogout, userManagement, blockUser, unBlockUser, adminDashboard, dashboardData} = require('../controller/adminController');
+const { adminHomeController,adminLogin, adminLoginPostController,adminlogout, userManagement, blockUser, unBlockUser, adminDashboard, dashboardData, bannerManagement, uploadBanner, deleteBanner} = require('../controller/adminController');
 const{addProduct, loadProduct, addProductLoad, editProduct, editProductPost, deleteProduct, listProduct, unlistProduct}= require('../controller/productController');
 const { loadCategory, addCategory, addCategoryLoad, editCategoryPost, editCategory, deleteCategory, listCategory, unlistCategory } = require('../controller/categoryController.js');
-const { orderManagement, changePendingStatus, changeStatus } = require('../controller/orderController.js')
+const { orderManagement, changePendingStatus, changeStatus, acceptReturnOrder } = require('../controller/orderController.js')
 const app = express.Router()
 const{ couponPageLoad, addCoupon, addCouponLoad, editCouponLoad, editCoupon, deleteCoupon } = require('../controller/couponController.js')
 const { salesReport, salesReportDownload, salesReportFilter, salesReportFilterWeekly } = require('../controller/salesReportController.js')
@@ -49,6 +49,7 @@ app.patch('/unblockUser',adminAuth,unBlockUser)
 //order management
 app.get('/orderManagement',adminAuth,orderManagement)
 app.post('/changeStatus/:id',adminAuth,changeStatus)
+app.post('/acceptReturnOrder/:id',adminAuth,acceptReturnOrder)
 
 //coupon management
 app.get('/couponManagement', adminAuth,couponPageLoad)
@@ -69,5 +70,10 @@ app.get('/salesReport',adminAuth,salesReport)
 app.get('/salesReportDownload',adminAuth,salesReportDownload)
 app.post('/salesReportFilter',adminAuth, salesReportFilter)
 app.post('/salesReportFilterWeekly',adminAuth, salesReportFilterWeekly)
+
+//banner management
+app.get('/bannerManagement',adminAuth,bannerManagement)
+app.post('/uploadBanner',adminAuth,upload.single('bannerImage'),uploadBanner)
+app.delete('/deleteBanner/:id',adminAuth,deleteBanner)
 
 module.exports = app;     

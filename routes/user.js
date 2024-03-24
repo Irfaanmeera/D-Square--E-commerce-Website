@@ -1,12 +1,12 @@
 const express = require("express");
-const { userHomeController, loginControler, signupControler, loginPostControler, logoutControler, productDetails, userLoginModel, signupPostController, sendOtp, forgotPassword, sendForgotPwdOtp, forgotPasswordUsermodel, forgotPasswordReset, forgotPasswordResetPage,  } = require("../controller/userController");
+const { userHomeController, loginControler, signupControler, loginPostControler, logoutControler, productDetails, userLoginModel, signupPostController, sendOtp, forgotPassword, sendForgotPwdOtp, forgotPasswordUsermodel, forgotPasswordReset, forgotPasswordResetPage, aboutUsPage,  } = require("../controller/userController");
 const app =express.Router();
 const blockedUser = require('../middlewares/blockedUserCheck');
 const userAuth = require('../middlewares/userAuth')
-const {addToCart,cartLoad, deleteCart, increaseCart, decreaseCart, checkout, checkoutPageLoad, addAddressCheckout, placeOrder, orderList, orderDetails, getOrderStatus, orderPlacedEnd, razorpayCreateOrderId, orderPlaced, applyCoupon,} = require("../controller/cartController");
+const {addToCart,cartLoad, deleteCart, increaseCart, decreaseCart, checkout, checkoutPageLoad, addAddressCheckout, placeOrder, orderList, orderDetails, getOrderStatus, orderPlacedEnd, razorpayCreateOrderId, orderPlaced, applyCoupon, updateCart,} = require("../controller/cartController");
 const{shopPage, filterCategoryPage, filterBrandPage, priceRange, filterPriceRange, sortPriceAscending, sortPriceDescending, searchProduct} = require('../controller/shopPageController');
-const { userAccountPageLoad, addAddressPost, deleteAddress, editAddress, cancelOrder, userCoupons,} = require("../controller/accountPageController");
-const{ wishlistGetController, addToWishlist, removeWishlist } = require('../controller/wishlistController')
+const { userAccountPageLoad, addAddressPost, deleteAddress, editAddress, cancelOrder, userCoupons, transactionHistory, invoiceDownload, returnOrder,} = require("../controller/accountPageController");
+const{ wishlistGetController, addToWishlist, removeWishlist, moveToCart } = require('../controller/wishlistController')
 
 app.get("/",blockedUser,userHomeController);
 app.get("/login",loginControler);
@@ -23,14 +23,14 @@ app.post('/forgotPasswordOtp',forgotPasswordUsermodel, sendForgotPwdOtp)
 app.post('/forgotPasswordPage', forgotPasswordResetPage)
 app.post('/forgotPasswordReset', forgotPasswordReset)
 
-
+//aboutUs page
+app.get('/aboutUs',aboutUsPage)
 
 //product details
 app.get('/productDetails/:id', productDetails)
 
 
 //cart controller
-
 app.get('/cart', blockedUser,userAuth,cartLoad);
 app.post('/addToCart/:id',blockedUser,userAuth,addToCart);
 app.delete('/deleteCart/:id',blockedUser,userAuth,deleteCart)
@@ -41,6 +41,7 @@ app.put('/decreaseQty/:id',blockedUser, userAuth,decreaseCart)
 app.get('/wishlist',blockedUser,userAuth,wishlistGetController)
 app.post('/wishlist/:id',userAuth,addToWishlist)
 app.delete('/removeWishlist/:id',userAuth,removeWishlist)
+app.post('/moveToCart/:id',blockedUser,userAuth,moveToCart);
 
 
 //shop page controller
@@ -62,6 +63,7 @@ app.get('/orderList',blockedUser,userAuth,orderList)
 app.get('/orderDetails/:id',blockedUser,userAuth,orderDetails)
 app.get('/orderStatus/:id',blockedUser,userAuth,getOrderStatus)
 app.put('/cancelOrder/:id',blockedUser,userAuth,cancelOrder)
+app.put('/returnOrder/:id',blockedUser,userAuth,returnOrder)
 
 //order routes checkout page
 app.get('/checkout',blockedUser,userAuth,checkoutPageLoad)
@@ -75,7 +77,11 @@ app.post('/razorpay/create/orderId',blockedUser,userAuth,razorpayCreateOrderId)
 app.post('/applyCoupon',blockedUser,userAuth,applyCoupon)
 app.get('/userCoupons',blockedUser,userAuth,userCoupons )
 
+//transaction history
+app.get('/transaction',blockedUser,userAuth,transactionHistory)
 
+//invoice download
+app.get('/invoice/:id',blockedUser,userAuth,invoiceDownload)
 
 
 

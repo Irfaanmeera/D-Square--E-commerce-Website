@@ -16,7 +16,8 @@ const orderSchema= new mongoose.Schema({
     cartData: { type: Array},
     grandTotalCost: { type: Number},
     paymentId: {type: String},
-    couponApplied : { type:  mongoose.Types.ObjectId, ref: 'coupons'},
+    couponApplied : {  type: String,
+      default: "Nil" },
     totalDiscount :{type:String,default:'Nil'}
 })
 

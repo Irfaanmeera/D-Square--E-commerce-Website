@@ -8,6 +8,7 @@
             <nav class="nav flex-lg-column w-100 d-flex nav-pills mb-4">
               <a class="nav-link my-0 active" href="#"><p class="pb-0 mb-0" style="width: 100px">Account main</p></a>
               <a class="nav-link my-0 bg-light" href="/orderList"><p class="pb-0 mb-0" style="width: 100px">Orders history</p></a>
+              <a class="nav-link my-0 bg-light" href="/transaction"><p class="pb-0 mb-0" style="width: 170px">Wallet Transactions</p></a>
               <a class="nav-link my-0 bg-light" href="/wishlist"><p class="pb-0 mb-0" style="width: 100px">My wishlist</p></a>
               <a class="nav-link my-0 bg-light" href="/userCoupons"><p class="pb-0 mb-0" style="width: 100px">My Coupons</p></a>
               <a class="nav-link my-0 bg-light" href="#"><p class="pb-0 mb-0" style="width: 100px">Profile setting</p></a>
@@ -23,18 +24,18 @@
                   </div>
                   <div class="pt-2">
                     <h6 class="pt-2">{{userData.name}} </h6>
-                    <span class="pt-2 pb-2">Your Wallet Balance:₹ {{walletData.walletBalance}}</span>
+                    <span class="pt-2 pb-2 text-success">Your Wallet Balance:₹ {{walletData.walletBalance}}</span>
                     <p>
                       {{userData.email}}, {{userData.mobile}}, 
-                      <a href="#" class="px-2"><i class="fa fa-pen"></i></a>
+                      <a href="#" class="px-2"></a>
                     </p>
                 
-            <h6>Referral code:</h6>
+            <p style="color:darkslategray" class="mt-4">Referral code:</p>
             <input type="text" value="/signup?referralCode={{userData.referralCode}}" id="copyText" disabled>
             <button class="btn btn-secondary btn-sm" id="copyReferralCode">Copy</button>
         
         
-            <h6>Refer your friends! Get Rs.500 added to your wallet for each new user</h6>
+            <p style="color:darkslategray"> Refer & Earn! Rs.500 will be added to your wallet for each new user</p>
         
                   </div>
                 </div>
@@ -110,7 +111,7 @@
 <!-- SweetAlert modal trigger button -->
 
         <div class="pt-3">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal1">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 Add New Address
             </button>
         </div>
@@ -152,8 +153,8 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-info">Save changes</button>
+                           
+                            <button type="submit" class="btn btn-primary">Add Address</button>
                         </div>
                     </form>
                 </div>
@@ -204,8 +205,8 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-info">Save changes</button>
+                            
+                            <button type="submit" class="btn btn-primary">Edit Address</button>
                         </div>
                     </form>
                 </div>
@@ -231,27 +232,29 @@
                       </div>
                       <div>
                         <a href="#" class="btn btn-sm btn-outline-danger" onclick="cancelOrder('{{this._id}}')">Cancel order</a>
+                        <a href="/invoice/{{this._id}}" class="btn btn-sm btn-outline-primary shadow-0">Download Invoice</a> 
                         <a href="/orderDetails/{{this._id}}" class="btn btn-sm btn-primary shadow-0">Track order</a> 
+                         
                       </div>
                     </header>
                     <hr />
                     <div class="row">
                       <div class="col-lg-4">
-                        <p class="mb-0 text-muted">Contact</p>
+                        <p class="mb-0 text-muted"><strong>Contact</strong></p>
                         <p class="m-0">
                           {{this.addressChosen.addressLine1}}
                            {{this.addressChosen.addressLine2}}
                         </p>
                       </div>
                       <div class="col-lg-4 border-start">
-                        <p class="mb-0 text-muted">Shipping address</p>
+                        <p class="mb-0 text-muted"><strong>Shipping address</strong></p>
                         <p class="m-0">
                             {{this.addressChosen.addressLine1}}
                            {{this.addressChosen.addressLine2}}
                         </p>
                       </div>
                       <div class="col-lg-4 border-start">
-                        <p class="mb-0 text-muted">Payment Mode: {{this.paymentType}}</p>
+                        <p class="mb-0 text-muted">Payment Mode: <strong>{{this.paymentType}}</strong></p>
                         <p class="m-0">
                           <span class="text-success"></span> <br />
                           Shipping fee: Free <br />

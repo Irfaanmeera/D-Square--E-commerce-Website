@@ -11,7 +11,7 @@ const salesReport = async (req, res) => {
         return res.render("admin/salesReport", { salesData, dateValues });
       }
 
-      let salesData = await orderCollection.find().populate("userId couponApplied");
+      let salesData = await orderCollection.find().populate("userId");
 
       salesData = salesData.map((v) => {
         v.orderDateFormatted = formatDate(v.orderDate);
@@ -57,7 +57,7 @@ if(req.session?.admin?.dateValues){
             $gte: startDate,
             $lte: endDate
         }
-    }).populate('userId couponApplied')
+    }).populate('userId')
 
     salesData.map((v) => {
       sheet.addRow({
@@ -66,7 +66,7 @@ if(req.session?.admin?.dateValues){
         orderDate: v.orderDateFormatted,
         products: v.cartData.map((v) => v.productId.productName).join(", "),
         noOfItems: v.cartData.map((v) => v.productQuantity).join(", "),
-        coupon:v.couponApplied.couponCode,
+        coupon:v.couponApplied,
         totalDiscount:v.totalDiscount,
         totalCost: "₹" + v.grandTotalCost,
         paymentMethod: v.paymentType,
@@ -87,7 +87,7 @@ if(req.session?.admin?.dateValues){
 
    }else{
 
-    let salesData = await orderCollection.find().populate('userId couponApplied')
+    let salesData = await orderCollection.find().sort({orderDate:-1}).populate('userId couponApplied')
 
 
     salesData = salesData.map((v)=>{
@@ -102,7 +102,7 @@ if(req.session?.admin?.dateValues){
           orderDate: v.orderDateFormatted,
           products: v.cartData.map((v) => v.productId.productName).join(", "),
           noOfItems: v.cartData.map((v) => v.productQuantity).join(", "),
-          coupon:v.couponApplied.couponCode,
+          coupon:v.couponApplied,
           totalDiscount:v.totalDiscount,
           totalCost: "₹" + v.grandTotalCost,
           paymentMethod: v.paymentType,
@@ -142,7 +142,7 @@ const salesReportFilter = async (req, res) => {
         .find({
           orderDate: { $gte: startDate, $lte: endDate },
         })
-        .populate("userId couponApplied");
+        .populate("userId");
 
 
 

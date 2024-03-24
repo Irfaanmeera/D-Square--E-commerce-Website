@@ -2976,7 +2976,7 @@ top: 2px;
 }
 
 .hero-area .hero-slider .single-slider {
-  background-size: cover;
+  background-size:contain;
   background-position: center;
   background-repeat: no-repeat;
   height: 500px;

@@ -36,8 +36,15 @@ hbs.registerPartials(path.join(__dirname, 'views', 'partials'));
 hbs.registerHelper("product", (val1, val2) => val1 * val2);
 hbs.registerHelper("sum", (val1, val2) => val1 + val2);
 hbs.registerHelper("lessThan", (val1, val2) => val1 < val2);
+hbs.registerHelper("gt", (val1, val2) => val1 > val2);
 hbs.registerHelper("equal", (val1, val2) => val1 == val2);
 hbs.registerHelper("arrayLength", (val) => val.length);
+hbs.registerHelper('ifCond', function (v1, v2, options) {
+  if (v1 == v2) {
+    return options.fn(this);
+  }
+  return '';
+});
 
 
 

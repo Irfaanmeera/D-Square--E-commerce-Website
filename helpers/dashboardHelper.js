@@ -38,7 +38,7 @@ const categoryCount = async()=>{
 const pendingOrdersCount = async()=>{
     try{
 const result = await orderCollection.countDocuments({
-    orderStatus:{$ne:'Delivered'}
+    orderStatus:{ $nin: ['Delivered', 'Cancelled', 'Return Pending', 'Return Accepted'] }
 })
 return result;
     }catch(error){
@@ -65,7 +65,7 @@ const totalRevenue = async () => {
         const result = await orderCollection.aggregate([
             {
                 $match: {
-                    orderStatus: { $nin: ["Cancelled", "Return"] } // Exclude 'cancelled' and 'return' orderStatus
+                    orderStatus: { $nin: ["Cancelled", "Return Pending",'Return Accepted'] } // Exclude 'cancelled' and 'return' orderStatus
                 }
             },
             {
@@ -138,7 +138,7 @@ const currentWeekRevenue= async () => {
       const result = await orderCollection.aggregate([
         {
                 $match: {
-                    orderStatus: { $nin: ["Cancelled", "Return"] } // Exclude 'cancelled' and 'return' orderStatus
+                    orderStatus: { $nin: ["Cancelled", "Return Pending",'Return Accepted'] } // Exclude 'cancelled' and 'return' orderStatus
                 }
             },
           {$group: {
@@ -171,7 +171,7 @@ const currentMonthRevenue = async () => {
         const result = await orderCollection.aggregate([
             {
                 $match: {
-                    orderStatus: { $nin: ["Cancelled", "Return"] }, // Exclude 'cancelled' and 'return' orderStatus
+                    orderStatus: { $nin: ["Cancelled", "Return Pending",'Return Accepted'] }, // Exclude 'cancelled' and 'return' orderStatus
                     orderDate: { $gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1) } // Filter by current month
                 }
             },

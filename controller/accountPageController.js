@@ -7,7 +7,7 @@ const orderCollection = require("../models/orderModel");
 const walletCollection = require("../models/walletModel");
 const wishlistCollection = require("../models/wishlistModel");
 const couponCollection = require("../models/couponModel");
-
+const {generateInvoice} = require('../helpers/invoice')
 //user account page get controller
 const userAccountPageLoad = async (req, res) => {
   try {
@@ -75,7 +75,6 @@ const addAddressPost = async (req, res) => {
     });
 
     const addressData = await address.save();
-    console.log(addressData);
 
     res.redirect("/userAccount");
   } catch (error) {
@@ -152,6 +151,19 @@ const cancelOrder = async (req, res) => {
   }
 };
 
+//return order
+const returnOrder = async (req, res) => {
+  try {
+    const orderData = await orderCollection.findByIdAndUpdate(
+      { _id: req.params.id },
+      { $set: { orderStatus: "Return Pending" } }
+    );
+    res.json({ success: true,orderStatus:'Return Pending' });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 //user coupon page
 const userCoupons = async (req, res) => {
   try {
@@ -168,11 +180,56 @@ const userCoupons = async (req, res) => {
   }
 };
 
+//transaction page
+const transactionHistory = async(req,res)=>{
+  try{
+
+    let walletData = await walletCollection.findOne({userId:req.session.user._id})
+    let walletBalance = await walletCollection.findOne({userId:req.session.user._id})
+
+    walletData = walletData.walletTransaction.map((transaction) => {
+      transaction.walletDateFormatted = formatDate(transaction.transactionDate);
+      return transaction;
+  });
+    console.log(walletData)
+     res.render('user/transaction',{walletData,user:req.session.user,walletBalance})
+  }catch(error){
+    console.log(RangeError)
+  }
+}
+
+
+//dowload invoice
+const invoiceDownload = async(req,res)=>{
+  try{
+    let orderData = await orderCollection
+    .findOne({ _id: req.params.id })
+    .populate("addressChosen");
+
+  const stream = res.writeHead(200, {
+    "Content-Type": "application/pdf",
+    "Content-Disposition": "attachment;filename=invoice.pdf",
+  });
+
+  generateInvoice(
+    (chunk) => stream.write(chunk),
+    () => stream.end(),
+    orderData
+  );
+  }catch(error){
+    console.log(error)
+  }
+}
+
 module.exports = {
   userAccountPageLoad,
   addAddressPost,
   editAddress,
   deleteAddress,
   cancelOrder,
+  returnOrder,
   userCoupons,
+  transactionHistory,
+  invoiceDownload,
+
 };

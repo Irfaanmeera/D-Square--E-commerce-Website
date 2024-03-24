@@ -6,7 +6,7 @@
         <div class="card border-top border-bottom border-3 mb-5" style="border-color: #c4c4c7 !important;">
           
           <div class="card pt-3">
-            <div class="title" style="margin-left:200px;font-size:20px;">Your Order</div>
+            <div class="title text-center" style="font-size:20px;">Your Order</div>
             <div class="info">
                 <div class="row">
                     
@@ -38,6 +38,18 @@
                     </div>
                 </div>
                 {{/each}}
+                 <div class="row">
+                    <div class="col-9">
+                        <span id="name">Total Discount</span>
+                    </div>
+                    
+                    <div class="col-3">
+                      {{#each orderData}}
+                        <span id="price">{{this.totalDiscount}}</span>
+                      {{/each}}
+                    </div>
+                   
+                </div>
                 <div class="row">
                     <div class="col-9">
                         <span id="name">Shipping</span>
@@ -46,11 +58,14 @@
                         <span id="price">Free Shipping</span>
                     </div>
                 </div>
+                
+                
+                
             </div>
       
-            <div class="total">
+            <div class="total mb-5">
                 <div class="row">
-                    <div class="col-9">Total</div>
+                    <div class="col-9">Total Amount</div>
                     <div class="col-3"><big>{{orderData.grandTotalCost}}</big></div>
                 </div>
             </div>

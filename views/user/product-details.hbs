@@ -64,7 +64,16 @@
                             <p class="info-text">{{currentProduct.productDescription}}</p>
                            
            
-      {{#if user}}
+     
+
+      {{#if (equal currentProduct.productStock 0)}}
+              <div class="promotion">
+                <span class="discount" style="font-size:15px;font-weight:bold;
+                 color:red">OUT OF STOCK!</span>
+              </div>
+              {{else}}
+
+               {{#if user}}
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 " id="productQuantity">
           
               <div class="quantity-wrapper mb-5" >
@@ -92,7 +101,7 @@
 
 
 
-
+                
 
               {{else}}
               <a href="/login">
@@ -101,6 +110,8 @@
               </a>
               
             </div>
+            {{/if}}
+
             {{/if}}
             {{!-- <div id="wishlist" class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
               <a class="link-wishlist wishlist btn-block ">Add to Wishlist</a>

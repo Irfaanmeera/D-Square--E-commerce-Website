@@ -26,71 +26,57 @@
 		</a>
 		<ul class="side-menu top ">
 			<li >
-				<a href="#">
+				<a href="/admin">
 					<i class='bx bxs-dashboard' ></i>
 					<span class="text">Dashboard</span>
 				</a>
 			</li>
-			<li class="active">
+			<li>
 				<a href="/admin/category">
 					<i class='bx bxs-package'></i>
 					<span class="text">Categories</span>
 				</a>
 			</li>
-			<li >
+			<li>
 				<a href="/admin/product">
 					<i class='bx bxs-shopping-bags'></i>
 					<span class="text">Products</span>
 				</a>
 			</li>
 			<li>
-				<a href="#">
+				<a href="/admin/orderManagement">
 					<i class='bx bxs-purchase-tag-alt'></i>
 					<span class="text">Orders</span>
 				</a>
 			</li>
 			<li>
-				<a href="#">
+				<a href="/admin/userManagement">
 					<i class='bx bxs-group' ></i>
 					<span class="text">Users</span>
 				</a>
 			</li>
-            <li>
-				<a href="#">
+            <li class="active">
+				<a href="/admin/couponManagement">
 					<i class='bx bxs-coupon'></i>
 					<span class="text">Coupons</span>
 				</a>
 			</li>
              <li>
-				<a href="#">
+				<a href="/admin/offerManagement">
 					<i class='bx bxs-receipt'></i>
 					<span class="text">Product Offers</span>
 				</a>
 			</li>
             <li>
-				<a href="#">
+				<a href="/admin/salesReport">
 					<i class='bx bxs-receipt'></i>
 					<span class="text">Sales Report</span>
 				</a>
 			</li>
             <li>
-				<a href="#">
+				<a href="/admin/bannerManagement">
 					<i class='bx bxs-receipt'></i>
 					<span class="text">Banner</span>
-				</a>
-			</li>
-		</ul>
-		<ul class="side-menu">
-			<li>
-				<a href="#">
-					<i class='bx bxs-cog' ></i>
-					<span class="text">Settings</span>
-				</a>
-			</li>
-			<li>
-				<a href="#" class="logout">
-					<i class='bx bxs-log-out-circle' ></i>
-					<span class="text">Logout</span>
 				</a>
 			</li>
 		</ul>
@@ -121,18 +107,18 @@
 		<main>
 			<div class="head-title">
 				<div class="left">
-					<h1>Add Category</h1>
+					<h1>Add Coupon</h1>
 					<ul class="breadcrumb">
 						<li>
 							<a href="#">Home</a>
 						</li>
 						<li><i class='bx bx-chevron-right' ></i></li>
                         <li>
-							<a href="/admin/product">Category</a>
+							<a href="/admin/product">Coupon</a>
 						</li>
                         <li><i class='bx bx-chevron-right' ></i></li>
 						<li>
-							<a class="active" href="#">Add Category</a>
+							<a class="active" href="#">Add Coupon</a>
 						</li>
 					</ul>
 				</div>
@@ -175,7 +161,7 @@
                                 <input id="discountPercentage" name="discountPercentage" type="number" min="5" max="90"
                                     class="form-control" placeholder="Enter discount percentage" required>
                             </div>
-                            <div class="form-text">Choose a percentage to be discounted. Between 5% and 90%.</div>
+                            <div class="form-text">Choose a percentage between 5% and 90% </div>
                         </div>
 
                         <div class="startDateInput p-2">
@@ -184,7 +170,7 @@
                                 <input id="startDate" name="startDate" id="startDate" type="date" class="form-control"
                                     required>
                             </div>
-                            <div class="form-text">Choose a start date for the discount to be considered.</div>
+                           
                         </div>
 
                         <div class="expiryDateInput p-2">
@@ -192,7 +178,7 @@
                             <div class="input-group">
                                 <input id="expiryDate" name="expiryDate" type="date" class="form-control" required>
                             </div>
-                            <div class="form-text">Choose an exipry date for the discount to end.</div>
+                            
                         </div>
 
                         <div class="minimumPurchaseInput p-2">
@@ -201,8 +187,7 @@
                                 <input id="minimumPurchase" name="minimumPurchase" type="text" class="form-control"
                                     placeholder="Enter minimum purchase required" required>
                             </div>
-                            <div class="form-text">Minimum amount of purchase to be done to allow the coupon discount.
-                            </div>
+                            
                         </div>
 
                         <div class="maximumDiscount p-2">
@@ -211,13 +196,11 @@
                                 <input id="maximumDiscount" name="maximumDiscount" type="text" class="form-control"
                                     placeholder="Maximum discount applicable" required>
                             </div>
-                            <div class="form-text">Maximum amount of discount to be allowed while using the coupon.
-                            </div>
+                            
                         </div>
 
                     
-                        <button type="button" class="btn btn-secondary" >Close</button>
-                        <button id="addCouponBtn" type="submit" class="btn btn-info">Save changes</button>
+                        <button id="addCouponBtn" type="submit" class="btn btn-primary mt-4">Add Coupon</button>
                 
                 </form>
 

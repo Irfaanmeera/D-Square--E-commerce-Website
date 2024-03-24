@@ -168,8 +168,8 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                          <button type="submit" class="btn btn-info">Save changes</button>
+                            
+                          <button type="submit" class="btn btn-primary">Add Address</button>
                         </div>
                     </form>
                 </div>
@@ -227,8 +227,23 @@
       try {
         event.preventDefault()
         if (CODElement.checked) {//cash on delivery 
-            console.log('COD clicked')
-          window.location.href = '/orderPlacedEnd'
+            let response = await fetch("/orderPlaced", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({}),
+        });
+        response = await response.json();
+        if (response.codNotAllowed) {
+          return Swal.fire({
+            icon: "error",
+            title: "COD Not Allowed",
+            text: "COD is not allowed for orders above Rs 1000.",
+          });
+        } else if (response.success) {
+            window.location.href = '/orderPlacedEnd'
+        }
       
         } else if (walletElement.checked) {
           let response = await fetch("/orderPlaced", {

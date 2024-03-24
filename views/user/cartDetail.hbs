@@ -48,7 +48,7 @@
                 {{#each cartData}}
                 <tr class="CartProduct" id="cartProduct{{@index}}" style="height:120px;" >
                   <td class="CartProductThumb ">
-                    <div><a href=""><img src="images/productImages/{{this.productId.productImage1}}" style="width:40%;height:40%;" alt="img"></a>
+                    <div><a href="/productDetails/{{this.productId._id}}"><img src="images/productImages/{{this.productId.productImage1}}" style="width:40%;height:40%;" alt="img"></a>
                     </div>
                   </td>
                   <td>
@@ -60,11 +60,19 @@
                   </td>
                     <div id="stockLimit{{@index}}" style="display: none;">{{this.productId.productStock}}</div>
                   <td>
+                    {{#if (equal this.productId.productStock 0)}}
+              <div class="promotion">
+                <span class="discount" style="font-size:15px;font-weight:bold;
+                 color:red">OUT OF STOCK!</span>
+                 <span>Please remove</span>
+              </div>
+              {{else}}
                     <button type="button" class="btn btn-secondary btn-sm"
                       onclick="cartDec('{{this._id}}','{{@index}}')">-</button>
                     <span id="productQuantity{{@index}}" style="margin:10px;"> {{ this.productQuantity }}</span>
                     <button type="button" class="btn btn-secondary btn-sm"
                       onclick="cartInc('{{this._id}}','{{@index}}')">+</button>
+                      {{/if}}
                   </td>
                   <td id="totalCostPerProduct{{@index}}" class="price">₹{{this.totalCostPerProduct}}</td>
                   
@@ -170,7 +178,7 @@
       totalPriceElement.innerHTML = '₹' +  data.grandTotal
       grandTotalElement.innerHTML = '₹' + data.grandTotal
 
-      window.location.reload();
+
     } catch (error) {
       console.error(error)
     }
@@ -201,8 +209,8 @@
       totalCostPerProductElement.innerHTML = '₹' + data.cartProduct.totalCostPerProduct;
       totalPriceElement.innerHTML = '₹' + data.grandTotal
       grandTotalElement.innerHTML = '₹' + data.grandTotal
+           
 
-      window.location.reload();
     } catch (error) {
       console.error(error)
     }

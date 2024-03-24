@@ -44,7 +44,7 @@ const addToCart = async (req, res) => {
   try {
     const userId = req.session.user._id;
     const productId = req.params.id;
-    const productQuantity = req.body.productQuantity;
+    const productQuantity = req.body.productQuantity ||1;
 
     let existingProduct = await cartCollection.findOne({
       userId: req.session.user._id,
@@ -69,6 +69,7 @@ const addToCart = async (req, res) => {
 
       // Save the cart item to the database
       const userCart = await cart.save();
+      console.log(userCart)
       res.status(200).json({ success: true });
     }
   } catch (error) {
@@ -128,7 +129,7 @@ const increaseCart = async (req, res) => {
     if (cartProduct.productQuantity < cartProduct.productId.productStock) {
       cartProduct.productQuantity++;
     }
-
+    cartProduct.totalCostPerProduct = cartProduct.productQuantity * cartProduct.productId.productPrice;
     cartProduct = await cartProduct.save();
     await grandTotal(req);
     res.json({ cartProduct, grandTotal: req.session.grandTotal });
@@ -147,14 +148,23 @@ const decreaseCart = async (req, res) => {
     if (cartProduct.productQuantity > 1) {
       cartProduct.productQuantity--;
     }
-
+    cartProduct.totalCostPerProduct = cartProduct.productQuantity * cartProduct.productId.productPrice;
     cartProduct = await cartProduct.save();
+    let {totalCostPerProduct} = cartProduct;
+
+    console.log("total cost:"+ totalCostPerProduct)
     await grandTotal(req);
+
     res.json({ cartProduct, grandTotal: req.session.grandTotal });
   } catch (error) {
     console.log(error);
   }
 };
+
+
+
+
+
 
 //checkout page
 const checkoutPageLoad = async (req, res) => {
@@ -246,8 +256,12 @@ const razorpayCreateOrderId = async (req, res) => {
   });
 };
 
+
+//order placed
 const orderPlaced = async (req, res) => {
   try {
+    const grandTotal = req.session.grandTotal;
+
     if (req.body.razorpay_payment_id) {
       //razorpay payment
       await orderCollection.updateOne(
@@ -265,13 +279,13 @@ const orderPlaced = async (req, res) => {
         userId: req.session.user._id,
       });
       console.log(walletData);
-      if (walletData.walletBalance >= req.session.grandTotal) {
-        walletData.walletBalance -= req.session.grandTotal;
+      if (walletData.walletBalance >= grandTotal) {
+        walletData.walletBalance -= grandTotal;
 
-        //wallet tranaction data
+        //wallet transaction data
         let walletTransaction = {
           transactionDate: new Date(),
-          transactionAmount: -req.session.grandTotal,
+          transactionAmount: -grandTotal,
           transactionType: "Debited for placed order",
         };
         walletData.walletTransaction.push(walletTransaction);
@@ -292,18 +306,22 @@ const orderPlaced = async (req, res) => {
         return res.json({ insufficientWalletBalance: true });
       }
     } else {
-      //incase of COD
-      await orderCollection.updateOne(
-        { _id: req.session.orderData._id },
-        {
-          $set: {
-            paymentId: "generatedAtDelivery",
-            paymentType: "COD",
-          },
-        }
-      );
+      // In case of COD
+      if (grandTotal <= 1000) {
+        await orderCollection.updateOne(
+          { _id: req.session.orderData._id },
+          {
+            $set: {
+              paymentId: "generatedAtDelivery",
+              paymentType: "COD",
+            },
+          }
+        );
 
-      res.json({ success: true });
+        res.json({ success: true });
+      } else {
+        return res.json({ codNotAllowed: true });
+      }
     }
   } catch (error) {
     console.error(error);
@@ -441,28 +459,34 @@ const getOrderStatus = async (req, res) => {
   }
 };
 
+
 //apply coupon
 const applyCoupon = async (req, res) => {
   try {
     let { couponCode } = req.body;
     console.log(couponCode);
 
-    //Retrive the coupon document from the database if it exists
+    // Retrieve the coupon document from the database if it exists
     let couponData = await couponCollection.findOne({ couponCode });
     console.log(couponData);
     if (couponData) {
       let order = await orderCollection.findOne({
         _id: req.session.orderData._id,
       });
-      if (order.couponApplied) {
-        // Respond with an error status if the coupon has already been applied to the order
-        return res
-          .status(400)
-          .json({ error: "Coupon already applied to this order." });
-      }
+      if (order.couponApplied !=='Nil') {
+        //         // Respond with an error status if the coupon has already been applied to the order
+                return res
+                  .status(400)
+                  .json({ error: "Coupon already applied to this order." });
+              }
+      // if (order.couponApplied !== "Coupon not applied") {
+      //   // Respond with an error status if the coupon has already been applied to the order
+      //   return res.status(400).json({ error: "Coupon already applied to this order." });
+      // }
+
       /*if coupon exists:
         > check if it is applicable, i.e within minimum purchase limit & expiry date
-        >proceed... */
+        > proceed... */
 
       let { grandTotal } = req.session;
       let { minimumPurchase, expiryDate } = couponData;
@@ -471,9 +495,9 @@ const applyCoupon = async (req, res) => {
 
       if (minimumPurchaseCheck && expiryDateCheck) {
         /* if coupon exists check if it is applicable :
-          >calculate the discount amount
-          >update the database's order document
-          >update the grand total in the req.session for the payment page
+          > calculate the discount amount
+          > update the database's order document
+          > update the grand total in the req.session for the payment page
           */
         let { discountPercentage, maximumDiscount } = couponData;
 
@@ -482,18 +506,11 @@ const applyCoupon = async (req, res) => {
             ? maximumDiscount
             : (grandTotal * discountPercentage) / 100;
 
-        // req.session.totalDiscount = discountAmount;
-
-        const order = await orderCollection.findOne({
-          _id: req.session.orderData._id,
-        });
-        console.log(order);
-
         await orderCollection.findByIdAndUpdate(
           { _id: req.session.orderData._id },
           {
             $set: {
-              couponApplied: couponData._id,
+              couponApplied: couponCode, // store coupon code as string
               totalDiscount: discountAmount,
             },
             $inc: { grandTotalCost: -discountAmount },
@@ -502,20 +519,19 @@ const applyCoupon = async (req, res) => {
 
         req.session.grandTotal -= discountAmount;
 
-        console.log(req.session.totalDiscount);
-
         // Respond with a success status and indication that the coupon was applied
-        res.status(202).json({ couponApplied: true, discountAmount });
+        return res.status(202).json({ couponApplied: true, discountAmount });
       } else {
         // Respond with an error status if the coupon is not applicable
-        res.status(501).json({ couponApplied: false });
+        return res.status(501).json({ couponApplied: false });
       }
     } else {
       // Respond with an error status if the coupon does not exist
-      res.status(501).json({ couponApplied: false });
+      return res.status(501).json({ couponApplied: false });
     }
   } catch (error) {
     console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 

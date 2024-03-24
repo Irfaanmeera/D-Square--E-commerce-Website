@@ -3,6 +3,7 @@ const adminCollection = require("../models/adminModel");
 const dashboardHelper = require('../helpers/dashboardHelper');
 const categoryCollection = require("../models/categoryModel");
 const orderCollection= require('../models/orderModel')
+const bannerCollection = require('../models/bannerModel')
 
 
 
@@ -166,6 +167,38 @@ const unBlockUser = async (req, res) => {
   }
 };
 
+//banner management
+const bannerManagement = async(req,res)=>{
+  try{
+    let bannerData = await bannerCollection.find({});
+    res.render('admin/banner',{bannerData})
+  }catch(error){
+    console.log(error)
+  }
+}
+
+
+const uploadBanner = async(req,res)=>{
+  try{
+     await bannerCollection.insertMany({
+      image:req.file.filename
+     })
+     res.json({success:true})
+  }catch(error){
+    console.log(error)
+  }
+}
+
+const deleteBanner = async(req,res)=>{
+  try{
+   await bannerCollection.findOneAndDelete({_id:req.params.id})
+   res.json({success:true})
+  }catch(error){
+    console.log(error)
+  }
+}
+
+
 //admin logout
 const adminlogout = async (req, res) => {
   req.session.destroy();
@@ -181,4 +214,7 @@ module.exports = {
   userManagement,
   blockUser,
   unBlockUser,
+  uploadBanner,
+  bannerManagement,
+  deleteBanner,
 };

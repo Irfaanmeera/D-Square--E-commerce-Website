@@ -519,6 +519,7 @@ input[type="range"]::-webkit-slider-thumb {
 
 
 
+
 </style>
 
 
@@ -641,13 +642,25 @@ input[type="range"]::-webkit-slider-thumb {
                  {{#if this.priceBeforeOffer}}
             <span style="color:darkgray;text-decoration:line-through; margin-right:5px; font-size:12px;">₹ {{this.priceBeforeOffer}}</span> 
             {{/if}}
+            {{#if (equal this.productStock 0)}}
+              <div class="promotion">
+                <span class="discount" style="font-size:12px;font-weight:bold;
+                 color:red">OUT OF STOCK!</span>
+              </div>
+              {{else}}
                 <button id="productQuantityInput" onclick="addToWishlist('{{this._id}}')"  class="btn btn-outline-secondary" style="margin-left:auto" ><i class="lni lni-heart"></i></button>
+                {{/if}}
               </div>
             </div>
           </div>
         </div>
         {{/each}}
-         <div class="row">
+
+
+
+
+        {{!-- pagination --}}
+         {{!-- <div class="row">
       <div class="col-md-12">
         <div class="pagination-container">
           <nav class="Pager2" aria-label="pagination example"></nav>
@@ -671,7 +684,49 @@ input[type="range"]::-webkit-slider-thumb {
           </ul>
         </div>
       </div>
+    </div> --}}
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="pagination-container">
+        <nav aria-label="pagination example">
+          <ul class="pagination d-flex no-margin-top mb-5">
+            <li class="page-item">
+              <a class="page-link" href="/shop?pageNo={{previousPage}}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+            {{!-- {{#each totalPagesArray}}
+              <li class="page-item {{#ifCond currentPage '==' (sum @index 1)}} active {{/ifCond}}">
+                <a class="page-link" href="/shop?pageNo={{sum @index 1}}">{{sum @index 1}}</a>
+              </li>
+            {{/each}} --}}
+    {{#each totalPagesArray}}
+  <li class="page-item {{#ifCond currentPage '==' (sum @index 1)}}active{{/ifCond}}">
+    <a class="page-link {{#ifCond currentPage '==' (sum @index 1)}}active{{/ifCond}}" href="/shop?pageNo={{sum @index 1}}" style="{{#ifCond currentPage '==' (sum @index 1)}}background-color: #007bff; color: #fff; border-color: #007bff;{{/ifCond}}">
+      {{sum @index 1}}
+    </a>
+  </li>
+{{/each}}
+
+
+            <li class="page-item">
+              <a class="page-link" href="/shop?pageNo={{nextPage}}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
     </div>
+  </div>
+
+
+
+
+
+     {{!-- pagination --}}
+
       </div>
 
     </div>

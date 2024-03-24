@@ -9,31 +9,19 @@
               <!-- Start Hero Slider -->
               <div class="hero-slider">
                 <!-- Start Single Slider -->
+                {{#each bannerData}}
                 <div
                   class="single-slider"
                   style="
-                    background-image: url(/images/hero/slider-bg1.jpg);
+                    background-image: url(/images/productImages/{{this.image}});
                   "
                 >
-                  <div class="content">
-                    <h2>
-                      <span>No restocking fee ($35 savings)</span>
-                      M75 Sport Watch
-                    </h2>
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                      sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua.
-                    </p>
-                    <h3><span>Now Only</span> Rs. 16899</h3>
-                    <div class="button">
-                      <a href="product-grids.html" class="btn">Shop Now</a>
-                    </div>
-                  </div>
+               
                 </div>
+                {{/each}}
                 <!-- End Single Slider -->
                 <!-- Start Single Slider -->
-                <div
+                {{!-- <div
                   class="single-slider"
                   style="
                     background-image: url(/images/hero/slider-bg2.jpg);
@@ -54,7 +42,7 @@
                       <a href="product-grids.html" class="btn">Shop Now</a>
                     </div>
                   </div>
-                </div>
+                </div> --}}
                 <!-- End Single Slider -->
               </div>
               <!-- End Hero Slider -->
@@ -72,10 +60,10 @@
                 >
                   <div class="content">
                     <h2>
-                      <span>New line required</span>
+                    
                       iPhone 12 Pro Max
                     </h2>
-                    <h3>$259.99</h3>
+                    <h3>Rs.58999</h3>
                   </div>
                 </div>
                 <!-- End Small Banner -->
@@ -89,7 +77,7 @@
                       Saving up to 50% off all online store items this week.
                     </p>
                     <div class="button">
-                      <a class="btn" href="product-grids.html">Shop Now</a>
+                      <a class="btn" href="/shop">Shop Now</a>
                     </div>
                   </div>
                 </div>
@@ -189,13 +177,20 @@
             <li><span>4.0 Review(s)</span></li>
           </ul>
           <div class="price">
-            {{#if this.priceBeforeOffer}}
+           
+            <span style="margin-right:5px;">₹ {{this.productPrice}}</span>
+             {{#if this.priceBeforeOffer}}
             <span style="color:darkgray;text-decoration:line-through; margin-right:5px; font-size:14px;">₹ {{this.priceBeforeOffer}}</span> 
             {{/if}}
-            <span style="margin-right:20px;">₹ {{this.productPrice}}</span>
        {{!-- <i class="fa-regular fa-heart" style="color: #1f59ea; margin-left: 20px;"></i> --}}
 
+               {{#if (equal this.productStock 0)}}
+              <div class="promotion">
+                <span class="discount" style="font-size:12px; color:red">OUT OF STOCK!</span>
+              </div>
+              {{else}}
        <button id="productQuantityInput" onclick="addToWishlist('{{this._id}}')"  class="btn btn-outline-secondary" style="margin-left:auto" ><i class="lni lni-heart"></i></button>
+       {{/if}}
           </div>
         </div>
       </div>
@@ -315,18 +310,30 @@
       try {
         console.log('clicked' + id)
 
-        let productQuantity = document.getElementById('productQuantityInput').value
-        let bodyData = { productQuantity }
-        console.log(productQuantity)
-
         let response = await fetch('/wishlist/' + id, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(bodyData)
-        })
-        let result = await response.json()
-        console.log('result' + result)
-        if (result.success) {
+          headers: { 'Content-Type': 'application/json' }
+        });
+        let result = await response.json();
+        console.log('result' + result);
+
+        if (result.exists) {
+          // Product already exists in the wishlist
+          return await Swal.fire({
+            title: "<strong>Product Already in Wishlist</strong>",
+            icon: "info",
+            showCloseButton: true,
+            focusConfirm: false,
+            confirmButtonText: `OK`,
+            confirmButtonColor: '#00008b',
+            confirmButtonAriaLabel: "OK"
+          });
+        } else {
+          // Product doesn't exist in the wishlist, proceed to add it
+          // Example: You can call the addToWishlist route here
+          // await addToWishlistRoute(id);
+
+          // For demonstration purposes, show a success message
           return await Swal.fire({
             title: "<strong>Added to Wishlist</strong>",
             icon: "success",
@@ -341,10 +348,11 @@
           });
         }
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     }
-  </script>
+</script>
+
 
     {{>userFooter}}
 

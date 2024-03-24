@@ -8,6 +8,7 @@ const walletCollection = require("../models/walletModel");
 const wishlistCollection = require("../models/wishlistModel");
 const productOfferCollection = require("../models/offerModel");
 const applyReferralOffer = require("../helpers/applyReferralOffer");
+const bannerCollection = require ('../models/bannerModel')
 const saltRound = 10;
 
 //homepage
@@ -34,6 +35,7 @@ const userHomeController = async (req, res) => {
   const productOffer = await productOfferCollection
     .find()
     .populate("productId");
+  const bannerData = await bannerCollection.find()
 
   if (req.session.user) {
     res.render("user/homepageUser", {
@@ -46,9 +48,10 @@ const userHomeController = async (req, res) => {
       wishlistCount,
       wishlistData,
       productOffer,
+      bannerData,
     });
   } else {
-    res.render("user/homepageUser", { productData, categoryData });
+    res.render("user/homepageUser", { productData, categoryData,bannerData });
   }
 };
 
@@ -363,6 +366,29 @@ const productDetails = async (req, res) => {
   }
 };
 
+
+//aboutUs page 
+const aboutUsPage = async(req,res)=>{
+  try{
+    const count = await cartCollection.countDocuments({
+      userId: req.session?.user?._id,
+    });
+    const wishlistCount = await wishlistCollection.countDocuments({
+      userId: req.session?.user?._id,
+    });
+    const wishlistData = await wishlistCollection.find({
+      userId: req.session?.user?._id,
+    });
+    let categoryData = await categoryCollection.find(
+      { is_listed: true },
+      { categoryName: true }
+    );
+    res.render('user/aboutUs',{user:req.session.user,count,wishlistCount,wishlistData,categoryData})
+  }catch{
+    console.log(error)
+  }
+}
+
 //logout
 const logoutControler = async (req, res) => {
   req.session.destroy();
@@ -384,4 +410,5 @@ module.exports = {
   sendForgotPwdOtp,
   forgotPasswordResetPage,
   forgotPasswordReset,
+  aboutUsPage
 };
