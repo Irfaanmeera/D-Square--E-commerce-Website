@@ -1,5 +1,4 @@
 const express = require("express");
-const app = express.Router();
 const categoryCollection = require("../models/categoryModel");
 const productCollection = require("../models/productModel");
 
@@ -30,38 +29,6 @@ const addCategoryLoad = async (req, res) => {
 };
 
 //post add category controller
-// const addCategory = async (req, res) => {
-//   try {
-//     const { categoryName, categoryDescription } = req.body;
-
-//     let categoryExists = await categoryCollection.findOne({
-//       categoryName: { $regex: new RegExp(req.body.categoryName, "i") },
-//     });
-//     console.log(categoryExists);
-
-//     if(!categoryExists){
-
-//       const category = new categoryCollection({
-//         categoryName,
-//         categoryDescription,
-
-//     });
-//       const categoryData = await category.save();
-// console.log(categoryData);
-
-//     if(categoryData){
-//     res.redirect('/admin/category');
-//  }
-//       }else{
-//         req.session.categoryExists = categoryExists;
-
-//         res.redirect("/admin/category");
-//       }
-//   }catch(error){
-//     console.log(error.message)
-// }
-// }
-
 const addCategory = async (req, res) => {
   try {
     const { categoryName, categoryDescription } = req.body;
@@ -69,7 +36,7 @@ const addCategory = async (req, res) => {
     let categoryExists = await categoryCollection.findOne({
       categoryName: { $regex: new RegExp(req.body.categoryName, "i") },
     });
-    console.log("CAtegory Exists: ", categoryExists);
+    console.log("Category Exists: ", categoryExists);
     if (!categoryExists) {
       const category = new categoryCollection({
         categoryName,
@@ -138,6 +105,7 @@ const deleteCategory = async (req, res) => {
   }
 };
 
+//unlist category
 const unlistCategory = async (req, res) => {
   try {
     await categoryCollection.findOneAndUpdate(
@@ -150,6 +118,7 @@ const unlistCategory = async (req, res) => {
   }
 };
 
+//list category
 const listCategory = async (req, res) => {
   try {
     await categoryCollection.findOneAndUpdate(

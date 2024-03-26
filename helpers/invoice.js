@@ -19,7 +19,7 @@ function generateHeader(doc) {
   doc
     .fillColor("#444444")
     .fontSize(20)
-    .text("D Square", 110, 57,{align:'left'})
+    .text("D Square", 110, 57, { align: "left" })
     .fontSize(10)
     .text("Avadi-Poonnamalle High Road", 200, 65, {
       align: "right",
@@ -62,7 +62,7 @@ function generateCustomerInformation(doc, orderData) {
 function generateBody(doc, orderData) {
   generateHr(doc, 90);
 
-  doc.fontSize(15).text("Invoice", 50, 200,{align:'center'});
+  doc.fontSize(15).text("Invoice", 50, 200, { align: "center" });
 
   doc.font("Helvetica-Bold").fontSize(14).text("Product", 50, 240);
   doc.text("Quantity", 200, 240);
@@ -74,11 +74,10 @@ function generateBody(doc, orderData) {
   orderData.cartData.forEach((v, i) => {
     doc.fontSize(10).text(v.productId.productName, 50, 290 + (i + 1) * 20);
     doc.text(v.productQuantity.toString(), 200, 290 + (i + 1) * 20);
-    doc.text('Rs.'+v.totalCostPerProduct, 430, 290 + (i + 1) * 20, {
+    doc.text("Rs." + v.totalCostPerProduct, 430, 290 + (i + 1) * 20, {
       width: 100,
       align: "right",
     });
-   
 
     if (i !== orderData.cartData.length - 1) {
       doc.moveDown();
@@ -86,12 +85,8 @@ function generateBody(doc, orderData) {
     doc.moveDown();
   });
 
-  doc
-  .fontSize(10)
-  .text(`Discount`, 50, doc.y,{align:'left'});
-  doc
-  .fontSize(10)
-  .text(`- ${orderData.totalDiscount}`, 495, doc.y);
+  doc.fontSize(10).text(`Discount`, 50, doc.y, { align: "left" });
+  doc.fontSize(10).text(`- ${orderData.totalDiscount}`, 495, doc.y);
   doc.moveDown();
 
   generateHr(doc, doc.y);
@@ -99,7 +94,7 @@ function generateBody(doc, orderData) {
 
   doc
     .fontSize(12)
-    .text(`Total Amount: ${'Rs.'+orderData.grandTotalCost}`, 400, doc.y);
+    .text(`Total Amount: ${"Rs." + orderData.grandTotalCost}`, 400, doc.y);
 }
 
 function generateHr(doc, y) {

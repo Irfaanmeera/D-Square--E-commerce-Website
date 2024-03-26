@@ -24,7 +24,7 @@ const shopPage = async (req, res) => {
     const skip = (pageNo - 1) * productsInOnePage;
     const limit = productsInOnePage;
 
-  console.log(pageNo)
+    console.log(pageNo);
 
     const productDataWithPagination = await productCollection
       .find({ is_listed: true })
@@ -33,14 +33,13 @@ const shopPage = async (req, res) => {
     const productData =
       req.session?.shopProductData || productDataWithPagination;
 
-    
     const totalProducts = await productCollection.countDocuments();
     const totalPages = Math.ceil(totalProducts / productsInOnePage);
     const totalPagesArray = new Array(totalPages).fill(null);
 
     const previousPage = Math.max(pageNo - 1, 1);
     const nextPage = Math.min(pageNo + 1, totalPages);
-      
+
     res.render("user/shop", {
       user: req.session.user,
       categoryData,
@@ -49,7 +48,7 @@ const shopPage = async (req, res) => {
       count,
       totalProducts,
       totalPagesArray,
-      currentPage:pageNo,
+      currentPage: pageNo,
       previousPage,
       nextPage,
       wishlistData,
@@ -57,9 +56,7 @@ const shopPage = async (req, res) => {
       limit,
     });
 
-
     req.session.shopProductData = null;
-    
   } catch (error) {
     console.log(error);
   }
@@ -85,20 +82,19 @@ const filterCategoryPage = async (req, res) => {
       is_listed: true,
       category: req.params.categoryName,
     });
-    res.render("user/shop",{ user: req.session.user,
+    res.render("user/shop", {
+      user: req.session.user,
       categoryData,
       cartProduct,
       wishlistData,
       wishlistCount,
       productData,
-      count,});
+      count,
+    });
   } catch (error) {
     console.log(error);
   }
 };
-
-
-
 
 //filter brand
 const filterBrandPage = async (req, res) => {

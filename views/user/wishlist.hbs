@@ -1,72 +1,86 @@
 
-   {{> userHeader}}
-    <section class="py-5 bg-light">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-3 col-xl-3">
-            <nav class="nav flex-lg-column w-100 d-flex nav-pills mb-4">
-              <a class="nav-link my-0 bg-light" href="/userAccount"><p class="pb-0 mb-0" style="width: 100px">Account main</p></a>
-              <a class="nav-link my-0 bg-light" href="/orderList"><p class="pb-0 mb-0" style="width: 100px">Orders history</p></a>
-                <a class="nav-link my-0 bg-light" href="/transaction"><p class="pb-0 mb-0" style="width: 170px">Wallet Transactions</p></a>
-              <a class="nav-link my-0 active" href="/wishlist"><p class="pb-0 mb-0" style="width: 100px">My wishlist</p></a>
-              <a class="nav-link my-0 bg-light" href="/userCoupons"><p class="pb-0 mb-0" style="width: 100px">My Coupons</p></a>
-              <a class="nav-link my-0 bg-light" href="#"><p class="pb-0 mb-0" style="width: 100px">Profile setting</p></a>
-              <a class="nav-link my-0 bg-light" href="#"><p class="pb-0 mb-0" style="width: 100px">Log out</p></a>
-            </nav>
-          </div>
-          <main class="col-lg-9 col-xl-9">
-            <div class="card p-4 mb-0 shadow-0 border">
-              <div class="content-body">
-
-<table class="cartTable table-responsive" style="font-color: rgb(35, 34, 34); width: 100%; border-collapse: collapse;">
-    <tbody>
-        <tr style="color: rgb(73, 71, 71); height: 50px;font-weight:bold;">
-            <td style="width: 15%; border-bottom: 1px solid #ddd; ">My Wishlist</td>
-            <td style="width: 25%; border-bottom: 1px solid #ddd;"></td>
-            <td style="width: 25%; border-bottom: 1px solid #ddd;"></td>
-            <td style="width: 10%; border-bottom: 1px solid #ddd;" class="delete"></td>
-        </tr>
-        {{#each wishlistData}}
-        <tr class="CartProduct" id="cartProduct{{@index}}" style="height: 120px; border-bottom: 1px solid #ddd;">
-            <td class="CartProductThumb">
-                <div><a href="/productDetails/{{this.productId._id}}"><img src="images/productImages/{{this.productId.productImage1}}" style="width: 40%; height: 40%;" alt="img"></a></div>
-            </td>
-            <td>
-                <div class="CartDescription">
-                    <h6><a href="/productDetails/{{this.productId._id}}">{{this.productId.productName}}</a></h6>
-                    <div id="productPrice{{@index}}" class="price"><span>₹{{this.productId.productPrice}}</span></div>
-                </div>
-            </td>
-            <td> 
-              
-      {{#if (equal this.productId.productStock 0)}}
-              <div class="promotion">
-                <span class="discount" style="font-size:15px;font-weight:bold;
-                 color:red">OUT OF STOCK!</span>
-              </div>
-              {{else}}
-              <button onclick="moveToCart('{{this.productId._id}}')" class="btn btn-primary" style="width: 150px; margin-right:10px;"><i class="lni lni-cart"></i>Move to Cart</button>
-              {{/if}}
-              </td>
-            <td class="delete"><a title="Delete" onclick="removeWishlist('{{this._id}}','{{@index}}')"><i class="fas fa-trash"></i></a></td>
-        </tr>
-        {{/each}}
-    </tbody>
-</table>
-
-         
-
-
-
-               
-              </div>
-            </div>
-          </main>
-        </div>
-    
+{{> userHeader}}
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-3 col-xl-3">
+        <nav class="nav flex-lg-column w-100 d-flex nav-pills mb-4">
+          <a class="nav-link my-0 bg-light" href="/userAccount"><p
+              class="pb-0 mb-0" style="width: 100px">Account main</p></a>
+          <a class="nav-link my-0 bg-light" href="/orderList"><p
+              class="pb-0 mb-0" style="width: 100px">Orders history</p></a>
+          <a class="nav-link my-0 bg-light" href="/transaction"><p
+              class="pb-0 mb-0" style="width: 170px">Wallet Transactions</p></a>
+          <a class="nav-link my-0 active" href="/wishlist"><p class="pb-0 mb-0"
+              style="width: 100px">My wishlist</p></a>
+          <a class="nav-link my-0 bg-light" href="/userCoupons"><p
+              class="pb-0 mb-0" style="width: 100px">My Coupons</p></a>
+          
+        </nav>
       </div>
-    </section>
-    
+      <main class="col-lg-9 col-xl-9">
+        <div class="card p-4 mb-0 shadow-0 border">
+          <div class="content-body">
+
+            <table class="cartTable table-responsive"
+              style="font-color: rgb(35, 34, 34); width: 100%; border-collapse: collapse;">
+              <tbody>
+                <tr
+                  style="color: rgb(73, 71, 71); height: 50px;font-weight:bold;">
+                  <td style="width: 15%; border-bottom: 1px solid #ddd; ">My
+                    Wishlist</td>
+                  <td style="width: 25%; border-bottom: 1px solid #ddd;"></td>
+                  <td style="width: 25%; border-bottom: 1px solid #ddd;"></td>
+                  <td style="width: 10%; border-bottom: 1px solid #ddd;"
+                    class="delete"></td>
+                </tr>
+                {{#each wishlistData}}
+                <tr class="CartProduct" id="cartProduct{{@index}}"
+                  style="height: 120px; border-bottom: 1px solid #ddd;">
+                  <td class="CartProductThumb">
+                    <div><a href="/productDetails/{{this.productId._id}}"><img
+                          src="images/productImages/{{this.productId.productImage1}}"
+                          style="width: 40%; height: 40%;" alt="img"></a></div>
+                  </td>
+                  <td>
+                    <div class="CartDescription">
+                      <h6><a
+                          href="/productDetails/{{this.productId._id}}">{{this.productId.productName}}</a></h6>
+                      <div id="productPrice{{@index}}"
+                        class="price"><span>₹{{this.productId.productPrice}}</span></div>
+                    </div>
+                  </td>
+                  <td>
+
+                    {{#if (equal this.productId.productStock 0)}}
+                    <div class="promotion">
+                      <span class="discount"
+                        style="font-size:15px;font-weight:bold;
+                 color:red">OUT OF STOCK!</span>
+                    </div>
+                    {{else}}
+                    <button onclick="moveToCart('{{this.productId._id}}')"
+                      class="btn btn-primary"
+                      style="width: 150px; margin-right:10px;"><i
+                        class="lni lni-cart"></i>Move to Cart</button>
+                    {{/if}}
+                  </td>
+                  <td class="delete"><a title="Delete"
+                      onclick="removeWishlist('{{this._id}}','{{@index}}')"><i
+                        class="fas fa-trash"></i></a></td>
+                </tr>
+                {{/each}}
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </main>
+    </div>
+
+  </div>
+</section>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
@@ -86,7 +100,7 @@
           cartProductElement.style.display = "none"
           fetch('/removeWishlist/' + id, { method: 'DELETE' }).then(data => console.log(data))
           Swal.fire({
-            title: "Deleted!",
+      
             text: "Product has been removed.",
             icon: "success"
 
@@ -97,11 +111,11 @@
       console.error(error)
     }
   }
-</script> 
+</script>
 
- <!-- ========================= add to cart ========================= -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-     <script>
+<!-- ========================= add to cart ========================= -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
     async function moveToCart(id) {
       try {
         console.log('clicked' + id)
@@ -132,7 +146,4 @@
     }
   </script>
 
-
-                     
-
-   {{> userFooter}}
+{{> userFooter}}

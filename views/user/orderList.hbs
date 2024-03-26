@@ -10,8 +10,7 @@
                 <a class="nav-link my-0 bg-light" href="/transaction"><p class="pb-0 mb-0" style="width: 170px">Wallet Transactions</p></a>
               <a class="nav-link my-0 bg-light" href="/wishlist"><p class="pb-0 mb-0" style="width: 100px">My wishlist</p></a>
               <a class="nav-link my-0 bg-light" href="/userCoupons"><p class="pb-0 mb-0" style="width: 100px">My Coupons</p></a>
-              <a class="nav-link my-0 bg-light" href="#"><p class="pb-0 mb-0" style="width: 100px">Profile setting</p></a>
-              <a class="nav-link my-0 bg-light" href="#"><p class="pb-0 mb-0" style="width: 100px">Log out</p></a>
+            
             </nav>
           </div>
           <main class="col-lg-9 col-xl-9">
@@ -35,7 +34,7 @@
                 </thead>
                 <tbody>
                     {{#each orderData}}
-                    <tr data-order-id="{{this._id}}">
+                    <tr style="font-size:13px;" data-order-id="{{this._id}}">
                         <td>{{this.orderNumber}}</td>
 						<td>{{this.orderDateFormatted}}</td>
                         <td>{{this.paymentType}}</td>

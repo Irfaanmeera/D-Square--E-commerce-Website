@@ -1,32 +1,35 @@
 {{> userHeader}}
 
 <div class="breadcrumbs mb-5">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6 col-md-6 col-12">
-                    <div class="breadcrumbs-content">
-                        <h1 class="page-title">Shopping Cart</h1>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-12">
-                    <ul class="breadcrumb-nav">
-                        <li><a href="/"><i class="lni lni-home"></i> Home</a></li>
-                        <li>Cart</li>
-                         
-                    </ul>
-                </div>
-            </div>
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 col-md-6 col-12">
+        <div class="breadcrumbs-content">
+          <h1 class="page-title">Shopping Cart</h1>
         </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-12">
+        <ul class="breadcrumb-nav">
+          <li><a href="/"><i class="lni lni-home"></i> Home</a></li>
+          <li>Cart</li>
+
+        </ul>
+      </div>
     </div>
+  </div>
+</div>
 
 <div class="container main-container headerOffset">
 
   <!--/.row-->
 
   <div class="row">
-  
-    {{!-- <div class="col-lg-3 col-md-3 col-sm-5 rightSidebar col-xs-6 col-xxs-12 text-center-xs" style="margin-left:600px; margin-bottom:40px;">
-      <h6 class="caps"><a href="/shop"><i class="fa fa-chevron-left"></i> Back to shopping </a></h6>
+
+    {{!-- <div
+      class="col-lg-3 col-md-3 col-sm-5 rightSidebar col-xs-6 col-xxs-12 text-center-xs"
+      style="margin-left:600px; margin-bottom:40px;">
+      <h6 class="caps"><a href="/shop"><i class="fa fa-chevron-left"></i> Back
+          to shopping </a></h6>
     </div> --}}
   </div>
   <!--/.row-->
@@ -36,47 +39,59 @@
       <div class="row ">
         <div class="col-xs-12 col-sm-12 ">
           <div class="cartContent w100" style="width:100%;margin-bottom:50px;">
-            <table class="cartTable table-responsive" style="font-color:rgb(35, 34, 34)">
+            <table class="cartTable table-responsive"
+              style="font-color:rgb(35, 34, 34)">
               <tbody>
                 <tr style="color:rgb(73, 71, 71);height: 80px;">
                   <td style="width:15%;"> Product</td>
-                  <td style="width:25%">Details</td> 
+                  <td style="width:25%">Details</td>
                   <td style="width:20%">QTY</td>
                   <td style="width:15%">Total</td>
-                   <td style="width:10%" class="delete">Remove</td>
+                  <td style="width:10%" class="delete">Remove</td>
                 </tr>
                 {{#each cartData}}
-                <tr class="CartProduct" id="cartProduct{{@index}}" style="height:120px;" >
+                <tr class="CartProduct" id="cartProduct{{@index}}"
+                  style="height:120px;">
                   <td class="CartProductThumb ">
-                    <div><a href="/productDetails/{{this.productId._id}}"><img src="images/productImages/{{this.productId.productImage1}}" style="width:40%;height:40%;" alt="img"></a>
+                    <div><a href="/productDetails/{{this.productId._id}}"><img
+                          src="images/productImages/{{this.productId.productImage1}}"
+                          style="width:40%;height:40%;" alt="img"></a>
                     </div>
                   </td>
                   <td>
                     <div class="CartDescription">
-                      <h6><a href="/productDetails/{{this.productId._id}}">{{this.productId.productName}}</a></h6>
-                      <div id="productPrice{{@index}}" class="price"><span>₹{{this.productId.productPrice}}</span>
+                      <h6><a
+                          href="/productDetails/{{this.productId._id}}">{{this.productId.productName}}</a></h6>
+                      <div id="productPrice{{@index}}"
+                        class="price"><span>₹{{this.productId.productPrice}}</span>
                       </div>
                     </div>
                   </td>
-                    <div id="stockLimit{{@index}}" style="display: none;">{{this.productId.productStock}}</div>
+                  <div id="stockLimit{{@index}}"
+                    style="display: none;">{{this.productId.productStock}}</div>
                   <td>
                     {{#if (equal this.productId.productStock 0)}}
-              <div class="promotion">
-                <span class="discount" style="font-size:15px;font-weight:bold;
+                    <div class="promotion">
+                      <span class="discount"
+                        style="font-size:15px;font-weight:bold;
                  color:red">OUT OF STOCK!</span>
-                 <span>Please remove</span>
-              </div>
-              {{else}}
+                      <span>Please remove</span>
+                    </div>
+                    {{else}}
                     <button type="button" class="btn btn-secondary btn-sm"
                       onclick="cartDec('{{this._id}}','{{@index}}')">-</button>
-                    <span id="productQuantity{{@index}}" style="margin:10px;"> {{ this.productQuantity }}</span>
+                    <span id="productQuantity{{@index}}" style="margin:10px;">
+                      {{ this.productQuantity }}</span>
                     <button type="button" class="btn btn-secondary btn-sm"
                       onclick="cartInc('{{this._id}}','{{@index}}')">+</button>
-                      {{/if}}
+                    {{/if}}
                   </td>
-                  <td id="totalCostPerProduct{{@index}}" class="price">₹{{this.totalCostPerProduct}}</td>
-                  
-                  <td class="delete"><a title="Delete" onclick="deleteCart('{{this._id}}','{{@index}}')">  <i class="fas fa-trash"></i></a></td>
+                  <td id="totalCostPerProduct{{@index}}"
+                    class="price">₹{{this.totalCostPerProduct}}</td>
+
+                  <td class="delete"><a title="Delete"
+                      onclick="deleteCart('{{this._id}}','{{@index}}')"> <i
+                        class="fas fa-trash"></i></a></td>
                 </tr>
                 {{/each}}
               </tbody>
@@ -86,10 +101,11 @@
 
           <div class="mb-5 w100 ">
             <div class="box-footer">
-              <div><a href="/shop" class="btn btn-default"> <i class="fa fa-arrow-left"></i>
-                   Continue shopping </a>
+              <div><a href="/shop" class="btn btn-default"> <i
+                    class="fa fa-arrow-left"></i>
+                  Continue shopping </a>
               </div>
-             
+
             </div>
           </div>
           <!--/ cartFooter -->
@@ -100,31 +116,37 @@
 
     </div>
     <div class="col-lg-3 col-md-3 col-sm-5 rightSidebar mt-4">
-      <div class="contentBox" style="border-color:rgb(231, 229, 229);border-style:solid;padding:10px;background-color:rgb(242, 243, 244)">
+      <div class="contentBox"
+        style="border-color:rgb(231, 229, 229);border-style:solid;padding:10px;background-color:rgb(242, 243, 244)">
         <div class="w100 costDetails">
-       
-            <div class="w100 cartMiniTable">
-              <table id="cart-summary" class="std table" style="margin-bottom:40px;">
-                <tbody >
-                  <tr>
-                    <td>Total Price</td>
-                    <td id="totalPrice" class="price">₹{{grandTotal}}</td>
-                  </tr>
-                  <tr style="height:70px;">
-                    <td>Shipping</td>
-                    <td class="price"><span class="success">Free shipping</span></td>
-                  </tr>
-                  <tr>
-                    <td style="font-weight:700">Grand Total</td>
-                    <td class="site-color" id="total-price">₹<span style="font-weight:700" id="grandTotal">{{grandTotal}}</span></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            {{#if cartData.length}}
-          <div class="table-block mx-4" id="order-detail-content" ><a class="btn  btn-primary"
-              title="checkout" href="/checkout"> 
-             Proceed to Checkout &nbsp; </a>
+
+          <div class="w100 cartMiniTable">
+            <table id="cart-summary" class="std table"
+              style="margin-bottom:40px;">
+              <tbody>
+                <tr>
+                  <td>Total Price</td>
+                  <td id="totalPrice" class="price">₹{{grandTotal}}</td>
+                </tr>
+                <tr style="height:70px;">
+                  <td>Shipping</td>
+                  <td class="price"><span class="success">Free
+                      shipping</span></td>
+                </tr>
+                <tr>
+                  <td style="font-weight:700">Grand Total</td>
+                  <td class="site-color" id="total-price">₹<span
+                      style="font-weight:700"
+                      id="grandTotal">{{grandTotal}}</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          {{#if cartData.length}}
+          <div class="table-block mx-4" id="order-detail-content"><a
+              class="btn  btn-primary"
+              title="checkout" href="/checkout">
+              Proceed to Checkout &nbsp; </a>
             {{/if}}
           </div>
         </div>
@@ -137,7 +159,6 @@
   </div>
   <!--/row-->
 
-  
 </div>
 <!-- /.main-container -->
 
@@ -185,7 +206,6 @@
   }
 </script>
 
-
 {{!increase cart quantity --}}
 <script>
   async function cartInc(id, index) {
@@ -217,7 +237,6 @@
   }
 </script>
 
-
 {{!===delete cart--}}
 <script>
   async function deleteCart(id, index) {
@@ -246,6 +265,6 @@
       console.error(error)
     }
   }
-</script> 
+</script>
 
 {{>userFooter}}

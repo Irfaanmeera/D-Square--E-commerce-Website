@@ -44,7 +44,7 @@ const addToCart = async (req, res) => {
   try {
     const userId = req.session.user._id;
     const productId = req.params.id;
-    const productQuantity = req.body.productQuantity ||1;
+    const productQuantity = req.body.productQuantity || 1;
 
     let existingProduct = await cartCollection.findOne({
       userId: req.session.user._id,
@@ -69,14 +69,18 @@ const addToCart = async (req, res) => {
 
       // Save the cart item to the database
       const userCart = await cart.save();
-      console.log(userCart)
-      res.status(200).json({ success: true });
+      console.log(userCart);
+      const count = await cartCollection.countDocuments({
+        userId: req.session?.user?._id,
+      });
+      res.status(200).json({ success: true,count});
     }
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
+
 
 //show cart get controller
 const cartLoad = async (req, res) => {
@@ -129,7 +133,8 @@ const increaseCart = async (req, res) => {
     if (cartProduct.productQuantity < cartProduct.productId.productStock) {
       cartProduct.productQuantity++;
     }
-    cartProduct.totalCostPerProduct = cartProduct.productQuantity * cartProduct.productId.productPrice;
+    cartProduct.totalCostPerProduct =
+      cartProduct.productQuantity * cartProduct.productId.productPrice;
     cartProduct = await cartProduct.save();
     await grandTotal(req);
     res.json({ cartProduct, grandTotal: req.session.grandTotal });
@@ -148,11 +153,12 @@ const decreaseCart = async (req, res) => {
     if (cartProduct.productQuantity > 1) {
       cartProduct.productQuantity--;
     }
-    cartProduct.totalCostPerProduct = cartProduct.productQuantity * cartProduct.productId.productPrice;
+    cartProduct.totalCostPerProduct =
+      cartProduct.productQuantity * cartProduct.productId.productPrice;
     cartProduct = await cartProduct.save();
-    let {totalCostPerProduct} = cartProduct;
+    let { totalCostPerProduct } = cartProduct;
 
-    console.log("total cost:"+ totalCostPerProduct)
+    console.log("total cost:" + totalCostPerProduct);
     await grandTotal(req);
 
     res.json({ cartProduct, grandTotal: req.session.grandTotal });
@@ -160,11 +166,6 @@ const decreaseCart = async (req, res) => {
     console.log(error);
   }
 };
-
-
-
-
-
 
 //checkout page
 const checkoutPageLoad = async (req, res) => {
@@ -255,7 +256,6 @@ const razorpayCreateOrderId = async (req, res) => {
     res.json(order);
   });
 };
-
 
 //order placed
 const orderPlaced = async (req, res) => {
@@ -448,7 +448,9 @@ const orderDetails = async (req, res) => {
 const getOrderStatus = async (req, res) => {
   try {
     // Fetch the order status from the database
-    const order = await orderCollection.findOne({ _id: req.params.id }).populate('addressChosen');
+    const order = await orderCollection
+      .findOne({ _id: req.params.id })
+      .populate("addressChosen");
     if (!order) {
       return res.status(404).json({ error: "Order not found" });
     }
@@ -458,7 +460,6 @@ const getOrderStatus = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
 
 //apply coupon
 const applyCoupon = async (req, res) => {
@@ -473,20 +474,12 @@ const applyCoupon = async (req, res) => {
       let order = await orderCollection.findOne({
         _id: req.session.orderData._id,
       });
-      if (order.couponApplied !=='Nil') {
+      if (order.couponApplied !== "Nil") {
         //         // Respond with an error status if the coupon has already been applied to the order
-                return res
-                  .status(400)
-                  .json({ error: "Coupon already applied to this order." });
-              }
-      // if (order.couponApplied !== "Coupon not applied") {
-      //   // Respond with an error status if the coupon has already been applied to the order
-      //   return res.status(400).json({ error: "Coupon already applied to this order." });
-      // }
-
-      /*if coupon exists:
-        > check if it is applicable, i.e within minimum purchase limit & expiry date
-        > proceed... */
+        return res
+          .status(400)
+          .json({ error: "Coupon already applied to this order." });
+      }
 
       let { grandTotal } = req.session;
       let { minimumPurchase, expiryDate } = couponData;

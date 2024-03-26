@@ -1,10 +1,10 @@
 const express = require('express');
 const upload= require('../services/multer.js')
 const adminAuth = require('../middlewares/adminAuth')
-const { adminHomeController,adminLogin, adminLoginPostController,adminlogout, userManagement, blockUser, unBlockUser, adminDashboard, dashboardData, bannerManagement, uploadBanner, deleteBanner} = require('../controller/adminController');
+const { adminLogin, adminLoginPostController,adminlogout, userManagement, blockUser, unBlockUser, adminDashboard, dashboardData, bannerManagement, uploadBanner, deleteBanner} = require('../controller/adminController');
 const{addProduct, loadProduct, addProductLoad, editProduct, editProductPost, deleteProduct, listProduct, unlistProduct}= require('../controller/productController');
 const { loadCategory, addCategory, addCategoryLoad, editCategoryPost, editCategory, deleteCategory, listCategory, unlistCategory } = require('../controller/categoryController.js');
-const { orderManagement, changePendingStatus, changeStatus, acceptReturnOrder } = require('../controller/orderController.js')
+const { orderManagement,changeStatus, acceptReturnOrder } = require('../controller/orderController.js')
 const app = express.Router()
 const{ couponPageLoad, addCoupon, addCouponLoad, editCouponLoad, editCoupon, deleteCoupon } = require('../controller/couponController.js')
 const { salesReport, salesReportDownload, salesReportFilter, salesReportFilterWeekly } = require('../controller/salesReportController.js')

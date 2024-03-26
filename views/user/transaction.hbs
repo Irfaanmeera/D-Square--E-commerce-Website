@@ -1,65 +1,69 @@
 {{> userHeader}}
 
-    <section class="py-5 bg-light">
-      <div class="container">
+<section class="py-5 bg-light">
+    <div class="container">
         <div class="row">
-          <div class="col-lg-3 col-xl-3">
-            <nav class="nav flex-lg-column w-100 d-flex nav-pills mb-4">
-              <a class="nav-link my-0 bg-light " href="/userAccount"><p class="pb-0 mb-0" style="width: 100px">Account main</p></a>
-              <a class="nav-link my-0 bg-light" href="/orderList"><p class="pb-0 mb-0" style="width: 100px">Orders history</p></a>
-                            <a class="nav-link my-0 active" href="/transaction"><p class="pb-0 mb-0" style="width: 170px">Wallet Transactions</p></a>
-              <a class="nav-link my-0 bg-light" href="/wishlist"><p class="pb-0 mb-0" style="width: 100px">My wishlist</p></a>
-              <a class="nav-link my-0 bg-light" href="/userCoupons"><p class="pb-0 mb-0" style="width: 100px">My Coupons</p></a>
-              <a class="nav-link my-0 bg-light" href="#"><p class="pb-0 mb-0" style="width: 100px">Profile setting</p></a>
-              <a class="nav-link my-0 bg-light" href="#"><p class="pb-0 mb-0" style="width: 100px">Log out</p></a>
-            </nav>
-          </div>
-          <main class="col-lg-9 col-xl-9">
-            <div class="card p-4 mb-0 shadow-0 border">
-              <div class="content-body">
-                <!-- Order Management table -->
-        <div class="container m-1">
-            <div ><h6 class="mb-4 text-success">Wallet Balance : ₹ {{walletBalance.walletBalance}}</h6></div>
-            <table class="table" id="productTable" style="width:100%">
-                <thead>
-                    <tr style="font-size:14px;">
-                        
-						<th>Transaction Date</th>
-                        <th>Transaction Amount</th>
-                        <th>Details</th>
-
-        
-                        
-                        
-                    </tr>
-                </thead>
+            <div class="col-lg-3 col-xl-3">
+                <nav class="nav flex-lg-column w-100 d-flex nav-pills mb-4">
+                    <a class="nav-link my-0 bg-light " href="/userAccount"><p
+                            class="pb-0 mb-0" style="width: 100px">Account
+                            main</p></a>
+                    <a class="nav-link my-0 bg-light" href="/orderList"><p
+                            class="pb-0 mb-0" style="width: 100px">Orders
+                            history</p></a>
+                    <a class="nav-link my-0 active" href="/transaction"><p
+                            class="pb-0 mb-0" style="width: 170px">Wallet
+                            Transactions</p></a>
+                    <a class="nav-link my-0 bg-light" href="/wishlist"><p
+                            class="pb-0 mb-0" style="width: 100px">My
+                            wishlist</p></a>
+                    <a class="nav-link my-0 bg-light" href="/userCoupons"><p
+                            class="pb-0 mb-0" style="width: 100px">My
+                            Coupons</p></a>
                     
-                <tbody>
-    {{#each walletData}}
-        <tr>
-            <td>{{this.walletDateFormatted}}</td>
-            <td>{{this.transactionAmount}}</td>
-            <td>{{this.transactionType}}</td>
-        </tr>
-    {{/each}}
-</tbody>
+                </nav>
+            </div>
+            <main class="col-lg-9 col-xl-9">
+                <div class="card p-4 mb-0 shadow-0 border">
+                    <div class="content-body">
+                        <!-- Order Management table -->
+                        <div class="container m-1">
+                            <div><h6 class="mb-4 text-success">Wallet Balance :
+                                    ₹ {{walletBalance.walletBalance}}</h6></div>
+                            <table class="table" id="productTable"
+                                style="width:100%">
+                                <thead>
+                                    <tr style="font-size:14px;">
 
-                 
-            </table>
+                                        <th>Transaction Date</th>
+                                        <th>Transaction Amount</th>
+                                        <th>Details</th>
+
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {{#each walletData}}
+                                    <tr>
+                                        <td>{{this.walletDateFormatted}}</td>
+                                        <td>{{this.transactionAmount}}</td>
+                                        <td>{{this.transactionType}}</td>
+                                    </tr>
+                                    {{/each}}
+                                </tbody>
+
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </main>
         </div>
 
-            </div>
-            </div>
-          </main>
-        </div>
-    
-      </div>
-    </section>
-    
+    </div>
+</section>
 
-
-   
-                            <script>
+<script>
         async function cancelOrder(orderId) {
             Swal.fire({
                 title: "Are you sure?",
@@ -86,9 +90,6 @@
             });
         }
     </script>
-
-
-    
 
 <script>
     // JavaScript
@@ -126,7 +127,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 </script>
-            
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
     // Get the table element
@@ -146,6 +147,5 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 </script>
-                     
-  
+
 {{>userFooter}}

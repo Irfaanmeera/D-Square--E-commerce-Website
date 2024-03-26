@@ -522,23 +522,31 @@ input[type="range"]::-webkit-slider-thumb {
 
 </style>
 
-
-    
-
 <div class="container">
-  <div class="bg-white rounded d-flex align-items-center justify-content-between" id="header">
-    <button class="btn btn-hide text-uppercase " type="button" data-toggle="collapse" data-target="#filterbar" aria-expanded="false" aria-controls="filterbar" id="filter-btn" onclick="changeBtnTxt()">
+  <div
+    class="bg-white rounded d-flex align-items-center justify-content-between"
+    id="header">
+    <button class="btn btn-hide text-uppercase " type="button"
+      data-toggle="collapse" data-target="#filterbar" aria-expanded="false"
+      aria-controls="filterbar" id="filter-btn" onclick="changeBtnTxt()">
       <span class="fas fa-angle-left" id="filter-angle"></span>
       <span id="btn-txt">Hide filters</span>
     </button>
     <nav class="navbar navbar-expand-lg navbar-light pl-lg-0 pl-auto">
       <div class="collapse navbar-collapse" id="mynav">
         <ul class="navbar-nav d-lg-flex align-items-lg-center">
-          <li class="nav-item d-inline-flex align-items-center justify-content-between mb-lg-0 mb-3">
-            <a class="dd-menu collapsed" href="javascript:void(0)" data-bs-toggle="collapse" data-bs-target="#submenu-1-4" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" style="margin-right:250px;">Sort By Price</a>
+          <li
+            class="nav-item d-inline-flex align-items-center justify-content-between mb-lg-0 mb-3">
+            <a class="dd-menu collapsed" href="javascript:void(0)"
+              data-bs-toggle="collapse" data-bs-target="#submenu-1-4"
+              aria-controls="navbarSupportedContent" aria-expanded="false"
+              aria-label="Toggle navigation" style="margin-right:250px;">Sort By
+              Price</a>
             <ul class="sub-menu collapse" id="submenu-1-4">
-              <li class="nav-item"><a href="/sortPriceAscending">Low to High</a></li>
-              <li class="nav-item"><a href="/sortPriceDescending">High to Low</a></li>
+              <li class="nav-item"><a href="/sortPriceAscending">Low to
+                  High</a></li>
+              <li class="nav-item"><a href="/sortPriceDescending">High to
+                  Low</a></li>
             </ul>
           </li>
           <li class="nav-item d-lg-none d-inline-flex"></li>
@@ -551,15 +559,19 @@ input[type="range"]::-webkit-slider-thumb {
       <div class="box border-bottom">
         <div class="form-group text-center">
           <div class="btn mt-2 ms-auto" data-toggle="buttons">
-            <button onclick="resetShopPage()" class=" btn btn-primary px-4 py-0 text-centre">
-              <label><i class="fa fa-undo" aria-hidden="true"></i>&nbsp;&nbsp; Reset</label>
+            <button onclick="resetShopPage()"
+              class=" btn btn-primary px-4 py-0 text-centre">
+              <label><i class="fa fa-undo" aria-hidden="true"></i>&nbsp;&nbsp;
+                Reset</label>
             </button>
           </div>
         </div>
         <div class="box border-bottom">
           <div class="box-label text-uppercase d-flex align-items-center">
             Category
-            <button class="btn ms-auto" type="button" data-toggle="collapse" data-target="#inner-box" aria-expanded="false" aria-controls="inner-box" id="out" onclick="outerFilter()">
+            <button class="btn ms-auto" type="button" data-toggle="collapse"
+              data-target="#inner-box" aria-expanded="false"
+              aria-controls="inner-box" id="out" onclick="outerFilter()">
               <span class="fas fa-plus"></span>
             </button>
           </div>
@@ -575,7 +587,9 @@ input[type="range"]::-webkit-slider-thumb {
         </div>
         <div class="box border-bottom">
           <div class="box-label text-uppercase d-flex align-items-center">Brand
-            <button class="btn ms-auto" type="button" data-toggle="collapse" data-target="#inner-box2" aria-expanded="false" aria-controls="inner-box2">
+            <button class="btn ms-auto" type="button" data-toggle="collapse"
+              data-target="#inner-box2" aria-expanded="false"
+              aria-controls="inner-box2">
               <span class="fas fa-plus"></span>
             </button>
           </div>
@@ -591,7 +605,8 @@ input[type="range"]::-webkit-slider-thumb {
         </div>
         <div class="box border-bottom">
           <div class="box-label text-uppercase d-flex align-items-center">price
-            <button class="btn ms-auto" type="button" data-toggle="collapse" data-target="#price" aria-expanded="false" aria-controls="price">
+            <button class="btn ms-auto" type="button" data-toggle="collapse"
+              data-target="#price" aria-expanded="false" aria-controls="price">
               <span class="fas fa-plus"></span>
             </button>
           </div>
@@ -604,7 +619,8 @@ input[type="range"]::-webkit-slider-thumb {
                   <input type="hidden" id="maxPrice" name="maxPrice">
                   <input type="text" id="priceRangeSlider">
                 </div>
-                <button class="btn btn-primary" id="filterBtn" type="submit">Filter</button>
+                <button class="btn btn-primary" id="filterBtn"
+                  type="submit">Filter</button>
               </form>
             </div>
           </div>
@@ -619,15 +635,19 @@ input[type="range"]::-webkit-slider-thumb {
           <div class="single-product">
             <div class="product-image">
               <a href="/productDetails/{{this._id}}">
-                <img style="width:150px;height:200px; margin-left:27px;" src="/images/productImages/{{this.productImage1}}" alt="Product Image" />
+                <img style="width:150px;height:200px; margin-left:27px;"
+                  src="/images/productImages/{{this.productImage1}}"
+                  alt="Product Image" />
                 {{#if this.productOfferPercentage}}
-            <span class="sale-tag">{{this.productOfferPercentage}}% Off</span>
-            {{/if}}
+                <span class="sale-tag">{{this.productOfferPercentage}}%
+                  Off</span>
+                {{/if}}
               </a>
             </div>
             <div class="product-info">
               <h4 class="title">
-                <a style="font-size:14px;" href="/productDetails/{{this._id}}">{{this.productName}}</a>
+                <a style="font-size:14px;"
+                  href="/productDetails/{{this._id}}">{{this.productName}}</a>
               </h4>
               <ul class="review">
                 <li><i class="lni lni-star-filled"></i></li>
@@ -639,16 +659,22 @@ input[type="range"]::-webkit-slider-thumb {
               </ul>
               <div class="price">
                 <span style="font-size:14px;">₹ {{this.productPrice}}</span>
-                 {{#if this.priceBeforeOffer}}
-            <span style="color:darkgray;text-decoration:line-through; margin-right:5px; font-size:12px;">₹ {{this.priceBeforeOffer}}</span> 
-            {{/if}}
-            {{#if (equal this.productStock 0)}}
-              <div class="promotion">
-                <span class="discount" style="font-size:12px;font-weight:bold;
+                {{#if this.priceBeforeOffer}}
+                <span
+                  style="color:darkgray;text-decoration:line-through; margin-right:5px; font-size:12px;">₹
+                  {{this.priceBeforeOffer}}</span>
+                {{/if}}
+                {{#if (equal this.productStock 0)}}
+                <div class="promotion">
+                  <span class="discount"
+                    style="font-size:12px;font-weight:bold;
                  color:red">OUT OF STOCK!</span>
-              </div>
-              {{else}}
-                <button id="productQuantityInput" onclick="addToWishlist('{{this._id}}')"  class="btn btn-outline-secondary" style="margin-left:auto" ><i class="lni lni-heart"></i></button>
+                </div>
+                {{else}}
+                <button id="productQuantityInput"
+                  onclick="addToWishlist('{{this._id}}')"
+                  class="btn btn-outline-secondary" style="margin-left:auto"><i
+                    class="lni lni-heart"></i></button>
                 {{/if}}
               </div>
             </div>
@@ -656,91 +682,94 @@ input[type="range"]::-webkit-slider-thumb {
         </div>
         {{/each}}
 
+        {{!-- pagination --}}
+        {{!-- <div class="row">
+          <div class="col-md-12">
+            <div class="pagination-container">
+              <nav class="Pager2" aria-label="pagination example"></nav>
+              <ul class="pagination d-flex no-margin-top mb-5">
+                <li class="page-item">
+                  <a class="page-link" href="/shop?pageNo={{previousPage}}"
+                    aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>
+                {{#each totalPagesArray}}
+                <li class="page-item">
 
+                  <a class="page-link"
+                    href="/shop?pageNo={{sum @index 1}}">{{sum @index 1}}</a>
+                </li>
+                {{/each}}
+                <li class="page-item">
+                  <a class="page-link" href="/shop?pageNo={{nextPage}}"
+                    aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div> --}}
 
+        <div class="row">
+          <div class="col-md-12">
+            <div class="pagination-container">
+              <nav aria-label="pagination example">
+                <ul class="pagination d-flex no-margin-top mb-5">
+                  <li class="page-item">
+                    <a class="page-link" href="/shop?pageNo={{previousPage}}"
+                      aria-label="Previous">
+                      <span aria-hidden="true">&laquo;</span>
+                    </a>
+                  </li>
+                  {{!-- {{#each totalPagesArray}}
+                  <li
+                    class="page-item {{#ifCond currentPage '==' (sum @index 1)}} active {{/ifCond}}">
+                    <a class="page-link"
+                      href="/shop?pageNo={{sum @index 1}}">{{sum @index 1}}</a>
+                  </li>
+                  {{/each}} --}}
+                  {{#each totalPagesArray}}
+                  <li
+                    class="page-item {{#ifCond currentPage '==' (sum @index 1)}}active{{/ifCond}}">
+                    <a
+                      class="page-link {{#ifCond currentPage '==' (sum @index 1)}}active{{/ifCond}}"
+                      href="/shop?pageNo={{sum @index 1}}"
+                      style="{{#ifCond currentPage '==' (sum @index 1)}}background-color: #007bff; color: #fff; border-color: #007bff;{{/ifCond}}">
+                      {{sum @index 1}}
+                    </a>
+                  </li>
+                  {{/each}}
+
+                  <li class="page-item">
+                    <a class="page-link" href="/shop?pageNo={{nextPage}}"
+                      aria-label="Next">
+                      <span aria-hidden="true">&raquo;</span>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
 
         {{!-- pagination --}}
-         {{!-- <div class="row">
-      <div class="col-md-12">
-        <div class="pagination-container">
-          <nav class="Pager2" aria-label="pagination example"></nav>
-          <ul class="pagination d-flex no-margin-top mb-5">
-            <li class="page-item">
-              <a class="page-link" href="/shop?pageNo={{previousPage}}" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-              </a>
-            </li>
-            {{#each totalPagesArray}}
-             <li class="page-item">
-           
-              <a class="page-link" href="/shop?pageNo={{sum @index 1}}">{{sum @index 1}}</a>
-            </li>
-            {{/each}}
-            <li class="page-item">
-              <a class="page-link" href="/shop?pageNo={{nextPage}}" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div> --}}
-
-  <div class="row">
-    <div class="col-md-12">
-      <div class="pagination-container">
-        <nav aria-label="pagination example">
-          <ul class="pagination d-flex no-margin-top mb-5">
-            <li class="page-item">
-              <a class="page-link" href="/shop?pageNo={{previousPage}}" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-              </a>
-            </li>
-            {{!-- {{#each totalPagesArray}}
-              <li class="page-item {{#ifCond currentPage '==' (sum @index 1)}} active {{/ifCond}}">
-                <a class="page-link" href="/shop?pageNo={{sum @index 1}}">{{sum @index 1}}</a>
-              </li>
-            {{/each}} --}}
-    {{#each totalPagesArray}}
-  <li class="page-item {{#ifCond currentPage '==' (sum @index 1)}}active{{/ifCond}}">
-    <a class="page-link {{#ifCond currentPage '==' (sum @index 1)}}active{{/ifCond}}" href="/shop?pageNo={{sum @index 1}}" style="{{#ifCond currentPage '==' (sum @index 1)}}background-color: #007bff; color: #fff; border-color: #007bff;{{/ifCond}}">
-      {{sum @index 1}}
-    </a>
-  </li>
-{{/each}}
-
-
-            <li class="page-item">
-              <a class="page-link" href="/shop?pageNo={{nextPage}}" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </div>
-  </div>
-
-
-
-
-
-     {{!-- pagination --}}
 
       </div>
 
     </div>
 
-   
   </div>
 </div>
 
-
-
-<script src="https://use.fontawesome.com/releases/v5.7.2/css/all.css" ></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" ></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"></script>
+<script src="https://use.fontawesome.com/releases/v5.7.2/css/all.css"></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script
+  src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+<script
+  src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"></script>
 {{!-- filters --}}
 <script>
 document.addEventListener("DOMContentLoaded", function() {
@@ -872,9 +901,8 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     </script>
 
-
 {{!-- reset shop page --}}
-    <script>
+<script>
     function resetShopPage() {
         // Clear any applied filters (e.g., by removing query parameters from the URL)
         // Reload the page
@@ -883,13 +911,16 @@ document.addEventListener("DOMContentLoaded", function() {
 </script>
 
 <!-- Include ion.rangeSlider CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css"/>
+<link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css" />
 
 <!-- Include jQuery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <!-- Include ion.rangeSlider JavaScript -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/js/ion.rangeSlider.min.js"></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/js/ion.rangeSlider.min.js"></script>
 
 <!-- JavaScript to initialize the slider -->
 <script>
@@ -916,12 +947,10 @@ $(document).ready(function() {
 
 </script>
 
+<!-- ========================= add to cart ========================= -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
-   <!-- ========================= add to cart ========================= -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-     <script>
+<script>
     async function addToCart(id) {
       try {
         console.log('clicked' + id)
@@ -959,18 +988,30 @@ $(document).ready(function() {
       try {
         console.log('clicked' + id)
 
-        let productQuantity = document.getElementById('productQuantityInput').value
-        let bodyData = { productQuantity }
-        console.log(productQuantity)
-
         let response = await fetch('/wishlist/' + id, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(bodyData)
-        })
-        let result = await response.json()
-        console.log('result' + result)
-        if (result.success) {
+          headers: { 'Content-Type': 'application/json' }
+        });
+        let result = await response.json();
+        console.log('result' + result);
+
+        if (result.exists) {
+          // Product already exists in the wishlist
+          return await Swal.fire({
+            title: "<strong>Product Already in Wishlist</strong>",
+            icon: "info",
+            showCloseButton: true,
+            focusConfirm: false,
+            confirmButtonText: `OK`,
+            confirmButtonColor: '#00008b',
+            confirmButtonAriaLabel: "OK"
+          });
+        } else {
+          // Product doesn't exist in the wishlist, proceed to add it
+          // Example: You can call the addToWishlist route here
+          // await addToWishlistRoute(id);
+
+          // For demonstration purposes, show a success message
           return await Swal.fire({
             title: "<strong>Added to Wishlist</strong>",
             icon: "success",
@@ -985,10 +1026,9 @@ $(document).ready(function() {
           });
         }
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     }
-  </script>
-
+</script>
 
 {{> userFooter}}

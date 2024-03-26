@@ -1,221 +1,235 @@
 
 
-   {{> userHeader}}
+{{> userHeader}}
 
-    <div class="breadcrumbs mb-4">
-        <!-- Breadcrumbs content -->
-    </div>
-
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 order-md-2 mt-4 mb-4">
-             
-             
- <table id="cart-summary" class="std table ">
-            <tbody>
-              <tr>
-                <td>Total Price</td>
-                <td class="price" id="totalPrice1">₹{{grandTotal}}</td>
-              </tr>
-              <tr style="">
-                <td>Shipping</td>
-                <td class="price">Free shipping!</td>
-              </tr>
-              <tr>
-                <td>Total Discount</td>
-                <td class="price" id="totalDiscount">₹0</td>
-              </tr>
-              <tr>
-                <td>Grand Total</td>
-                <td class="site-color" id="total-price">₹<span id="grandTotal">{{grandTotal}}</span></td>
-              </tr>
-              <tr>
-                <td colspan="2">
-                  <div class="input-append couponForm">
-                    <form id="couponApplyForm">
-                      <input class="col-lg-7 p-1" name="couponCode" id="appendedInputButton" type="text"
-                        placeholder="Enter coupon code">
-                       <button type="submit" class="btn btn-secondary">Apply Coupon</button>
-                    </form>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-            <tbody>
-            </tbody>
-          </table>
-
-
-{{!--     
-        <ul class="list-group mb-3" >
-           {{#each cartData}}
-          <li class="list-group-item d-flex justify-content-between lh-condensed">
-            <div>
-              <p style="font-size:14px;" class="my-0 text-dark"><strong>{{this.productId.productName}}</strong></p>
-              <small class="text-muted">Quantity: {{this.productQuantity}}* {{this.productId.productPrice}}</small>
-            </div>
-            <span class="text-muted">₹ {{this.totalCostPerProduct}}</span>
-          </li>
-          {{/each}} --}}
-          {{!-- <li class="list-group-item d-flex justify-content-between bg-light">
-            <div class="text-success">
-              <h6 class="my-0">Promo code</h6>
-              <small>EXAMPLECODE</small>
-            </div>
-            <span class="text-success">-$5</span>
-          </li> --}}
-
-          {{!-- <li class="list-group-item d-flex justify-content-between text-white text-lg" style="text-size:18px; background-color:rgb(64, 64, 64)">
-            <span><strong> Total Amount</strong></span>
-           <span id="totalPrice" > <strong>₹ {{grandTotal}}</strong></span>
-          </li>
-        </ul> --}}
-
-  
-
-
-{{!-- 
-        <form class="card p-2">
-          <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Promo code" name="promoCode">
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-secondary">Apply Coupon</button>
-                    </div>
-                </div>
-        </form> --}}
-      
-      
-                <!-- Cart details content -->
-{{!-- <div style="margin-left:100px;">
-                 <button class="btn btn-primary btn-block" id="orderBtn">Confirm Order</button>
-                 </div> --}}
-  </div>
-             
-
-            <div class="col-md-8 order-md-1 mt-4">
-                <h6 class="mb-3 bg-secondary text-white px-2 py-2">Select Address</h6>
-                <!-- Address selection and display content -->
-                 <div class="d-block my-3">
-    <div class="row g-2 mb-3">
-        <div class="col-lg-4 mx-3">
-            <select class="form-select" id="addressSelect"  name="chosenAddress">
-                {{#each addressData}}
-                <option value="{{this._id}}">{{this.addressTitle}}</option>
-                {{/each}}
-            </select>
-        </div>
-    </div>
+<div class="breadcrumbs mb-4">
+  <!-- Breadcrumbs content -->
 </div>
-<div class="d-block my-3">
-    <div class="row g-2 mb-3">
-        {{#each addressData}}
-        <div class="col-lg-5 mx-3">
-            <div class="d-flex align-items-center border rounded-3 bg-light">
-                <div class="d-flex align-items-center p-2  me-3">
-                    <i class="fa fa-map-marker-alt me-2"></i>
-                    <div>
-                      <div>{{this.addressTitle}}</div>
-                        <div>{{this.addressLine1}}</div>
-                        <div>{{this.addressLine2}}</div>
-                    </div>
-                </div>
-            </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-4 order-md-2 mt-4 mb-4">
+
+      <table id="cart-summary" class="std table ">
+        <tbody>
+          <tr>
+            <td>Total Price</td>
+            <td class="price" id="totalPrice1">₹{{grandTotal}}</td>
+          </tr>
+          <tr style>
+            <td>Shipping</td>
+            <td class="price">Free shipping!</td>
+          </tr>
+          <tr>
+            <td>Total Discount</td>
+            <td class="price" id="totalDiscount">₹0</td>
+          </tr>
+          <tr>
+            <td>Grand Total</td>
+            <td class="site-color" id="total-price">₹<span
+                id="grandTotal">{{grandTotal}}</span></td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <div class="input-append couponForm">
+                <form id="couponApplyForm">
+                  <input class="col-lg-7 p-1" name="couponCode"
+                    id="appendedInputButton" type="text"
+                    placeholder="Enter coupon code">
+                  <button type="submit" class="btn btn-secondary">Apply
+                    Coupon</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+        <tbody>
+        </tbody>
+      </table>
+
+      {{!--
+      <ul class="list-group mb-3">
+        {{#each cartData}}
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+          <div>
+            <p style="font-size:14px;"
+              class="my-0 text-dark"><strong>{{this.productId.productName}}</strong></p>
+            <small class="text-muted">Quantity: {{this.productQuantity}}*
+              {{this.productId.productPrice}}</small>
+          </div>
+          <span class="text-muted">₹ {{this.totalCostPerProduct}}</span>
+        </li>
+        {{/each}} --}}
+        {{!-- <li
+          class="list-group-item d-flex justify-content-between bg-light">
+          <div class="text-success">
+            <h6 class="my-0">Promo code</h6>
+            <small>EXAMPLECODE</small>
+          </div>
+          <span class="text-success">-$5</span>
+        </li> --}}
+
+        {{!-- <li
+          class="list-group-item d-flex justify-content-between text-white text-lg"
+          style="text-size:18px; background-color:rgb(64, 64, 64)">
+          <span><strong> Total Amount</strong></span>
+          <span id="totalPrice"> <strong>₹ {{grandTotal}}</strong></span>
+        </li>
+      </ul> --}}
+
+      {{!--
+      <form class="card p-2">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" placeholder="Promo code"
+            name="promoCode">
+          <div class="input-group-append">
+            <button type="submit" class="btn btn-secondary">Apply
+              Coupon</button>
+          </div>
         </div>
-        {{/each}}
+      </form> --}}
+
+      <!-- Cart details content -->
+      {{!-- <div style="margin-left:100px;">
+        <button class="btn btn-primary btn-block" id="orderBtn">Confirm
+          Order</button>
+      </div> --}}
     </div>
-    <!-- SweetAlert modal trigger button -->
+
+    <div class="col-md-8 order-md-1 mt-4">
+      <h6 class="mb-3 bg-secondary text-white px-2 py-2">Select Address</h6>
+      <!-- Address selection and display content -->
+      <div class="d-block my-3">
+        <div class="row g-2 mb-3">
+          <div class="col-lg-4 mx-3">
+            <select class="form-select" id="addressSelect" name="chosenAddress">
+              {{#each addressData}}
+              <option value="{{this._id}}">{{this.addressTitle}}</option>
+              {{/each}}
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="d-block my-3">
+        <div class="row g-2 mb-3">
+          {{#each addressData}}
+          <div class="col-lg-5 mx-3">
+            <div class="d-flex align-items-center border rounded-3 bg-light">
+              <div class="d-flex align-items-center p-2  me-3">
+                <i class="fa fa-map-marker-alt me-2"></i>
+                <div>
+                  <div>{{this.addressTitle}}</div>
+                  <div>{{this.addressLine1}}</div>
+                  <div>{{this.addressLine2}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {{/each}}
+        </div>
+        <!-- SweetAlert modal trigger button -->
 
         <div class="pt-3">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                Add New Address
-            </button>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+            data-bs-target="#exampleModal">
+            Add New Address
+          </button>
         </div>
 
         <!-- Add address Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Add New Address</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form action="/addAddressCheckout" method="POST" role="form">
-                        <div class="modal-body">
-                            <div class="input-group mb-3">
-                                <input type="text" id="addressTitle" name="addressTitle" class="form-control"
-                                    placeholder="Address Title" required>
-                            </div>
-                              <div class="input-group mb-3">
-                                <input type="text" id="firstName" name="firstName"  class="form-control"
-                                    placeholder="First Name" required>
-                            </div>
-                            
-                            <div class="input-group mb-3">
-                                <input type="text" id="lastName" name="lastName"  class="form-control"  placeholder="Last Name"
-                                    required>
-                            </div>
-                            <div class="input-group mb-3">
-                                <input type="text" id="addressLine1" name="addressLine1" class="form-control"
-                                    placeholder="Address Line 1" required>
-                            </div>
-                            <div class="input-group mb-3">
-                                <input type="text" id="addressLine2" name="addressLine2" class="form-control"
-                                    placeholder="Address Line 2" >
-                            </div>
-                            <div class="input-group mb-3">
-                                <input type="text" id="phone" name="phone"  class="form-control"
-                                    placeholder="Phone Number" required>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            
-                          <button type="submit" class="btn btn-primary">Add Address</button>
-                        </div>
-                    </form>
+        <div class="modal fade" id="exampleModal" tabindex="-1"
+          aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add New
+                  Address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                  aria-label="Close"></button>
+              </div>
+              <form action="/addAddressCheckout" method="POST" role="form">
+                <div class="modal-body">
+                  <div class="input-group mb-3">
+                    <input type="text" id="addressTitle" name="addressTitle"
+                      class="form-control"
+                      placeholder="Address Title" required>
+                  </div>
+                  <div class="input-group mb-3">
+                    <input type="text" id="firstName" name="firstName"
+                      class="form-control"
+                      placeholder="First Name" required>
+                  </div>
+
+                  <div class="input-group mb-3">
+                    <input type="text" id="lastName" name="lastName"
+                      class="form-control" placeholder="Last Name"
+                      required>
+                  </div>
+                  <div class="input-group mb-3">
+                    <input type="text" id="addressLine1" name="addressLine1"
+                      class="form-control"
+                      placeholder="Address Line 1" required>
+                  </div>
+                  <div class="input-group mb-3">
+                    <input type="text" id="addressLine2" name="addressLine2"
+                      class="form-control"
+                      placeholder="Address Line 2">
+                  </div>
+                  <div class="input-group mb-3">
+                    <input type="text" id="phone" name="phone"
+                      class="form-control"
+                      placeholder="Phone Number" required>
+                  </div>
                 </div>
+                <div class="modal-footer">
+
+                  <button type="submit" class="btn btn-primary">Add
+                    Address</button>
+                </div>
+              </form>
             </div>
-        </div>
-
-</div>
-
-
-
-                <hr class="mb-4"> 
-
-                <h6 class="mb-3 bg-secondary text-white px-2 py-2">Select Payment method</h6>
-                <!-- Payment method selection content -->
-   <div class="d-block my-3">
-           <div class="card-paynemt-box payment-method">
-                                    <label class="radio-inline" for="CashOnDelivery"
-                                      >
-                                      <input name="radios" id="COD" value="COD" type="radio" >Cash On Delivery
-                                    </label>
-                                  </div>
-
-                                  <div class="card-paynemt-box payment-method">
-                                    <label class="radio-inline" for="wallet" >
-                                      <input name="radios" id="wallet" value="wallet" type="radio">Wallet
-                                    </label>
-                                  </div>
-
-                                  <div class="card-paynemt-box payment-method">
-                                    <label class="radio-inline" for="razorpay">
-                                      <input name="radios" id="razorpay" value="razorpay" type="radio">Razorpay
-                                    </label>
-                                  </div>
           </div>
-                <hr class="mb-4">
- <button class="btn btn-primary btn-block" id="orderBtn">Confirm Order</button>
-              
-            </div>
         </div>
-    </div>
-    
 
+      </div>
+
+      <hr class="mb-4">
+
+      <h6 class="mb-3 bg-secondary text-white px-2 py-2">Select Payment
+        method</h6>
+      <!-- Payment method selection content -->
+      <div class="d-block my-3">
+        <div class="card-paynemt-box payment-method">
+          <label class="radio-inline" for="CashOnDelivery">
+            <input name="radios" id="COD" value="COD" type="radio">Cash On
+            Delivery
+          </label>
+        </div>
+
+        <div class="card-paynemt-box payment-method">
+          <label class="radio-inline" for="wallet">
+            <input name="radios" id="wallet" value="wallet" type="radio">Wallet
+          </label>
+        </div>
+
+        <div class="card-paynemt-box payment-method">
+          <label class="radio-inline" for="razorpay">
+            <input name="radios" id="razorpay" value="razorpay"
+              type="radio">Razorpay
+          </label>
+        </div>
+      </div>
+      <hr class="mb-4">
+      <button class="btn btn-primary btn-block" id="orderBtn">Confirm
+        Order</button>
+
+    </div>
+  </div>
+</div>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
- <script>
+<script>
     const orderBtnElement = document.getElementById('orderBtn')
     const CODElement = document.getElementById('COD')
     const razorpayElement = document.getElementById('razorpay')
@@ -307,8 +321,7 @@
 
   </script>
 
-
-  <script>
+<script>
     // Attach a submit event listener to the couponApplyForm element
     const couponApplyFormElement = document.getElementById('couponApplyForm');
     couponApplyFormElement.addEventListener('submit', async (e) => {
@@ -356,7 +369,5 @@
       }
     }
   </script>
-
-
 
 {{> userFooter}}

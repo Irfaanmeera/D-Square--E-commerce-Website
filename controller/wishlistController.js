@@ -21,7 +21,6 @@ const wishlistGetController = async (req, res) => {
       .find({ userId: req.session.user._id })
       .populate("productId");
 
-    
     res.render("user/wishlist", {
       user: req.session.user,
       cartProduct,
@@ -41,33 +40,33 @@ const addToWishlist = async (req, res) => {
     const userId = req.session.user._id;
     const productId = req.params.id;
 
-    let existingProduct = await wishlistCollection.findOne({productId:req.params.id})
-    if(existingProduct){
-        // Product already exists in the wishlist
-        return res.json({ exists: true });
-  }else{
-    const wishlist = new wishlistCollection({
-      userId: userId,
-      productId: productId,
+    let existingProduct = await wishlistCollection.findOne({
+      productId: req.params.id,
     });
-    const wishlistData = await wishlist.save();
-    console.log(wishlistData);
+    if (existingProduct) {
+      // Product already exists in the wishlist
+      return res.json({ exists: true });
+    } else {
+      const wishlist = new wishlistCollection({
+        userId: userId,
+        productId: productId,
+      });
+      const wishlistData = await wishlist.save();
+      console.log(wishlistData);
 
-    res.status(200).json({ success: true });
-  }
+      res.status(200).json({ success: true });
+    }
   } catch (error) {
     console.log(error);
   }
 };
-
-
 
 //move to cart
 const moveToCart = async (req, res) => {
   try {
     const userId = req.session.user._id;
     const productId = req.params.id;
-    const productQuantity = req.body.productQuantity ||1;
+    const productQuantity = req.body.productQuantity || 1;
 
     let existingProduct = await cartCollection.findOne({
       userId: req.session.user._id,
@@ -77,7 +76,7 @@ const moveToCart = async (req, res) => {
     if (existingProduct) {
       await cartCollection.updateOne(
         { _id: existingProduct._id },
-        { $inc: { productQuantity: productQuantity} }
+        { $inc: { productQuantity: productQuantity } }
       );
       res.status(200).json({ success: true });
     } else {
@@ -92,11 +91,10 @@ const moveToCart = async (req, res) => {
 
       // Save the cart item to the database
       const userCart = await cart.save();
-      console.log(userCart)
+      console.log(userCart);
       res.status(200).json({ success: true });
 
-
-      await wishlistCollection.deleteOne({productId:req.params.id})
+      await wishlistCollection.deleteOne({ productId: req.params.id });
     }
   } catch (error) {
     console.error(error);
@@ -113,4 +111,9 @@ const removeWishlist = async (req, res) => {
   }
 };
 
-module.exports = { wishlistGetController, addToWishlist, moveToCart,removeWishlist };
+module.exports = {
+  wishlistGetController,
+  addToWishlist,
+  moveToCart,
+  removeWishlist,
+};

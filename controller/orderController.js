@@ -1,7 +1,7 @@
 const orderCollection = require("../models/orderModel");
 const formatDate = require("../helpers/formatDate");
-const walletCollection = require('../models/walletModel')
-const cartCollection = require('../models/cartModel')
+const walletCollection = require("../models/walletModel");
+const cartCollection = require("../models/cartModel");
 
 //admin side order Management
 
@@ -39,11 +39,8 @@ const changeStatus = async (req, res) => {
   }
 };
 
-
 const acceptReturnOrder = async (req, res) => {
   try {
-
-    
     const orderData = await orderCollection.findByIdAndUpdate(
       { _id: req.params.id },
       { $set: { orderStatus: "Return Accepted" } }
@@ -57,30 +54,30 @@ const acceptReturnOrder = async (req, res) => {
     };
 
     const wallet = await walletCollection.findOneAndUpdate(
-      { userId:orderData.userId},
+      { userId: orderData.userId },
       {
         $inc: { walletBalance: orderData.grandTotalCost },
         $push: { walletTransaction },
       }
     );
-console.log(wallet)
+    console.log(wallet);
 
     let cartData = await cartCollection
-    .find({ userId:orderData.userId })
-    .populate("productId");
+      .find({ userId: orderData.userId })
+      .populate("productId");
 
     //reducing from stock qty
-  cartData.map(async (v) => {
-    v.productId.productStock += v.productQuantity;
-    await v.productId.save();
-    return v;
-  });
+    cartData.map(async (v) => {
+      v.productId.productStock += v.productQuantity;
+      await v.productId.save();
+      return v;
+    });
 
-    console.log('productQuantity Added');
+    console.log("productQuantity Added");
     res.json({ success: true });
   } catch (error) {
     console.log(error);
   }
 };
 
-module.exports = { orderManagement, changeStatus,acceptReturnOrder };
+module.exports = { orderManagement, changeStatus, acceptReturnOrder };

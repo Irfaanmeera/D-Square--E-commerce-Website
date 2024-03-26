@@ -3,8 +3,8 @@ const { userHomeController, loginControler, signupControler, loginPostControler,
 const app =express.Router();
 const blockedUser = require('../middlewares/blockedUserCheck');
 const userAuth = require('../middlewares/userAuth')
-const {addToCart,cartLoad, deleteCart, increaseCart, decreaseCart, checkout, checkoutPageLoad, addAddressCheckout, placeOrder, orderList, orderDetails, getOrderStatus, orderPlacedEnd, razorpayCreateOrderId, orderPlaced, applyCoupon, updateCart,} = require("../controller/cartController");
-const{shopPage, filterCategoryPage, filterBrandPage, priceRange, filterPriceRange, sortPriceAscending, sortPriceDescending, searchProduct} = require('../controller/shopPageController');
+const {addToCart,cartLoad, deleteCart, increaseCart, decreaseCart, checkoutPageLoad, addAddressCheckout, orderList, orderDetails, getOrderStatus, orderPlacedEnd, razorpayCreateOrderId, orderPlaced, applyCoupon, cartCount,} = require("../controller/cartController");
+const{shopPage, filterCategoryPage, filterBrandPage, filterPriceRange, sortPriceAscending, sortPriceDescending, searchProduct} = require('../controller/shopPageController');
 const { userAccountPageLoad, addAddressPost, deleteAddress, editAddress, cancelOrder, userCoupons, transactionHistory, invoiceDownload, returnOrder,} = require("../controller/accountPageController");
 const{ wishlistGetController, addToWishlist, removeWishlist, moveToCart } = require('../controller/wishlistController')
 
@@ -65,7 +65,7 @@ app.get('/orderStatus/:id',blockedUser,userAuth,getOrderStatus)
 app.put('/cancelOrder/:id',blockedUser,userAuth,cancelOrder)
 app.put('/returnOrder/:id',blockedUser,userAuth,returnOrder)
 
-//order routes checkout page
+//order routes & checkout page
 app.get('/checkout',blockedUser,userAuth,checkoutPageLoad)
 app.post('/addAddressCheckout',blockedUser,userAuth,addAddressCheckout)
 app.all('/orderPlaced',blockedUser,userAuth,orderPlaced)
@@ -73,7 +73,7 @@ app.all('/orderPlacedEnd',blockedUser,userAuth,orderPlacedEnd)
 app.post('/razorpay/create/orderId',blockedUser,userAuth,razorpayCreateOrderId)
 
 
-//coupon apply 
+//coupon management 
 app.post('/applyCoupon',blockedUser,userAuth,applyCoupon)
 app.get('/userCoupons',blockedUser,userAuth,userCoupons )
 
@@ -82,8 +82,6 @@ app.get('/transaction',blockedUser,userAuth,transactionHistory)
 
 //invoice download
 app.get('/invoice/:id',blockedUser,userAuth,invoiceDownload)
-
-
 
 
 module.exports = app; 

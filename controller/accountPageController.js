@@ -7,7 +7,8 @@ const orderCollection = require("../models/orderModel");
 const walletCollection = require("../models/walletModel");
 const wishlistCollection = require("../models/wishlistModel");
 const couponCollection = require("../models/couponModel");
-const {generateInvoice} = require('../helpers/invoice')
+const { generateInvoice } = require("../helpers/invoice");
+
 //user account page get controller
 const userAccountPageLoad = async (req, res) => {
   try {
@@ -134,17 +135,17 @@ const cancelOrder = async (req, res) => {
     );
 
     let cartData = await cartCollection
-    .find({ userId: req.session.user._id })
-    .populate("productId");
+      .find({ userId: req.session.user._id })
+      .populate("productId");
 
     //reducing from stock qty
-  cartData.map(async (v) => {
-    v.productId.productStock += v.productQuantity;
-    await v.productId.save();
-    return v;
-  });
+    cartData.map(async (v) => {
+      v.productId.productStock += v.productQuantity;
+      await v.productId.save();
+      return v;
+    });
 
-    console.log('productQuantity Added');
+    console.log("productQuantity Added");
     res.json({ success: true });
   } catch (error) {
     console.log(error);
@@ -158,7 +159,7 @@ const returnOrder = async (req, res) => {
       { _id: req.params.id },
       { $set: { orderStatus: "Return Pending" } }
     );
-    res.json({ success: true,orderStatus:'Return Pending' });
+    res.json({ success: true, orderStatus: "Return Pending" });
   } catch (error) {
     console.log(error);
   }
@@ -167,6 +168,7 @@ const returnOrder = async (req, res) => {
 //user coupon page
 const userCoupons = async (req, res) => {
   try {
+    const categoryData = await categoryCollection.find({});
     let couponData = await couponCollection.find();
     couponData = couponData.map((coupon) => {
       coupon.startDateFormatted = formatDate(coupon.startDate);
@@ -174,52 +176,60 @@ const userCoupons = async (req, res) => {
       return coupon;
     });
 
-    res.render("user/coupons", { couponData, user: req.session.user });
+    res.render("user/coupons", { couponData, user: req.session.user,categoryData });
   } catch (error) {
     console.log(error);
   }
 };
 
 //transaction page
-const transactionHistory = async(req,res)=>{
-  try{
-
-    let walletData = await walletCollection.findOne({userId:req.session.user._id})
-    let walletBalance = await walletCollection.findOne({userId:req.session.user._id})
+const transactionHistory = async (req, res) => {
+  try {
+    const categoryData = await categoryCollection.find({});
+    let walletData = await walletCollection.findOne({
+      userId: req.session.user._id,
+    });
+    let walletBalance = await walletCollection.findOne({
+      userId: req.session.user._id,
+    });
 
     walletData = walletData.walletTransaction.map((transaction) => {
       transaction.walletDateFormatted = formatDate(transaction.transactionDate);
       return transaction;
-  });
-    console.log(walletData)
-     res.render('user/transaction',{walletData,user:req.session.user,walletBalance})
-  }catch(error){
-    console.log(RangeError)
+    });
+    console.log(walletData);
+    res.render("user/transaction", {
+      walletData,
+      user: req.session.user,
+      walletBalance,
+      categoryData,
+    });
+  } catch (error) {
+    console.log(RangeError);
   }
-}
-
+};
 
 //dowload invoice
-const invoiceDownload = async(req,res)=>{
-  try{
+const invoiceDownload = async (req, res) => {
+  try {
     let orderData = await orderCollection
-    .findOne({ _id: req.params.id })
-    .populate("addressChosen");
+      .findOne({ _id: req.params.id })
+      .populate("addressChosen");
 
-  const stream = res.writeHead(200, {
-    "Content-Type": "application/pdf",
-    "Content-Disposition": "attachment;filename=invoice.pdf",
-  });
+    const stream = res.writeHead(200, {
+      "Content-Type": "application/pdf",
+      "Content-Disposition": "attachment;filename=invoice.pdf",
+    });
 
-  generateInvoice(
-    (chunk) => stream.write(chunk),
-    () => stream.end(),
-    orderData
-  );
-  }catch(error){
-    console.log(error)
+    generateInvoice(
+      (chunk) => stream.write(chunk),
+      () => stream.end(),
+      orderData
+    );
+  } catch (error) {
+    console.log(error);
   }
-}
+};
 
 module.exports = {
   userAccountPageLoad,
@@ -231,5 +241,4 @@ module.exports = {
   userCoupons,
   transactionHistory,
   invoiceDownload,
-
 };
