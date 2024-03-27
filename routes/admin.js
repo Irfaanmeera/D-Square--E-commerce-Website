@@ -5,75 +5,75 @@ const { adminLogin, adminLoginPostController,adminlogout, userManagement, blockU
 const{addProduct, loadProduct, addProductLoad, editProduct, editProductPost, deleteProduct, listProduct, unlistProduct}= require('../controller/productController');
 const { loadCategory, addCategory, addCategoryLoad, editCategoryPost, editCategory, deleteCategory, listCategory, unlistCategory } = require('../controller/categoryController.js');
 const { orderManagement,changeStatus, acceptReturnOrder } = require('../controller/orderController.js')
-const app = express.Router()
+const adminRoute = express.Router()
 const{ couponPageLoad, addCoupon, addCouponLoad, editCouponLoad, editCoupon, deleteCoupon } = require('../controller/couponController.js')
 const { salesReport, salesReportDownload, salesReportFilter, salesReportFilterWeekly } = require('../controller/salesReportController.js')
 const{ offerManagement, addOffer, editOffer, categoryOffer } = require('../controller/offerController.js')
 
 //admin login & home page
-app.get('/login',adminLogin);
-app.post('/login',adminLoginPostController)
-app.get('/logout',adminlogout)
+adminRoute.get('/login',adminLogin);
+adminRoute.post('/login',adminLoginPostController)
+adminRoute.get('/logout',adminlogout)
 
 //dashboard management
-app.get('/',adminAuth,adminDashboard)
-app.get('/dashboardData',adminAuth,dashboardData)
+adminRoute.get('/',adminAuth,adminDashboard)
+adminRoute.get('/dashboardData',adminAuth,dashboardData)
 
 //product management
-app.get('/product',adminAuth,loadProduct)
-app.get('/addProduct',adminAuth,addProductLoad)
-app.post('/addProduct',adminAuth,upload.any(),addProduct)
-app.get('/editProduct',adminAuth,editProduct)
-app.post('/editProduct',adminAuth,upload.any(),editProductPost);
-app.get('/deleteProduct',adminAuth,deleteProduct)
-app.patch('/listProduct/:id',adminAuth,listProduct)
-app.patch('/unlistProduct/:id',adminAuth,unlistProduct)
+adminRoute.get('/product',adminAuth,loadProduct)
+adminRoute.get('/addProduct',adminAuth,addProductLoad)
+adminRoute.post('/addProduct',adminAuth,upload.any(),addProduct)
+adminRoute.get('/editProduct',adminAuth,editProduct)
+adminRoute.post('/editProduct',adminAuth,upload.any(),editProductPost);
+adminRoute.get('/deleteProduct',adminAuth,deleteProduct)
+adminRoute.patch('/listProduct/:id',adminAuth,listProduct)
+adminRoute.patch('/unlistProduct/:id',adminAuth,unlistProduct)
 
 
 //category management
-app.get('/category',adminAuth,loadCategory)
-app.get('/addCategory',adminAuth,addCategoryLoad)
-app.post('/addCategory',adminAuth,addCategory)
-app.get('/editCategory',adminAuth,editCategory)
-app.post('/editCategory',adminAuth,editCategoryPost)
-app.get('/deleteCategory',adminAuth,deleteCategory)
-app.patch('/listCategory/:id',adminAuth,listCategory)
-app.patch('/unlistCategory/:id',adminAuth,unlistCategory)
+adminRoute.get('/category',adminAuth,loadCategory)
+adminRoute.get('/addCategory',adminAuth,addCategoryLoad)
+adminRoute.post('/addCategory',adminAuth,addCategory)
+adminRoute.get('/editCategory',adminAuth,editCategory)
+adminRoute.post('/editCategory',adminAuth,editCategoryPost)
+adminRoute.get('/deleteCategory',adminAuth,deleteCategory)
+adminRoute.patch('/listCategory/:id',adminAuth,listCategory)
+adminRoute.patch('/unlistCategory/:id',adminAuth,unlistCategory)
 
 
 //user management
-app.get('/userManagement',adminAuth,userManagement)
-app.patch('/blockUser',adminAuth,blockUser)
-app.patch('/unblockUser',adminAuth,unBlockUser)
+adminRoute.get('/userManagement',adminAuth,userManagement)
+adminRoute.patch('/blockUser',adminAuth,blockUser)
+adminRoute.patch('/unblockUser',adminAuth,unBlockUser)
 
 //order management
-app.get('/orderManagement',adminAuth,orderManagement)
-app.post('/changeStatus/:id',adminAuth,changeStatus)
-app.post('/acceptReturnOrder/:id',adminAuth,acceptReturnOrder)
+adminRoute.get('/orderManagement',adminAuth,orderManagement)
+adminRoute.post('/changeStatus/:id',adminAuth,changeStatus)
+adminRoute.post('/acceptReturnOrder/:id',adminAuth,acceptReturnOrder)
 
 //coupon management
-app.get('/couponManagement', adminAuth,couponPageLoad)
-app.get('/addCoupon',adminAuth,addCouponLoad)
-app.post('/addCoupon',adminAuth,addCoupon)
-app.get('/editCoupon',adminAuth,editCouponLoad)
-app.post('/editCoupon',adminAuth,editCoupon)
-app.get('/deleteCoupon',adminAuth,deleteCoupon)
+adminRoute.get('/couponManagement', adminAuth,couponPageLoad)
+adminRoute.get('/addCoupon',adminAuth,addCouponLoad)
+adminRoute.post('/addCoupon',adminAuth,addCoupon)
+adminRoute.get('/editCoupon',adminAuth,editCouponLoad)
+adminRoute.post('/editCoupon',adminAuth,editCoupon)
+adminRoute.get('/deleteCoupon',adminAuth,deleteCoupon)
 
 //offer management
-app.get('/offerManagement',adminAuth,offerManagement)
-app.post('/addOffer',adminAuth,addOffer)
-app.put('/editOffer/:id',adminAuth,editOffer)
-app.post('/categoryOffer',adminAuth,categoryOffer)
+adminRoute.get('/offerManagement',adminAuth,offerManagement)
+adminRoute.post('/addOffer',adminAuth,addOffer)
+adminRoute.put('/editOffer/:id',adminAuth,editOffer)
+adminRoute.post('/categoryOffer',adminAuth,categoryOffer)
 
 //salesReport management
-app.get('/salesReport',adminAuth,salesReport)
-app.get('/salesReportDownload',adminAuth,salesReportDownload)
-app.post('/salesReportFilter',adminAuth, salesReportFilter)
-app.post('/salesReportFilterWeekly',adminAuth, salesReportFilterWeekly)
+adminRoute.get('/salesReport',adminAuth,salesReport)
+adminRoute.get('/salesReportDownload',adminAuth,salesReportDownload)
+adminRoute.post('/salesReportFilter',adminAuth, salesReportFilter)
+adminRoute.post('/salesReportFilterWeekly',adminAuth, salesReportFilterWeekly)
 
 //banner management
-app.get('/bannerManagement',adminAuth,bannerManagement)
-app.post('/uploadBanner',adminAuth,upload.single('bannerImage'),uploadBanner)
-app.delete('/deleteBanner/:id',adminAuth,deleteBanner)
+adminRoute.get('/bannerManagement',adminAuth,bannerManagement)
+adminRoute.post('/uploadBanner',adminAuth,upload.single('bannerImage'),uploadBanner)
+adminRoute.delete('/deleteBanner/:id',adminAuth,deleteBanner)
 
-module.exports = app;     
+module.exports = adminRoute;     

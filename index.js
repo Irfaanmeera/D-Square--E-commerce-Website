@@ -50,8 +50,8 @@ app.use(express.static(__dirname + "/public"));
 app.use(nocache());
 app.use(flash());
 
-app.use("/", userRouter);
 app.use("/admin", adminRouter);
+app.use("/", userRouter);
 
 app.listen(PORT, () => {
   console.log("Server is connected successfully");
