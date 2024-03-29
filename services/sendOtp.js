@@ -4,10 +4,13 @@ const nodemailer = require('nodemailer')
     service: "gmail",
     host: "smtp.gmail.com",
     port: 587,
-    secure: false,
+    secure: true,
       auth:{
           user:'irfaanmeera@gmail.com',
           pass:'kjwl efmz fvhy mvbp'
+      },
+      tls:{
+         rejectUnauthorized:false
       }
 
    });
