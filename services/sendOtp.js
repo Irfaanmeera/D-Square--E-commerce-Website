@@ -7,7 +7,7 @@ const nodemailer = require('nodemailer')
       requireTLS:true,
       auth:{
           user:'irfaanmeera@gmail.com',
-          pass:'tayk wqro aapk jryl'
+          pass:'kjwl efmz fvhy mvbp'
       }
 
    });
