@@ -166,7 +166,7 @@ const searchProduct = async (req, res) => {
       ],
     });
     const count = await cartCollection.countDocuments({
-      userId: req.session.user._id,
+      userId: req.session?.user?._id,
     });
     const cartProduct = await cartCollection.find({
       userId: req.session?.user?._id,
