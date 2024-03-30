@@ -14,10 +14,10 @@ const shopPage = async (req, res) => {
       userId: req.session?.user?._id,
     });
     const wishlistData = await wishlistCollection.find({
-      userId: req.session.user._id,
+      userId: req.session?.user?._id,
     });
     const wishlistCount = await wishlistCollection.countDocuments({
-      userId: req.session.user._id,
+      userId: req.session?.user?._id,
     });
     const productsInOnePage = 6;
     const pageNo = parseInt(req.query.pageNo) || 1;
@@ -66,7 +66,7 @@ const shopPage = async (req, res) => {
 const filterCategoryPage = async (req, res) => {
   try {
     const count = await cartCollection.countDocuments({
-      userId: req.session.user._id,
+      userId: req.session?.user?._id,
     });
     const cartProduct = await cartCollection.find({
       userId: req.session?.user?._id,
