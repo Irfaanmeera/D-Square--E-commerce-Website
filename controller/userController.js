@@ -154,78 +154,95 @@ const userLoginModel = async (req, res, next) => {
     // req.session.user = req.body;
     // req.session.loggedIn = true;
     console.log(req.session.tempUserData);
-    next();
+    await userCollection.create(req.session.tempUserData);
+        req.session.user = await userCollection.findOne({
+          email: req.session.tempUserData.email,
+        });
+        let tempUserReferralCode = req.session?.tempUserReferralCode;
+        if (tempUserReferralCode) {
+          await applyReferralOffer(tempUserReferralCode);
+        }
+  
+        await walletCollection.create({ userId: req.session.user._id });
+  
+        res.redirect("/");
+  
+        console.log(req.session.user);
+
+
   } catch (error) {
     console.log(error);
   }
 };
 
 //sendOtp
-const sendOtp = async (req, res) => {
-  const otp = Math.floor(1000 + Math.random() * 9000);
-  req.session.otp = otp;
-  req.session.emailofNewUser = req.body.email;
+// const sendOtp = async (req, res) => {
+//   const otp = Math.floor(1000 + Math.random() * 9000);
+//   req.session.otp = otp;
+//   req.session.emailofNewUser = req.body.email;
 
-  const expirationTime = new Date();
-  expirationTime.setMinutes(expirationTime.getMinutes() + 5);
+//   const expirationTime = new Date();
+//   expirationTime.setMinutes(expirationTime.getMinutes() + 5);
 
-  req.session.otpExpiration = expirationTime;
-  console.log(req.session.otpExpiration);
+//   req.session.otpExpiration = expirationTime;
+//   console.log(req.session.otpExpiration);
 
 
-  const mailOptions = {
-    from: `${process.env.GMAIL_ID}`,
-    to: `${req.session.emailofNewUser}`,
-    subject: "Registration OTP for D Square",
-    html: `Your OTP is ${otp}`,
-  };
+//   const mailOptions = {
+//     from: `${process.env.GMAIL_ID}`,
+//     to: `${req.session.emailofNewUser}`,
+//     subject: "Registration OTP for D Square",
+//     html: `Your OTP is ${otp}`,
+//   };
 
-  console.log(mailOptions)
-  console.log(process.env.GMAIL_PASSWORD)
+//   console.log(mailOptions)
+//   console.log(process.env.GMAIL_PASSWORD)
 
-  await transporter.sendMail(mailOptions, function (error, info) {
-    if (error) {
-      console.log(error);
-      return res.status(500).send("Error sending OTP");
-    } else {
-      console.log("Email has been sent:", info.response);
-      res.render("user/otpPage", {
-        expirationTime: expirationTime.toISOString(),
-      });
-    }
-  });
-};
+//   await transporter.sendMail(mailOptions, function (error, info) {
+//     if (error) {
+//       console.log(error);
+//       return res.status(500).send("Error sending OTP");
+//     } else {
+//       console.log("Email has been sent:", info.response);
+//       res.render("user/otpPage", {
+//         expirationTime: expirationTime.toISOString(),
+//       });
+//     }
+//   });
+// };
 
 //signup Post controller
-const signupPostController = async (req, res) => {
-  try {
-    const otp = req.body.otp.join("");
-    const sessionOTP = req.session.otp;
+// const signupPostController = async (req, res) => {
+//   try {
+//     const otp = req.body.otp.join("");
+//     const sessionOTP = req.session.otp;
 
-    if (sessionOTP == otp) {
-      await userCollection.create(req.session.tempUserData);
-      req.session.user = await userCollection.findOne({
-        email: req.session.tempUserData.email,
-      });
+//     if (sessionOTP == otp) {
+//       await userCollection.create(req.session.tempUserData);
+//       req.session.user = await userCollection.findOne({
+//         email: req.session.tempUserData.email,
+//       });
 
-      //adding money to wallet if referral code exists
-      let tempUserReferralCode = req.session?.tempUserReferralCode;
-      if (tempUserReferralCode) {
-        await applyReferralOffer(tempUserReferralCode);
-      }
+//       //adding money to wallet if referral code exists
+//       let tempUserReferralCode = req.session?.tempUserReferralCode;
+//       if (tempUserReferralCode) {
+//         await applyReferralOffer(tempUserReferralCode);
+//       }
 
-      await walletCollection.create({ userId: req.session.user._id });
+//       await walletCollection.create({ userId: req.session.user._id });
 
-      res.redirect("/");
+//       res.redirect("/");
 
-      console.log(req.session.user);
-    } else {
-      res.render("user/otpPage", { message: "Invalid otp" });
-    }
-  } catch (error) {
-    console.log(error);
-  }
-};
+//       console.log(req.session.user);
+//     } else {
+//       res.render("user/otpPage", { message: "Invalid otp" });
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+
 
 //forgot password
 const forgotPassword = async (req, res) => {
@@ -409,10 +426,8 @@ module.exports = {
   loginControler,
   signupControler,
   userLoginModel,
-  signupPostController,
   loginPostControler,
   logoutControler,
-  sendOtp,
   productDetails,
   forgotPassword,
   forgotPasswordUsermodel,

@@ -11,9 +11,9 @@ const{ wishlistGetController, addToWishlist, removeWishlist, moveToCart } = requ
 userRoute.get("/",blockedUser,userHomeController);
 userRoute.get("/login",loginControler);
 userRoute.get("/signup",signupControler);
-userRoute.post('/otp',userLoginModel,sendOtp);
-userRoute.get('/resendOtp',sendOtp);
-userRoute.post('/signup',signupPostController)
+// userRoute.post('/otp',userLoginModel,sendOtp);
+// userRoute.get('/resendOtp',sendOtp);
+userRoute.post('/signup',userLoginModel)
 userRoute.post("/login",loginPostControler);
 userRoute.get("/logout",logoutControler);
 
