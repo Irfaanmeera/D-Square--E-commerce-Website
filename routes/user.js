@@ -45,7 +45,7 @@ userRoute.post('/moveToCart/:id',blockedUser,userAuth,moveToCart);
 
 
 //shop page controller
-userRoute.get('/shop',blockedUser, userAuth, shopPage)
+userRoute.get('/shop',blockedUser, shopPage)
 userRoute.get('/filterCategory/:categoryName',blockedUser,filterCategoryPage)
 userRoute.get('/filterBrand/:brand',blockedUser,userAuth,filterBrandPage)
 userRoute.get('/filterPriceRange',blockedUser,userAuth,filterPriceRange)
