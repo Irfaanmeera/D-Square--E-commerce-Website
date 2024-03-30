@@ -1,18 +1,16 @@
-const nodemailer = require('nodemailer')
+const nodemailer = require('nodemailer');
+require('dotenv').config(); // Load environment variables from .env file
 
-   const transporter= nodemailer.createTransport({
-    service: "gmail",
-    host: "smtp.gmail.com",
+const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
     port: 587,
-    secure: true,
-      auth:{
-          user:'irfaanmeera@gmail.com',
-          pass:'kjwl efmz fvhy mvbp'
-      },
-      tls:{
-         rejectUnauthorized:false
-      }
+    secure: false,
+    auth: {
+        user: process.env.GMAIL_ID,
+        pass: process.env.GMAIL_PASSWORD,
+        method: 'PLAIN' // Ensure the authentication method is specified
+    }
+});
 
-   });
-
-module.exports= transporter;
+// Rest of your email sending logic...
+module.exports = transporter;

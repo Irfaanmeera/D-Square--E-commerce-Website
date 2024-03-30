@@ -172,12 +172,16 @@ const sendOtp = async (req, res) => {
   req.session.otpExpiration = expirationTime;
   console.log(req.session.otpExpiration);
 
+
   const mailOptions = {
-    from: "irfaanmeera@gmail.com",
+    from: `${process.env.GMAIL_ID}`,
     to: `${req.session.emailofNewUser}`,
     subject: "Registration OTP for D Square",
     html: `Your OTP is ${otp}`,
   };
+
+  console.log(mailOptions)
+  console.log(process.env.GMAIL_PASSWORD)
 
   await transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
