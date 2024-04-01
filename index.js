@@ -53,6 +53,10 @@ app.use(flash());
 app.use("/admin", adminRouter);
 app.use("/", userRouter);
 
+app.use((req,res)=>{
+  res.render('user/404')
+});
+
 app.listen(PORT, () => {
   console.log("Server is connected successfully");
 });

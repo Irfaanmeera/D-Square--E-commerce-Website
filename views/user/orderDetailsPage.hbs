@@ -11,14 +11,14 @@
                 <div class="row">
                     
                     <div class="col-8">
-                        <span style="margin-left:30px;" id="heading">Date : {{orderDateFormatted}}</span><br>
+                        <span style="margin-left:10px;" id="heading">Date : {{orderDateFormatted}}</span><br>
                       
                     </div>
                     <div class="col-4 pull-right">
                         <span id="heading">Order No: {{orderData.orderNumber}}</span><br>
                        
                     </div>
-                     <div class="col-5" style="margin-left:40px;margin-top:10px;">
+                     <div class="col-5" style="margin-left:20px;margin-top:10px; margin-bottom:10px;">
                     <span><i class="fa fa-map-marker-alt me-2"></i>Shipping Address: {{orderData.addressChosen.addressLine1}} {{orderData.addressChosen.addressLine2}}</span>
                 </div> 
                 </div> 
@@ -45,7 +45,7 @@
                     
                     <div class="col-3">
                       {{#each orderData}}
-                        <span id="price">{{this.totalDiscount}}</span>
+                        <span id="price" style="margin-left:-1px;">{{this.totalDiscount}}</span>
                       {{/each}}
                     </div>
                    
@@ -84,9 +84,14 @@
 
  
     <div >
-             <a href="/orderList" class="btn btn-primary" style="margin-left:200px;margin-top:-30px;margin-bottom:30px;">
+   <a href="/invoice/{{orderData._id}}" class="btn btn-primary shadow-0" style="margin-left:100px;margin-top:-30px;margin-bottom:30px;">Download Invoice</a>
+             <a href="/orderList" class="btn btn-primary" style="margin-left:60px;margin-top:-30px;margin-bottom:30px;">
         Back to orders
     </a>
+     
+    </div>
+    <div>
+                
     </div>
  
         </div>

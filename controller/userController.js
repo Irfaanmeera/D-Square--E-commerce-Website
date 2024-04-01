@@ -321,7 +321,7 @@ const forgotPasswordReset = async (req, res) => {
 };
 
 //product details page
-const productDetails = async (req, res) => {
+const productDetails = async (req, res,next) => {
   try {
     const currentProduct = await productCollection.findOne({
       _id: req.params.id,
@@ -370,6 +370,7 @@ const productDetails = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    next(error);
   }
 };
 

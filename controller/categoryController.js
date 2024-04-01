@@ -3,7 +3,7 @@ const categoryCollection = require("../models/categoryModel");
 const productCollection = require("../models/productModel");
 
 //load category
-const loadCategory = async (req, res) => {
+const loadCategory = async (req, res,next) => {
   try {
     const category = await categoryCollection.find({});
     res.render("admin/category", {
@@ -14,6 +14,7 @@ const loadCategory = async (req, res) => {
     req.session.categoryExists = null;
   } catch (error) {
     console.log(error);
+    next(error)
   }
 };
 

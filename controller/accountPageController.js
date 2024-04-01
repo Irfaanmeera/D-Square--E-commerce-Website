@@ -10,7 +10,7 @@ const couponCollection = require("../models/couponModel");
 const { generateInvoice } = require("../helpers/invoice");
 
 //user account page get controller
-const userAccountPageLoad = async (req, res) => {
+const userAccountPageLoad = async (req, res,next) => {
   try {
     let userData = await userCollection.findOne({ _id: req.session.user._id });
     let addressData = await addressCollection.find({
@@ -59,6 +59,7 @@ const userAccountPageLoad = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    next(error)
   }
 };
 
@@ -166,7 +167,7 @@ const returnOrder = async (req, res) => {
 };
 
 //user coupon page
-const userCoupons = async (req, res) => {
+const userCoupons = async (req, res,next) => {
   try {
     const categoryData = await categoryCollection.find({});
     let couponData = await couponCollection.find();
@@ -179,11 +180,12 @@ const userCoupons = async (req, res) => {
     res.render("user/coupons", { couponData, user: req.session.user,categoryData });
   } catch (error) {
     console.log(error);
+    next(error)
   }
 };
 
 //transaction page
-const transactionHistory = async (req, res) => {
+const transactionHistory = async (req, res,next) => {
   try {
     const categoryData = await categoryCollection.find({});
     let walletData = await walletCollection.findOne({
@@ -206,6 +208,7 @@ const transactionHistory = async (req, res) => {
     });
   } catch (error) {
     console.log(RangeError);
+    next(error)
   }
 };
 

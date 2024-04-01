@@ -4,7 +4,7 @@ const cartCollection = require("../models/cartModel");
 const wishlistCollection = require("../models/wishlistModel");
 
 //shop page get controller
-const shopPage = async (req, res) => {
+const shopPage = async (req, res,next) => {
   try {
     const categoryData = await categoryCollection.find({});
     const cartProduct = await cartCollection
@@ -59,11 +59,12 @@ const shopPage = async (req, res) => {
     req.session.shopProductData = null;
   } catch (error) {
     console.log(error);
+    next(error);
   }
 };
 
 //filter Category
-const filterCategoryPage = async (req, res) => {
+const filterCategoryPage = async (req, res,next) => {
   try {
     const count = await cartCollection.countDocuments({
       userId: req.session?.user?._id,
@@ -93,11 +94,12 @@ const filterCategoryPage = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    next(error)
   }
 };
 
 //filter brand
-const filterBrandPage = async (req, res) => {
+const filterBrandPage = async (req, res,next) => {
   try {
     req.session.shopProductData = await productCollection.find({
       is_listed: true,
@@ -106,11 +108,12 @@ const filterBrandPage = async (req, res) => {
     res.redirect("/shop");
   } catch (error) {
     console.log(error);
+    next(error)
   }
 };
 
 //filter price
-const filterPriceRange = async (req, res) => {
+const filterPriceRange = async (req, res,next) => {
   try {
     const minPrice = parseInt(req.query.minPrice);
     const maxPrice = parseInt(req.query.maxPrice);
@@ -125,7 +128,8 @@ const filterPriceRange = async (req, res) => {
     console.log(req.session.shopProductData);
   } catch (error) {
     console.log(error);
-    res.status(500).send("Internal Server Error");
+    // res.status(500).send("Internal Server Error");
+    next(error)
   }
 };
 
@@ -154,32 +158,96 @@ const sortPriceDescending = async (req, res) => {
 };
 
 //search product
-const searchProduct = async (req, res) => {
-  try {
-    const searchQuery = req.query.q;
-    const productData = await productCollection.find({
-      is_listed: true,
-      $or: [
-        { productName: { $regex: searchQuery, $options: "i" } },
-        { category: { $regex: searchQuery, $options: "i" } },
-        { brand: { $regex: searchQuery, $options: "i" } },
-      ],
-    });
-    const count = await cartCollection.countDocuments({
-      userId: req.session?.user?._id,
-    });
-    const cartProduct = await cartCollection.find({
-      userId: req.session?.user?._id,
-    });
-    const wishlistData = await wishlistCollection.find({
-      userId: req.session?.user?._id,
-    });
-    const wishlistCount = await wishlistCollection.countDocuments({
-      userId: req.session?.user?._id,
-    });
-    const categoryData = await categoryCollection.find({});
+// const searchProduct = async (req, res,next) => {
+//   try {
+//     const searchQuery = req.query.q;
+//     const productData = await productCollection.find({
+//       is_listed: true,
+//       $or: [
+//         { productName: { $regex: searchQuery, $options: "i" } },
+//         { category: { $regex: searchQuery, $options: "i" } },
+//         { brand: { $regex: searchQuery, $options: "i" } },
+//       ],
+//     });
+//     const count = await cartCollection.countDocuments({
+//       userId: req.session?.user?._id,
+//     });
+//     const cartProduct = await cartCollection.find({
+//       userId: req.session?.user?._id,
+//     });
+//     const wishlistData = await wishlistCollection.find({
+//       userId: req.session?.user?._id,
+//     });
+//     const wishlistCount = await wishlistCollection.countDocuments({
+//       userId: req.session?.user?._id,
+//     });
+//     const categoryData = await categoryCollection.find({});
+// if(productData.length>0){
+//     res.render("user/shop", {
+//       user: req.session.user,
+//       searchQuery,
+//       productData,
+//       categoryData,
+//       cartProduct,
+//       wishlistData,
+//       wishlistCount,
+//       count,
+//     });
+//   }else{
+//     res.render("user/shop", {
+//       user: req.session.user,
+//       searchQuery,
+//       productData,
+//       categoryData,
+//       cartProduct,
+//       wishlistData,
+//       wishlistCount,
+//       count,
+//       message:"Product not found",
+//     });
+//   }
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("Internal Server Error");
+//     next(error)
+//   }
+// };
 
-    res.render("user/shop", {
+
+// Assuming you have initialized your Express app and set up your database connections
+
+// Define a route for handling the search request
+const searchProduct = async (req, res, next) => {
+  try {
+      const searchQuery = req.query.q; // Get the search query from the request query parameters
+
+      // Perform the search in your database
+      const productData = await productCollection.find({
+          is_listed: true,
+          $or: [
+              { productName: { $regex: searchQuery, $options: "i" } },
+              { category: { $regex: searchQuery, $options: "i" } },
+              { brand: { $regex: searchQuery, $options: "i" } },
+          ],
+      });
+      const count = await cartCollection.countDocuments({
+              userId: req.session?.user?._id,
+            });
+            const cartProduct = await cartCollection.find({
+              userId: req.session?.user?._id,
+            });
+            const wishlistData = await wishlistCollection.find({
+              userId: req.session?.user?._id,
+            });
+            const wishlistCount = await wishlistCollection.countDocuments({
+              userId: req.session?.user?._id,
+            });
+            const categoryData = await categoryCollection.find({});
+
+      // Check if any products are found
+if (productData.length > 0) {
+  // If products are found, render the shop page with the search results
+  res.render("user/shop", {
       user: req.session.user,
       searchQuery,
       productData,
@@ -188,12 +256,23 @@ const searchProduct = async (req, res) => {
       wishlistData,
       wishlistCount,
       count,
-    });
+      // Include other necessary data for rendering the shop page
+  });
+} else {
+  // If no products are found, send a failure response with the message
+  res.status(404).json({ message: "No products found ." });
+}
+
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Internal Server Error");
+      // If an error occurs, send a 500 Internal Server Error response
+      console.error('Error performing search:', error);
+      res.status(500).send("No Products Found");
+      // You may want to call next(error) to pass the error to the error handling middleware
+      // next(error);
   }
 };
+
+
 
 module.exports = {
   shopPage,

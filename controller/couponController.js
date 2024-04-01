@@ -2,7 +2,7 @@ const couponCollection = require("../models/couponModel");
 const formatDate = require("../helpers/formatDate");
 
 //get coupon page load
-const couponPageLoad = async (req, res) => {
+const couponPageLoad = async (req, res,next) => {
   try {
     let couponData = await couponCollection.find();
     couponData = couponData.map((coupon) => {
@@ -13,6 +13,7 @@ const couponPageLoad = async (req, res) => {
     res.render("admin/coupons", { couponData });
   } catch (error) {
     console.log(error);
+    next(error)
   }
 };
 

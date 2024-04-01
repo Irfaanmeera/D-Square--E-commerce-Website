@@ -5,7 +5,7 @@ const sharpImage = require("../services/sharp");
 
 //get product controller
 
-const loadProduct = async (req, res) => {
+const loadProduct = async (req, res,next) => {
   try {
     if (req.session.admin) {
       const productData = await productCollection.find({});
@@ -20,6 +20,7 @@ const loadProduct = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    next(error)
   }
 };
 

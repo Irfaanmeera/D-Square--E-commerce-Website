@@ -11,7 +11,7 @@ const orderManagement = async (req, res) => {
     let orderData = await orderCollection
       .find({})
       .sort({ orderDate: -1 })
-      .populate("userId");
+      .populate("userId addressChosen");
 
     orderData = orderData.map((v) => {
       v.orderDateFormatted = formatDate(v.orderDate);

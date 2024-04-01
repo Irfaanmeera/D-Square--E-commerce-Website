@@ -187,19 +187,19 @@
                     <i class='bx bxs-edit-alt'></i>
                 </button>
             </div>
-             
              <div >
-           <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal1{{@index}}">
+           <a href="admin/orderDetails/{{this._id}}">  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 View Details
-            </button>
+            </button></a>
         </div>
+        
             <div>
                 {{#if (equal this.orderStatus 'Return Pending')}}
                 <a href="#" class="btn btn-sm btn-secondary" onclick="acceptReturnOrder('{{this._id}}')">Accept Return</a>
                 </div>
                 {{/if}}
 
-            <!-- Delivery status change Modal -->
+            <!-- Add address Modal -->
             <div class="modal fade" id="exampleModal{{@index}}" tabindex="-1" aria-labelledby="exampleModalLabel{{@index}}" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -229,104 +229,6 @@
                 </div>
             </div>
 
-
-  {{!-- view prder details modal --}}
-
-        <div class="modal fade" id="exampleModal1{{@index}}" tabindex="-1" aria-labelledby="exampleModalLabel1{{@index}}" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel1{{@index}}" style="color:rgb(6, 6, 126);">Order Details</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        
-                            <div class="modal-body">
-                       
-            <div class="info">
-                <div class="row">
-                    
-                    <div class="col-8">
-                        <span  id="heading">Date : {{this.orderDateFormatted}}</span><br>
-                      
-                    </div>
-                    <div class="col-4 pull-right">
-                        <span id="heading">Order No: {{this.orderNumber}}</span><br>
-                       
-                    </div>
-                     <div class="col-5" style="margin-top:20px;margin-bottom:20px;">
-                    <span><i class="fa fa-map-marker-alt "></i>Shipping Address:{{this.addressChosen.firstName}}, {{this.addressChosen.addressLine1}} {{this.addressChosen.addressLine2}}</span>
-                </div> 
-                </div> 
-                   
-            </div>    
-             <hr class="my-2">
-            <div class="pricing">
-                {{#each this.cartData}} 
-                <div class="row">
-                    <div class="col-9 mb-3">
-                        <span id="name" style="font-size:14px;">{{this.productId.productName}} (Qty: {{this.productQuantity}})</span>  
-                     
-                    
-                    </div>
-                    <div class="col-3 mb-3">
-                        <span id="price">{{this.totalCostPerProduct}}</span>
-                    </div>
-                </div>
-                {{/each}}
-                 <div class="row">
-                    <div class="col-9 mb-3">
-                        <span id="name">Total Discount</span>
-                    </div>
-                    
-                    <div class="col-3 mb-3">
-                     
-                        <span id="price">{{this.totalDiscount}}</span>
-                
-                    </div>
-                   
-                </div>
-                <div class="row">
-                    <div class="col-9 mb-3">
-                        <span id="name">Shipping</span>
-                    </div>
-                    <div class="col-3 mb-3">
-                        <span id="price">Free Shipping</span>
-                    </div>
-                </div>
-                
-                
-                
-            </div>
-       <hr class="my-2">
-            <div class="total mb-5">
-                <div class="row">
-                    <div class="col-9">Total Amount</div>
-                    <div class="col-3"><big><strong>{{this.grandTotalCost}}</strong></big></div>
-                </div>
-            </div>
-           
-            
-            {{!-- <div class="tracking">
-                <div class="title" style="margin-left:200px;font-size:18px;">Tracking Order</div>
-            </div>
-            <div class="progress-track">
-                <ul id="progressbar">
-                    <li class="step0 active " id="step1">Ordered</li>
-                    <li class="step0 active text-center" id="step2">Shipped</li>
-                    <li class="step0 text-center" id="step4">Delivered</li>
-                </ul>
-            </div> --}}
-
- 
-                            </div>
-                            {{!-- <div class="modal-footer">
-                                
-                                <button type="submit" class="btn btn-primary">Update Status</button>
-                            </div> --}}
-                
-                    </div>
-                </div>
-            </div>
         </td>
     </tr>
     {{/each}}

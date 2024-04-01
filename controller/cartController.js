@@ -83,7 +83,7 @@ const addToCart = async (req, res) => {
 
 
 //show cart get controller
-const cartLoad = async (req, res) => {
+const cartLoad = async (req, res,next) => {
   try {
     const cartData = await grandTotal(req);
     const categoryData = await categoryCollection.find();
@@ -112,6 +112,7 @@ const cartLoad = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    next(error)
   }
 };
 
@@ -168,7 +169,7 @@ const decreaseCart = async (req, res) => {
 };
 
 //checkout page
-const checkoutPageLoad = async (req, res) => {
+const checkoutPageLoad = async (req, res,next) => {
   try {
     let cartData = await grandTotal(req);
     const cartProduct = await cartCollection.find({
@@ -209,6 +210,7 @@ const checkoutPageLoad = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    next(error)
   }
 };
 
@@ -378,7 +380,7 @@ const orderPlacedEnd = async (req, res) => {
 };
 
 //order List Page
-const orderList = async (req, res) => {
+const orderList = async (req, res,next) => {
   try {
     let cartData = await grandTotal(req);
     const count = await cartCollection.countDocuments({
@@ -416,11 +418,12 @@ const orderList = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    next(error)
   }
 };
 
 //get single order Details page
-const orderDetails = async (req, res) => {
+const orderDetails = async (req, res,next) => {
   try {
     const count = await cartCollection.countDocuments({
       userId: req.session.user._id,
@@ -441,6 +444,7 @@ const orderDetails = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    next(error)
   }
 };
 

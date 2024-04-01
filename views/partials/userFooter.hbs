@@ -164,7 +164,7 @@
 {{!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> --}}
-<script>
+{{!-- <script>
   // client-side JavaScript
 function performSearch() {
   const searchQuery = document.getElementById('searchInput').value; // Get the search query
@@ -173,6 +173,35 @@ function performSearch() {
   window.location.href = '/search?q=' + encodeURIComponent(searchQuery);
 }
 
+</script> --}}
+
+<script>
+ // Client-side JavaScript
+function performSearch() {
+    const searchQuery = document.getElementById('searchInput').value; // Get the search query
+
+    // Make an AJAX request to the server to perform the search
+    fetch('/search?q=' + encodeURIComponent(searchQuery))
+        .then(response => {
+            if (response.ok) {
+                // If response is successful, redirect to the search results page
+                window.location.href = '/search?q=' + encodeURIComponent(searchQuery);
+            } else {
+                // If response indicates no products found, show the alert message from the server
+                response.json().then(data => {
+                    alert(data.message);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error performing search:', error);
+            // Handle any errors that occur during the search
+            alert('No Products found.');
+        });
+}
+
+
 </script>
+
   </body>
 </html>

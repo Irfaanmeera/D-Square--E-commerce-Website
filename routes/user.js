@@ -74,7 +74,7 @@ userRoute.post('/razorpay/create/orderId',blockedUser,userAuth,razorpayCreateOrd
 
 
 //coupon management 
-userRoute.post('/userRoutelyCoupon',blockedUser,userAuth,applyCoupon)
+userRoute.post('/applyCoupon',blockedUser,userAuth,applyCoupon)
 userRoute.get('/userCoupons',blockedUser,userAuth,userCoupons )
 
 //transaction history
@@ -82,6 +82,13 @@ userRoute.get('/transaction',blockedUser,userAuth,transactionHistory)
 
 //invoice download
 userRoute.get('/invoice/:id',blockedUser,userAuth,invoiceDownload)
+
+
+//404 error middlewares
+userRoute.use((err, req, res, next) => {
+    console.log(err.message);
+    res.status(err.status || 404).render('user/404')
+})
 
 
 module.exports = userRoute; 

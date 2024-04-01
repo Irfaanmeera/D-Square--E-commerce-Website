@@ -8,7 +8,13 @@ const salesReport = async (req, res) => {
   try {
     if (req.session?.admin?.salesData) {
       let { salesData, dateValues } = req.session.admin;
-      return res.render("admin/salesReport", { salesData, dateValues });
+
+      salesData = salesData.map((v) => {
+        v.orderDateFormatted = formatDate(v.orderDate);
+        return v;
+      });
+
+      res.render("admin/salesReport", { salesData, dateValues });
     }
 
     let salesData = await orderCollection.find().populate("userId");
@@ -57,6 +63,11 @@ const salesReportDownload = async (req, res) => {
           },
         })
         .populate("userId");
+
+        salesData = salesData.map((v) => {
+          v.orderDateFormatted = formatDate(v.orderDate);
+          return v;
+    })
 
       salesData.map((v) => {
         sheet.addRow({
@@ -134,16 +145,18 @@ const salesReportFilter = async (req, res) => {
     let endDate = new Date(req.body.endDate);
     endDate.setUTCHours(23, 59, 59, 999);
 
-    let salesDataFiltered = await orderCollection
+    let salesData = await orderCollection
       .find({
         orderDate: { $gte: startDate, $lte: endDate },
       })
       .populate("userId");
 
-    salesData = salesDataFiltered.map((v) => {
-      v.orderDateFormatted = formatDate(v.orderDate);
-      return v;
-    });
+      salesData = salesData.map((v) => {
+        v.orderDateFormatted = formatDate(v.orderDate);
+        return v;
+      });
+
+      console.log(salesData)
 
     req.session.admin = {};
     req.session.admin.dateValues = req.body;
@@ -151,7 +164,8 @@ const salesReportFilter = async (req, res) => {
     console.log(req.session.admin.dateValues);
     // console.log(typeof(req.session.admin.salesData));
 
-    res.status(200).json({ success: true });
+    res.status(200).json({ success: true,salesData });
+    
   } catch (error) {
     console.error(error);
   }
@@ -170,13 +184,14 @@ const salesReportFilterWeekly = async (req, res) => {
     let lastDayOfWeek = new Date(firstDayOfWeek);
     lastDayOfWeek.setDate(lastDayOfWeek.getDate() + 6);
 
-    let salesDataFiltered = await orderCollection
+    let salesData = await orderCollection
       .find({
         orderDate: { $gte: firstDayOfWeek, $lte: lastDayOfWeek },
       })
       .populate("userId couponApplied");
 
-    let salesData = salesDataFiltered.map((v) => {
+    salesData = salesData.map((v) => {
+  
       v.orderDateFormatted = formatDate(v.orderDate);
       return v;
     });
